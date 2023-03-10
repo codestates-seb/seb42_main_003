@@ -1,0 +1,16 @@
+:root {
+	/*폰트색깔, 굵기, 크기*/
+    /* color */
+    --point__color: #F48225;
+
+    --menu__active: #F1F2F3;
+    /* component border line color */
+    --tab__focus: #E3E6E8;
+    
+    --button__back: #0A95FF;
+    --button__back--hover: #0069C5;
+    --button__light--hover: #B9D2E8;
+
+    --tag__back: #E1ECF4;
+    --tag__content: #39739D;
+}
