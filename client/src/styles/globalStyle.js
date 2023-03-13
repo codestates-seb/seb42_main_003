@@ -1,6 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
 
-
 export const GlobalStyle = createGlobalStyle`
   * {margin: 0;padding: 0;border: none;background: none;font-size: 100%;font-family: 'Noto Sans KR', sans-serif;box-sizing: border-box;-webkit-tap-highlight-color: transparent;}
   ol,ul {list-style: none;} 
@@ -14,7 +13,7 @@ export const GlobalStyle = createGlobalStyle`
   article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {display:block}
   ol, ul {list-style:none}
   blockquote, q {quotes:none}
-  blockquote:after, blockquote:before, q:after, q:before {content:"";content:none}
+  blockquote:after, blockquote:before, q:after, q:before {content:'';content:none}
   table {border-collapse:collapse;border-spacing:0}
   input:-webkit-autofill, 
   input:-webkit-autofill:hover, 
