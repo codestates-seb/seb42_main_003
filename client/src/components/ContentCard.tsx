@@ -13,6 +13,7 @@ interface CardView {
   img_width?: string;
   content_align?: string;
   line?: string;
+  data?: any;
 }
 
 const Container = styled('div')<CardView>`
@@ -24,7 +25,7 @@ const Container = styled('div')<CardView>`
     display: flex;
     flex-direction: column;
     align-items: ${props => props.content_align || 'center'};
-    margin: 20px 15px;
+    margin: 0 15px 15px 15px;
   }
   .card_bottom {
     display: flex;
@@ -45,15 +46,16 @@ const Container = styled('div')<CardView>`
   .adress {
     font-size: ${props => props.body || 'var(--fs__mid)'};
     color: var(--fontBlack__400);
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     font-weight: 400;
   }
   .body {
-    font-size: ${props => props.body || 'var(--fs__mid)'};
+    font-size: ${props => props.body || 'var(--fs__small)'};
     color: var(--fontBlack__700);
     margin-bottom: 10px;
     font-weight: 400;
     line-height: ${props => props.line || 1};
+    text-align: center;
   }
   .icon {
     font-size: ${props => props.body || 'var(--fs__mid)'};
@@ -96,6 +98,7 @@ function ContentCard({
   radius,
   content_align,
   line,
+  data,
 }: CardView) {
   return (
     <Link to="#">
@@ -107,38 +110,45 @@ function ContentCard({
         content_align={content_align}
         line={line}
       >
-        <div className="img_box">
-          <img
-            src="https://gocamping.or.kr/upload/camp/87/thumb/thumb_720_6823LIi5eTPTRrI0iWf8ynXt.jpeg"
-            alt="img"
-            sizes="160"
-          />
-          <svg viewBox="0 0 24 24" className="heart" fill="none">
-            <path
-              d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z"
-              fill="var(--chamong__color)"
-            />
-          </svg>
-        </div>
-        <div className="content">
-          <h1>양촌여울체험캠프</h1>
-          <div className="adress">강원도 원주시</div>
-          <div className="body">침대에서 누워 즐기는 홍천강 풍경</div>
-          <div className="card_bottom">
-            <div className="box">
-              <div className="icon">
-                <AiFillStar size="20px" style={{ color: 'FF9F1C' }} />
-              </div>
-              <div className="text mg12">4.5</div>
-            </div>
-            <div className="box">
-              <div className="icon">
-                <MdOutlineRateReview size="20px" />
-              </div>
-              <div className="text">3</div>
-            </div>
-          </div>
-        </div>
+        {data &&
+          data.map((ele: any) => {
+            return (
+              <>
+                <div key={ele.contentId} className="img_box">
+                  <img
+                    src="https://gocamping.or.kr/upload/camp/87/thumb/thumb_720_6823LIi5eTPTRrI0iWf8ynXt.jpeg"
+                    alt="img"
+                    sizes="160"
+                  />
+                  <svg viewBox="0 0 24 24" className="heart" fill="none">
+                    <path
+                      d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z"
+                      fill="var(--chamong__color)"
+                    />
+                  </svg>
+                </div>
+                <div className="content">
+                  <h1>{ele.facltNm}</h1>
+                  <div className="adress">{ele.facltNm}</div>
+                  <div className="body">{ele.lineIntro}</div>
+                  <div className="card_bottom">
+                    <div className="box">
+                      <div className="icon">
+                        <AiFillStar size="20px" style={{ color: 'FF9F1C' }} />
+                      </div>
+                      <div className="text mg12">4.5</div>
+                    </div>
+                    <div className="box">
+                      <div className="icon">
+                        <MdOutlineRateReview size="20px" />
+                      </div>
+                      <div className="text">{ele.contendId}</div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            );
+          })}
       </Container>
     </Link>
   );
