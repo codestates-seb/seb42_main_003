@@ -1,100 +1,93 @@
 import styled from 'styled-components';
-import { Button } from '../styles/Button';
-import { useState } from 'react';
-import { areas, themes } from '../datas/areas';
-import { MouseEvent } from 'react';
-import { Link } from 'react-router-dom';
-import { AiFillStar } from 'react-icons/ai';
-import { MdOutlineRateReview } from 'react-icons/md';
+// import { content } from '../../data/content';
+import ContentCard from './ContentCard';
+import { useState, useEffect } from 'react';
+import useIntersectionObserver from '../hooks/useIO';
+import { getContent } from '../api/api';
+import axios from 'axios';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 30px;
-  border: 1px solid white;
-  border-radius: 50px 50px 50px 50px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  img {
-    width: 100%;
-    height: 30%;
-    object-fit: contain;
-    margin-bottom: 10px;
-    border-radius: 50px 50px 0px 0px;
-  }
-  .content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .card_bottom {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    width: 100%;
-    padding: 0px 130px;
-  }
-  .box {
-    display: flex;
-    flex-direction: row;
-  }
-  h1 {
-    color: var(--fontBlack__700);
-    font-size: var(--fs__h1);
-    font-weight: 500;
-    margin-bottom: 5px;
-  }
-  .adress {
-    font-size: var(--fs__big);
-    color: var(--fontBlack__400);
-    margin-bottom: 12px;
-    font-weight: 400;
-  }
-  .body {
-    font-size: var(--fs__big);
-    color: var(--fontBlack__700);
-    margin-bottom: 10px;
-    font-weight: 400;
-  }
-  .icon {
-    font-size: var(--fs__big);
-    color: var(--fontBlack__700);
-    font-weight: 400;
-  }
-  .text {
-    margin-left: 5px;
-    font-size: var(--fs__big);
-    color: var(--fontBlack__700);
-    font-weight: 400;
+interface CardList {
+  flex_dir?: string;
+  bottom_justify?: string;
+  fs_h1?: string;
+  body?: string;
+  heart?: string;
+  radius?: string;
+  img_width?: string;
+  content_align?: string;
+  line?: string;
+}
+
+const Container = styled('div')<CardList>`
+  display: grid !important;
+  margin: 10px;
+  gap: 12px 12px;
+  @media (max-width: 980px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 `;
 
-function ContentList() {
+function ContentList({}: CardList) {
+  type Info = any | null;
+
+  const [content, setContent] = useState<Info>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [itemIndex, setItemIndex] = useState(6);
+  const [data, setData] = useState<Info>([]);
+
+  // useEffect(() => {
+  //   getContent().then(res => setContent(res));
+  //   if (content) setData([...content.slice(0, 6)]);
+  // }, []);
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/content').then(res => {
+      setContent(res.data);
+      setData([...res.data.slice(0, 6)]);
+    });
+  }, []);
+
+  const testFetch = (delay = 1000) =>
+    new Promise(res => setTimeout(res, delay));
+
+  const getMoreItem = async () => {
+    setIsLoaded(true);
+    await testFetch();
+    setItemIndex(i => i + 6);
+    setData(data.concat(content.slice(itemIndex, itemIndex + 6)));
+    setIsLoaded(false);
+  };
+
+  const onIntersect: IntersectionObserverCallback = async (
+    [entry],
+    observer
+  ) => {
+    if (entry.isIntersecting && !isLoaded) {
+      if (data.length === itemIndex) {
+        observer.unobserve(entry.target);
+        await getMoreItem();
+        observer.observe(entry.target);
+      }
+      // else alert('데이터가 없습니다');
+    }
+  };
+
+  const { setTarget } = useIntersectionObserver({
+    root: null,
+    rootMargin: '0px',
+    threshold: 1,
+    onIntersect,
+  });
+
   return (
     <Container>
-      <img
-        src="https://gocamping.or.kr/upload/camp/11/thumb/thumb_720_4031mKP95kUbSSBNbq5bSC5o.jpg"
-        alt="img"
-        sizes="160"
-      />
-      <div className="content">
-        <h1>양촌여울체험캠프</h1>
-        <div className="adress">강원도 원주시</div>
-        <div className="body">침대에서 누워 즐기는 홍천강 풍경</div>
-        <div className="card_bottom">
-          <div className="box">
-            <div className="icon">
-              <AiFillStar size="20px" style={{ color: 'FF9F1C' }} />
-            </div>
-            <div className="text">4.5</div>
-          </div>
-          <div className="box">
-            <div className="icon">
-              <MdOutlineRateReview size="20px" />
-            </div>
-            <div className="text">3</div>
-          </div>
-        </div>
+      {data &&
+        data.map((e: any, idx: number) => {
+          return <ContentCard key={idx} data={e} />;
+        })}
+      {/* <ContentCard data={data} /> */}
+      <div ref={setTarget}>
+        {isLoaded && <div style={{ height: '100px' }}>Loading..</div>}
       </div>
     </Container>
   );
