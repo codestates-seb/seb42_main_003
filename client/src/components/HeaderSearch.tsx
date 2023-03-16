@@ -1,13 +1,9 @@
 import styled from 'styled-components';
-import { Button } from '../styles/Button';
-import { useState } from 'react';
-import { areas, themes } from '../datas/areas';
-import { MouseEvent } from 'react';
 import { HiOutlineSearch } from 'react-icons/hi';
 import { FiArrowLeft } from 'react-icons/fi';
 
 const Container = styled.div`
-  padding: 10px;
+  padding: 10px 10px 0 10px;
 `;
 
 const Main = styled.div`
@@ -27,10 +23,9 @@ const Main = styled.div`
     margin: 5px;
     width: 100%;
     position: relative;
-    /* max-width: 300px; */
   }
   input {
-    padding-left: 10px;
+    padding-left: 20px;
     height: 50px;
     ::placeholder {
       font-size: 15px;
@@ -40,6 +35,7 @@ const Main = styled.div`
     display: flex;
     flex-direction: row;
     margin-left: 10px;
+    position: absolute;
   }
   .keyword_box {
     padding: 10px 6px 10px 7px;
@@ -67,39 +63,19 @@ const Main = styled.div`
   }
 `;
 
-const Section = styled.div`
-  .title {
-    font-size: var(--fs__h1);
-    font-weight: 600;
-    color: var(--fontBlack__700);
-    margin: 15px 0 5px 5px;
-  }
-  .button_box {
-    margin-bottom: 30px;
-  }
-`;
+interface SearchState {
+  isKeyword: { id: string; title: string | null }[];
+  isClicked: boolean;
+  setIsClicked: (foo: any) => void;
+  setIsKeyword: (foo: any) => void;
+}
 
-function HeaderSearch() {
-  //* id값으로 number 타입 지정이 안됨.
-  //* 백엔드로 넘길 때 키워드들 number 타입으로 바꿔서 보내기.
-
-  type Info = { id: string; title: string | null };
-  const [isClicked, setIsClicked] = useState(false);
-  const [isKeyword, setIsKeyword] = useState<Info[]>([]);
-  type CustomMouseEvent = MouseEvent<HTMLElement>;
-
-  const clickHandler = (event: CustomMouseEvent) => {
-    const newData = {
-      id: (event.target as HTMLLIElement).id,
-      title: (event.target as HTMLLIElement).textContent,
-    };
-
-    if (
-      isKeyword.length < 3 &&
-      isKeyword.filter(data => data.title === newData.title).length !== 1
-    )
-      setIsKeyword([...isKeyword, newData]);
-  };
+function HeaderSearch({
+  isKeyword,
+  setIsKeyword,
+  isClicked,
+  setIsClicked,
+}: SearchState) {
   const removeKeyword = (index: string) => {
     setIsKeyword(isKeyword.filter(keyword => keyword.id !== index));
   };
@@ -119,7 +95,13 @@ function HeaderSearch() {
               <FiArrowLeft />
             </div>
           ) : null}
-          <div className="input_field">
+          <div
+            className="input_field"
+            onClick={e => {
+              e.stopPropagation();
+              setIsClicked(true);
+            }}
+          >
             <HiOutlineSearch className="search_icon" />
             <ul className="keywords">
               {isKeyword &&
@@ -137,75 +119,9 @@ function HeaderSearch() {
                   );
                 })}
             </ul>
-            {isKeyword.length === 0 ? (
-              <input
-                onClick={e => {
-                  e.stopPropagation();
-                  setIsClicked(true);
-                }}
-                placeholder="검색"
-              ></input>
-            ) : null}
+            {isKeyword.length === 0 ? <input placeholder="검색"></input> : null}
           </div>
         </div>
-        {isClicked ? (
-          <>
-            <Section>
-              <div className="title_field">
-                <h1 className="title">지역</h1>
-              </div>
-              <div className="button_box">
-                {areas &&
-                  areas.map(area => {
-                    return (
-                      <Button
-                        key={area.id}
-                        id={String(area.id)}
-                        onClick={clickHandler}
-                        className={
-                          isKeyword.filter(keyword => {
-                            return keyword.title === area.keyword;
-                          }).length !== 0
-                            ? 'active'
-                            : ''
-                        }
-                      >
-                        {area.keyword}
-                      </Button>
-                    );
-                  })}
-              </div>
-            </Section>
-            <Section>
-              <div>
-                <h1 className="title">키워드</h1>
-              </div>
-              <div className="button_box">
-                {themes &&
-                  themes.map(theme => {
-                    return (
-                      <Button
-                        key={theme.id}
-                        id={String(theme.id)}
-                        onClick={clickHandler}
-                        className={
-                          isKeyword.filter(keyword => {
-                            return keyword.title === theme.keyword;
-                          }).length !== 0
-                            ? 'active'
-                            : ''
-                        }
-                      >
-                        {theme.keyword}
-                      </Button>
-                    );
-                  })}
-              </div>
-            </Section>
-          </>
-        ) : (
-          <></>
-        )}
       </Main>
     </Container>
   );
