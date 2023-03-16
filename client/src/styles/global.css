@@ -1,0 +1,30 @@
+:root {
+    /* color */
+    --chamong__color: #f95738;
+    --orange__color: #FF9F1C;
+    --salmon__color: #FFBF69;
+    --green__color: #79C16F;
+    --darkGreen__color: #64A75A;
+    --searchbar__color: #F4F2F1;
+    
+    /* font color */
+    --fontBlack__900: hsl(210,8%,5%);
+    --fontBlack__800: hsl(210,8%,15%);
+    --fontBlack__700: hsl(210,8%,20%);
+    --fontBlack__600: hsl(210,8%,25%);
+    --fontBlack__500: hsl(210,8%,35%);
+    --fontBlack__400: hsl(210,8%,45%);
+    --fontBlack__200: hsl(210,8%,60%);
+    --fontBlack__100: hsl(210,8%,65%);
+    
+    /* placeholder*/
+    --fontBlack__300: hsl(210,8%,55%);
+
+    
+    /* font size */
+    --fs__h1: 28px;
+    --fs__h2: 18px;
+    --fs__big: 16px;
+    --fs__mid: 14px;
+    --fs__small: 12px;
+}
