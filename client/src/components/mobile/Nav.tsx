@@ -14,7 +14,7 @@ export const Container = styled.div`
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 4.2em;
+  height: 4.5em;
   background-color: var(--chamong__color);
   border-radius: 25px 25px 0 0;
   padding: 0 15px;
@@ -24,7 +24,7 @@ export const Container = styled.div`
   }
   .nav_box {
     width: 78px;
-    height: 4.2em;
+    height: 3.7em;
     display: flex;
     flex-direction: column;
     align-items: center;
