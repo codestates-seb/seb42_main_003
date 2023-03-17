@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface ButtonStyled {
-  key?: number;
+  key?: number | string;
   id?: string;
   onClick?: any;
   className?: string;
@@ -18,11 +18,12 @@ interface ButtonStyled {
   acolor?: string;
   aborder?: string;
   radius?: string;
+  width?: string;
 }
 
 export const Button = styled('button')<ButtonStyled>`
   padding: ${props => props.padding || '12px 14px'};
-  width: fit-content;
+  width: ${props => props.width || 'fit-content'};
   height: fit-content;
   white-space: nowrap !important;
   background: ${props => props.bg || 'white'};
