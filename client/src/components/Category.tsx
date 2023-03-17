@@ -9,14 +9,20 @@ export const Container = styled.div`
   -webkit-overflow-scrolling: touch; // mobile
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
-  /* overflow: hidden; */
-  /* text-overflow: ellipsis; */
   white-space: nowrap;
-  /* word-break: break-all; */
   margin-bottom: 5px;
+  display: flex;
+
+  align-items: center;
 
   &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
+  }
+  @media (min-width: 768px) {
+    justify-content: center;
+    .main {
+      width: 1174px;
+    }
   }
 `;
 // interface CategoryType {
@@ -31,21 +37,24 @@ function Category() {
   }, []);
   return (
     <Container>
-      {isCategory.map(ele => {
-        return (
-          <Button
-            border={'var(--chamong__color)'}
-            color={'var(--chamong__color)'}
-            hcolor={'white'}
-            hover={'var(--chamong__color)'}
-            hborder={'var(--chamong__color)'}
-            padding="13px 15px"
-            radius="16px"
-          >
-            {ele.keyword}
-          </Button>
-        );
-      })}
+      <div className="main">
+        {isCategory.map(ele => {
+          return (
+            <Button
+              key={ele.id}
+              border={'var(--chamong__color)'}
+              color={'var(--chamong__color)'}
+              hcolor={'white'}
+              hover={'var(--chamong__color)'}
+              hborder={'var(--chamong__color)'}
+              padding="13px 15px"
+              radius="16px"
+            >
+              {ele.keyword}
+            </Button>
+          );
+        })}
+      </div>
     </Container>
   );
 }

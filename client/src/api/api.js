@@ -11,16 +11,23 @@ export const getArea = () => {
   return axios.get(`http://localhost:3001/area`).then(res => res.data);
 };
 
-export const getTheme = async () => {
+export const getTheme = () => {
   return axios
     .get('http://localhost:3001/themes')
     .then(res => res.data)
     .catch(err => console.log(err));
 };
 
-export const getCategory = async () => {
+export const getCategory = () => {
   return axios
     .get('http://localhost:3001/category')
+    .then(res => res.data)
+    .catch(err => console.log(err));
+};
+
+export const getReview = () => {
+  return axios
+    .get('http://localhost:3001/review')
     .then(res => res.data)
     .catch(err => console.log(err));
 };

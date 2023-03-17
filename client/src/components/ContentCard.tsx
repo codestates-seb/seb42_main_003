@@ -106,7 +106,7 @@ const Container = styled('div')<CardView>`
       position: absolute;
       right: 8%;
       top: 8%;
-      width: ${props => props.heart || '30px'};
+      width: 30px;
       stroke: white;
       stroke-width: 2px;
       z-index: 1;
@@ -117,7 +117,7 @@ const Container = styled('div')<CardView>`
       position: absolute;
       right: 8%;
       top: 8%;
-      width: ${props => props.heart || '30px'};
+      width: 30px;
       stroke: white;
       stroke-width: 2px;
       z-index: 1;
@@ -137,7 +137,6 @@ function ContentCard({
   data,
 }: CardView) {
   const [isLike, setIsLike] = useState(false);
-  console.log(isLike);
   return (
     <Link to="#" style={{ width: '100%' }}>
       <Container

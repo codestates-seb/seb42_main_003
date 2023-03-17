@@ -16,6 +16,11 @@ interface CardList {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 14px;
+  margin-top: 10px;
+  @media (max-width: 768px) {
+    display: none;
+  }
   .content_box {
     height: auto;
     border: 0.5px solid var(--fontBlack__500);
@@ -24,7 +29,7 @@ const Container = styled.div`
   }
   h1 {
     font-weight: 600;
-    font-size: var(--fs__h1);
+    font-size: 20px;
     color: var(--fontBlack__600);
     margin: 0 0 15px 10px;
   }
@@ -32,7 +37,7 @@ const Container = styled.div`
     align-self: center;
     color: var(--fontBlack__600);
     font-weight: 500;
-    font-size: var(--fs__h2);
+    font-size: 15px;
   }
   .list_box {
     display: flex;
@@ -51,7 +56,7 @@ const Container = styled.div`
       font-size: 13px;
       color: var(--fontBlack__600);
       font-weight: 500;
-      margin-left: 5px;
+      margin: 0 5px 0 5px;
     }
     .like_icon {
       font-size: 19px;
