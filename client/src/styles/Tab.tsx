@@ -3,12 +3,14 @@ import styled from "styled-components";
 interface TabStyled {
   color?: string;
   state?:number;
+  height?:string;
 }
 
 export const Tab=styled.div<TabStyled>`
 display: flex;
  > button {
-  height: 39px;
+  height: ${props=>props.height||'39px'};
+  flex-basis: 100%;
   flex-grow: 1;
   font-size: 15px;
   font-weight: 700;
@@ -16,7 +18,7 @@ display: flex;
   background-color:white;
   border:1px solid ${props=>props.color==='green'?`var(--darkGreen__color)`:'var(--chamong__color)'};;
   border-left:none;
-  padding:10px;
+  padding:0px 10px;
   cursor: pointer;
   &:hover {
     color:white;
