@@ -1,8 +1,5 @@
 import styled from 'styled-components';
 import { useRef, useState } from 'react';
-// import Banner1 from '../../assets/banner/banner1.png';
-// import Banner2 from '../../assets/banner/banner2.png';
-// import Banner3 from '../../assets/banner/banner3.png';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { AiOutlineRight } from 'react-icons/ai';
 import { images } from '../../assets/banner/banner';
@@ -10,26 +7,19 @@ import { images } from '../../assets/banner/banner';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  /* overflow-x: scroll;
-  -webkit-overflow-scrolling: touch;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  white-space: nowrap; */
   overflow: hidden;
+  height: auto;
   @media (max-width: 768px) {
     display: none;
   }
   .carousel {
     display: flex;
-    /* flex-direction: row; */
     overflow: hidden;
-    /* white-space: nowrap; */
   }
   img {
     width: 100vw;
-    height: 350px;
-    /* max-width: 1268px; */
-    object-fit: cover;
+    height: 100%;
+    object-fit: none;
     box-sizing: border-box;
   }
   .pointer_L {
@@ -48,19 +38,25 @@ const Container = styled.div`
     color: white;
     position: absolute;
   }
-
-  /* .image {
-    width: 500px;
-    height: 300px;
-    box-sizing: border-box;
-  } */
-
   .controller {
     position: relative;
     margin-top: 20px;
     display: flex;
     justify-content: center;
     gap: 30px;
+  }
+  .ba_img {
+    height: 330px;
+    position: relative;
+    background-color: black;
+  }
+  .img_text {
+    position: absolute;
+    color: white;
+    top: 50%;
+    right: 10%;
+    font-size: 25px;
+    font-weight: 600;
   }
 `;
 
@@ -103,7 +99,11 @@ function Banner() {
     <Container>
       <section className="carousel">
         {images.map((image, index) => (
-          <div key={image.id} ref={el => (imageRef.current[index] = el)}>
+          <div
+            className="ba_img"
+            key={image.id}
+            ref={el => (imageRef.current[index] = el)}
+          >
             <img
               className={`image ${
                 currentImageIndex === index ? 'selected' : ''
@@ -111,6 +111,11 @@ function Banner() {
               alt={`carousel-img-${index}`}
               src={image.location}
             />
+            {/* {currentImageIndex === 0 ? (
+              <div className="img_text">
+                차와 함께 떠나는 가볍고 자유로운 여행
+              </div>
+            ) : null} */}
           </div>
         ))}
       </section>

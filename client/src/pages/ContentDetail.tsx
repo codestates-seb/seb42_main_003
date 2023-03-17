@@ -14,6 +14,7 @@ import { GiIsland } from 'react-icons/gi';
 import MapContainer from '../components/map/MapContainer';
 import { Button } from '../styles/Button';
 import Review from '../components/Review';
+import { Link } from 'react-router-dom';
 
 interface ContentInfo {
   bg?: URL;
@@ -21,6 +22,10 @@ interface ContentInfo {
 }
 
 const Container = styled('div')<ContentInfo>`
+  .map {
+    width: 100%;
+    height: 300px;
+  }
   .header {
     display: flex;
     flex-direction: row;
@@ -120,11 +125,13 @@ export function ContentDetail({}: ContentInfo) {
   useEffect(() => {
     getContent().then(res => setIsContent(res[10]));
   }, []);
-  console.log(isContinue);
+  // console.log(isContinue);
   return (
     <Container bg={isContent.firstImageUrl}>
       <div className="header">
-        <FiArrowLeft className="back" />
+        <Link to="/">
+          <FiArrowLeft className="back" />
+        </Link>
         <div className="title">{isContent.facltNm}</div>
         <svg
           viewBox="0 0 24 24"
@@ -201,7 +208,14 @@ export function ContentDetail({}: ContentInfo) {
       </div>
       <div className="info">
         <h1>지도</h1>
-        {/* <MapContainer campList={[isContent]}></MapContainer> */}
+        <div className="map">
+          {Object.keys(isContent).length >= 1 && (
+            <MapContainer campList={[isContent]} />
+          )}
+          {/* {isContent ? (
+            <MapContainer campList={[isContent]}></MapContainer>
+          ) : null} */}
+        </div>
       </div>
       <div className="info">
         <div className="review_box">

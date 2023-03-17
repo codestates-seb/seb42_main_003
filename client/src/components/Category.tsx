@@ -12,7 +12,6 @@ export const Container = styled.div`
   white-space: nowrap;
   margin-bottom: 5px;
   display: flex;
-
   align-items: center;
 
   &::-webkit-scrollbar {

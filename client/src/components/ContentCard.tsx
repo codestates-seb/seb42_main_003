@@ -52,7 +52,7 @@ const Container = styled('div')<CardView>`
     white-space: nowrap;
     word-break: break-all;
     color: var(--fontBlack__700);
-    font-size: ${props => props.fs_h1 || '22px'};
+    font-size: ${props => props.fs_h1 || '20px'};
     font-weight: 500;
     margin: 8px 0;
   }
@@ -138,7 +138,7 @@ function ContentCard({
 }: CardView) {
   const [isLike, setIsLike] = useState(false);
   return (
-    <Link to="#" style={{ width: '100%' }}>
+    <Link to="/content" style={{ width: '100%' }}>
       <Container
         flex_dir={flex_dir}
         bottom_justify={bottom_justify}

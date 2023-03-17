@@ -9,8 +9,8 @@ const Container = styled.div`
   padding: 20px;
   position: fixed;
   bottom: 0;
-  background-color: white;
-  z-index: 999;
+  background-color: var(--searchbar__color);
+  z-index: 800;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 
   @media (max-width: 768px) {

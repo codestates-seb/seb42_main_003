@@ -5,34 +5,40 @@ import { MouseEvent } from 'react';
 import { getArea, getTheme } from '../api/api';
 
 const Container = styled.div`
-  padding: 10px;
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 const Main = styled.div`
+  @media (min-width: 768px) {
+    padding: 100px 10px;
+    width: 390px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 900;
+    opacity: 90%;
+    animation: fadeInLeft 1s;
+    @keyframes fadeInLeft {
+      0% {
+        opacity: 0;
+        transform: translate3d(-100%, 0, 0);
+      }
+      to {
+        opacity: 0.9;
+        transform: translateZ(0);
+      }
+    }
+  }
+  background-color: white;
   display: flex;
   flex-direction: column;
+  height: 100vh;
   .back {
     font-size: 35px;
     margin-top: 12px;
     color: var(--fontBlack__600);
-  }
-  .input_field {
-    display: flex;
-    border: 1px solid var(--searchbar__color);
-    background-color: var(--searchbar__color);
-    border-radius: 20px;
-    height: 50px;
-    margin: 5px;
-    width: 100%;
-    position: relative;
-    /* max-width: 300px; */
-  }
-  input {
-    padding-left: 10px;
-    height: 50px;
-    ::placeholder {
-      font-size: 15px;
-    }
   }
   .keywords {
     display: flex;
@@ -77,9 +83,11 @@ const Section = styled.div`
     margin-bottom: 30px;
   }
 `;
+
 interface SearchState {
   isKeyword: { id: string; title: string | null }[];
   setIsKeyword: (foo: any) => void;
+  // onClick: (foo: any) => void;
 }
 
 function SearchModal({ isKeyword, setIsKeyword }: SearchState) {
@@ -111,7 +119,7 @@ function SearchModal({ isKeyword, setIsKeyword }: SearchState) {
   };
 
   return (
-    <Container>
+    <Container onClick={e => e.stopPropagation()}>
       <Main>
         <Section>
           <div className="title_field">

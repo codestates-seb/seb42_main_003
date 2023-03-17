@@ -18,15 +18,21 @@ function Main() {
   const [isKeyword, setIsKeyword] = useState<Info[]>([]);
 
   return (
-    <Container>
-      <Header></Header>
+    <Container onClick={() => setIsClicked(false)}>
+      <Header
+        isKeyword={isKeyword}
+        setIsKeyword={setIsKeyword}
+        isClicked={isClicked}
+        setIsClicked={setIsClicked}
+      ></Header>
       <HeaderSearch
         isKeyword={isKeyword}
         setIsKeyword={setIsKeyword}
         isClicked={isClicked}
         setIsClicked={setIsClicked}
+        view={'none'}
       />
-      {isClicked ? (
+      {/* {isClicked ? (
         <SearchModal isKeyword={isKeyword} setIsKeyword={setIsKeyword} />
       ) : (
         <>
@@ -35,7 +41,22 @@ function Main() {
           <CommunityBestM></CommunityBestM>
           <ContentList></ContentList>
         </>
-      )}
+      )} */}
+      {isClicked ? (
+        <SearchModal
+          isKeyword={isKeyword}
+          setIsKeyword={setIsKeyword}
+          // onClick={(e: any) => {
+          //   e.stopPropagation();
+          // }}
+        />
+      ) : null}
+
+      <Banner></Banner>
+      <Category></Category>
+      <CommunityBestM></CommunityBestM>
+      <ContentList></ContentList>
+
       <Nav></Nav>
       <Footer></Footer>
     </Container>
