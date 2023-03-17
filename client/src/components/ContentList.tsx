@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import useIntersectionObserver from '../hooks/useIO';
 import { getContent } from '../api/api';
 import axios from 'axios';
+import CommunityBestD from './destop/CommunityBestD';
 
 interface CardList {
   flex_dir?: string;
@@ -19,11 +20,22 @@ interface CardList {
 }
 
 const Container = styled('div')<CardList>`
-  display: grid !important;
-  margin: 10px;
-  gap: 12px 12px;
-  @media (max-width: 980px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  .main {
+    display: grid !important;
+    margin: 10px;
+    gap: 12px 12px;
+    max-width: 814px;
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 30px 30px;
+    }
   }
 `;
 
@@ -81,14 +93,17 @@ function ContentList({}: CardList) {
 
   return (
     <Container>
-      {data &&
-        data.map((e: any, idx: number) => {
-          return <ContentCard key={idx} data={e} />;
-        })}
-      {/* <ContentCard data={data} /> */}
-      <div ref={setTarget}>
-        {isLoaded && <div style={{ height: '100px' }}>Loading..</div>}
+      <div className="main">
+        {data &&
+          data.map((e: any, idx: number) => {
+            return <ContentCard key={idx} data={e} />;
+          })}
+        {/* <ContentCard data={data} /> */}
+        <div ref={setTarget}>
+          {isLoaded && <div style={{ height: '100px' }}>Loading..</div>}
+        </div>
       </div>
+      <CommunityBestD></CommunityBestD>
     </Container>
   );
 }

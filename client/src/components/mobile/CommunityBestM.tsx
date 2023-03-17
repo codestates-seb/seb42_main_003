@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import { useState } from 'react';
-import { BsDot } from 'react-icons/bs';
 
 interface CardList {
   data?: string[];
@@ -15,6 +13,9 @@ const Container = styled('div')<CardList>`
   border-top: 0.5px solid var(--chamong__color);
   border-bottom: 0.5px solid var(--chamong__color);
   margin-bottom: 15px;
+  @media (min-width: 768px) {
+    display: none;
+  }
   h1 {
     font-weight: 600;
     font-size: var(--fs__small);

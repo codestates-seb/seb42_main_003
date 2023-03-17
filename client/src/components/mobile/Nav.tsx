@@ -92,9 +92,8 @@ function Nav() {
     <Container>
       {title.map(ele => {
         return (
-          <Link to={ele.link}>
+          <Link key={ele.id} to={ele.link}>
             <div
-              key={ele.id}
               id={String(ele.id)}
               className={isNav !== ele.id ? 'nav_box' : 'nav_box active'}
               onClick={clickHandler}

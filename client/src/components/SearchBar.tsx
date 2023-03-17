@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { HiOutlineSearch } from 'react-icons/hi';
-import { Button } from '../styles/Button';
 
 interface ExampleProps {
   height?: string;
