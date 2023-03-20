@@ -16,15 +16,16 @@ display: flex;
   font-weight: 700;
   color:${props=>props.color==='green'?`var(--darkGreen__color)`:'var(--chamong__color)'};
   background-color:white;
-  border:1px solid ${props=>props.color==='green'?`var(--darkGreen__color)`:'var(--chamong__color)'};;
+  border:1px solid ${props=>props.color==='green'?`var(--darkGreen__color)`:'var(--chamong__color)'};
   border-left:none;
   padding:0px 10px;
   cursor: pointer;
   &:hover {
     color:white;
-    background-color: ${props=>props.color==='green'?`var(--green__color)`:'var(--chamong__color)'};;
+    background-color: ${props=>props.color==='green'?`var(--green__color)`:'var(--chamong__color)'};
   }
   &:first-child {
+    border-left:1px solid ${props=>props.color==='green'?`var(--darkGreen__color)`:'var(--chamong__color)'};
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
   }
@@ -34,7 +35,7 @@ display: flex;
   }
   &:nth-child(${props=>props.state||0}){
     color:white;
-    background-color: ${props=>props.color==='green'?`var(--green__color)`:'var(--chamong__color)'};;
+    background-color: ${props=>props.color==='green'?`var(--green__color)`:'var(--chamong__color)'};
   }
  } 
 `
