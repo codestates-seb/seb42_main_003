@@ -5,34 +5,53 @@ import { MouseEvent } from 'react';
 import { getArea, getTheme } from '../api/api';
 
 const Container = styled.div`
-  padding: 10px;
+  @media (max-width: 768px) {
+    padding: 10px;
+    margin-top: -15px;
+  }
+  /* animation: fadeInRight 1s;
+  @keyframes fadeInRight {
+    0% {
+      opacity: 0.9;
+      transform: translateZ(0);
+    }
+    to {
+      opacity: 0;
+      transform: translate3d(-100%, 0, 0);
+    }
+  } */
 `;
 
 const Main = styled.div`
+  @media (min-width: 768px) {
+    padding: 100px 10px;
+    width: 390px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 900;
+    opacity: 90%;
+  }
+  &.active {
+    transition: all 700ms linear;
+  }
+  &.hidden {
+    position: absolute;
+    left: -100%;
+    top: 0;
+    bottom: 0;
+    right: 100%;
+    transition: all 1000ms linear;
+    opacity: 0;
+  }
+  background-color: white;
   display: flex;
   flex-direction: column;
+  height: 100vh;
   .back {
     font-size: 35px;
     margin-top: 12px;
     color: var(--fontBlack__600);
-  }
-  .input_field {
-    display: flex;
-    border: 1px solid var(--searchbar__color);
-    background-color: var(--searchbar__color);
-    border-radius: 20px;
-    height: 50px;
-    margin: 5px;
-    width: 100%;
-    position: relative;
-    /* max-width: 300px; */
-  }
-  input {
-    padding-left: 10px;
-    height: 50px;
-    ::placeholder {
-      font-size: 15px;
-    }
   }
   .keywords {
     display: flex;
@@ -77,12 +96,15 @@ const Section = styled.div`
     margin-bottom: 30px;
   }
 `;
+
 interface SearchState {
   isKeyword: { id: string; title: string | null }[];
+  isClicked: boolean;
   setIsKeyword: (foo: any) => void;
+  // onClick: (foo: any) => void;
 }
 
-function SearchModal({ isKeyword, setIsKeyword }: SearchState) {
+function SearchModal({ isKeyword, setIsKeyword, isClicked }: SearchState) {
   useEffect(() => {
     getArea().then(res => setArea(res));
     getTheme().then(res => setTheme(res));
@@ -111,8 +133,8 @@ function SearchModal({ isKeyword, setIsKeyword }: SearchState) {
   };
 
   return (
-    <Container>
-      <Main>
+    <Container onClick={e => e.stopPropagation()}>
+      <Main className={isClicked ? 'active' : 'hidden'}>
         <Section>
           <div className="title_field">
             <h1 className="title">지역</h1>

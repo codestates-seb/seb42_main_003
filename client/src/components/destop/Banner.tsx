@@ -1,66 +1,82 @@
 import styled from 'styled-components';
 import { useRef, useState } from 'react';
-// import Banner1 from '../../assets/banner/banner1.png';
-// import Banner2 from '../../assets/banner/banner2.png';
-// import Banner3 from '../../assets/banner/banner3.png';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { AiOutlineRight } from 'react-icons/ai';
+import { BsDot } from 'react-icons/bs';
 import { images } from '../../assets/banner/banner';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  /* overflow-x: scroll;
-  -webkit-overflow-scrolling: touch;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  white-space: nowrap; */
   overflow: hidden;
+  height: auto;
   @media (max-width: 768px) {
     display: none;
   }
   .carousel {
     display: flex;
-    /* flex-direction: row; */
     overflow: hidden;
-    /* white-space: nowrap; */
   }
   img {
     width: 100vw;
-    height: 350px;
-    /* max-width: 1268px; */
-    object-fit: cover;
+    height: 100%;
+    object-fit: none;
     box-sizing: border-box;
   }
   .pointer_L {
     font-size: 45px;
-    top: -220px;
+    top: -190px;
     left: 50px;
     color: white;
     position: absolute;
+    opacity: 0.5;
     cursor: pointer;
   }
   .pointer_R {
     cursor: pointer;
     font-size: 45px;
     right: 50px;
-    top: -220px;
+    top: -190px;
     color: white;
+    opacity: 0.5;
     position: absolute;
   }
-
-  /* .image {
-    width: 500px;
-    height: 300px;
-    box-sizing: border-box;
-  } */
-
   .controller {
     position: relative;
-    margin-top: 20px;
     display: flex;
     justify-content: center;
     gap: 30px;
+  }
+  .ba_img {
+    height: 330px;
+    position: relative;
+    background-color: black;
+  }
+  .img_text {
+    position: absolute;
+    color: white;
+    top: 50%;
+    right: 10%;
+    font-size: 25px;
+    font-weight: 600;
+  }
+  .controller_dot {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px 20px 10px;
+  }
+  .dot {
+    color: var(--fontBlack__100);
+    font-size: 45px;
+    margin-right: -10px;
+    path {
+      cursor: pointer;
+    }
+    &.active {
+      color: var(--fontBlack__500);
+    }
   }
 `;
 
@@ -72,7 +88,6 @@ type OnSelectImageType = {
 function Banner() {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const imageRef = useRef<HTMLDivElement[] | null[]>([]);
-
   function onSelectImage({
     currentIndex,
     behavior = 'smooth',
@@ -103,7 +118,11 @@ function Banner() {
     <Container>
       <section className="carousel">
         {images.map((image, index) => (
-          <div key={image.id} ref={el => (imageRef.current[index] = el)}>
+          <div
+            className="ba_img"
+            key={image.id}
+            ref={el => (imageRef.current[index] = el)}
+          >
             <img
               className={`image ${
                 currentImageIndex === index ? 'selected' : ''
@@ -123,6 +142,21 @@ function Banner() {
         <AiOutlineRight
           className="pointer_R"
           onClick={() => handleImageMove(currentImageIndex + 1)}
+        />
+      </section>
+
+      <section className="controller_dot">
+        <BsDot
+          className={currentImageIndex === 0 ? 'dot active' : 'dot'}
+          onClick={() => handleImageMove(0)}
+        />
+        <BsDot
+          className={currentImageIndex === 1 ? 'dot active' : 'dot'}
+          onClick={() => handleImageMove(1)}
+        />
+        <BsDot
+          className={currentImageIndex === 2 ? 'dot active' : 'dot'}
+          onClick={() => handleImageMove(2)}
         />
       </section>
     </Container>
