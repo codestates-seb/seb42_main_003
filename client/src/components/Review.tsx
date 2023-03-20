@@ -3,11 +3,17 @@ import styled from 'styled-components';
 import { getReview } from '../api/api';
 import { AiFillStar } from 'react-icons/ai';
 const Container = styled.div`
+  @media (min-width: 768px) {
+    display: grid;
+    gap: 17px 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 90px;
+  }
   .top {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 7px;
+    margin-bottom: 13px;
   }
   .top_mid {
     display: flex;
@@ -34,6 +40,7 @@ const Container = styled.div`
     }
   }
   .bottom {
+    max-width: 400px;
     line-height: 1.2;
     margin-bottom: 20px;
   }
@@ -48,7 +55,7 @@ function Review() {
     <Container>
       {isReview.map((ele: any) => {
         return (
-          <>
+          <div key={ele.id}>
             <div className="top">
               <img src={ele.image} alt="img"></img>
               <div className="top_mid">
@@ -61,7 +68,7 @@ function Review() {
               </div>
             </div>
             <p className="bottom">{ele.body}</p>
-          </>
+          </div>
         );
       })}
     </Container>
