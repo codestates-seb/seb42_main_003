@@ -6,6 +6,7 @@ import useIntersectionObserver from '../hooks/useIO';
 import { getContent } from '../api/api';
 import axios from 'axios';
 import CommunityBestD from './destop/CommunityBestD';
+import MyPick from './destop/MyPick';
 
 interface CardList {
   flex_dir?: string;
@@ -21,14 +22,22 @@ interface CardList {
 
 const Container = styled('div')<CardList>`
   display: flex;
-  flex-direction: row;
   justify-content: center;
+  width: 100%;
+  .wrapper {
+    width: 1200px;
+    overflow: visible;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+  }
 
   .main {
     display: grid !important;
     margin: 10px;
     gap: 12px 12px;
-    max-width: 814px;
+    /* width: 830px; */
+    width: 100%;
     @media (max-width: 768px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -36,6 +45,18 @@ const Container = styled('div')<CardList>`
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 30px 30px;
     }
+  }
+  .item {
+    margin-left: 10px;
+    width: 420px;
+    position: relative;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  .item_wrapper {
+    position: sticky;
+    top: 10px;
   }
 `;
 
@@ -93,17 +114,42 @@ function ContentList({}: CardList) {
 
   return (
     <Container>
-      <div className="main">
-        {data &&
-          data.map((e: any, idx: number) => {
-            return <ContentCard key={idx} data={e} />;
-          })}
-        {/* <ContentCard data={data} /> */}
-        <div ref={setTarget}>
-          {isLoaded && <div style={{ height: '100px' }}>Loading..</div>}
+      <div className="wrapper">
+        <div className="main">
+          {data &&
+            data.map((e: any, idx: number) => {
+              return (
+                <ContentCard
+                  key={idx}
+                  data={e}
+                  // flex_dir="row"
+                  // content_align="start"
+                  // bottom_justify="start"
+                  // img_width="auto"
+                  // radius="25px 0px 0px 25px"
+                  // content_rd="0px 25px 25px 0px"
+                  // line="1.2"
+                  // content_pd="15px"
+                  // wrap="wrap"
+                  // img_height="auto"
+                  // ratio="0.5"
+                  // content_width="50%"
+                  // webkit="-webkit-box"
+                />
+              );
+            })}
+          {/* <ContentCard data={data} /> */}
+          <div ref={setTarget}>
+            {isLoaded && <div style={{ height: '100px' }}>Loading..</div>}
+          </div>
+        </div>
+        <div className="item">
+          <div className="item_wrapper">
+            <CommunityBestD></CommunityBestD>
+            <MyPick></MyPick>
+          </div>
         </div>
       </div>
-      <CommunityBestD></CommunityBestD>
     </Container>
   );
 }

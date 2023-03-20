@@ -19,6 +19,7 @@ export const Container = styled.div`
   border-radius: 25px 25px 0 0;
   padding: 0 15px;
   z-index: 999;
+  //TODO모바일 반응형
   @media (min-width: 768px) {
     display: none;
   }
