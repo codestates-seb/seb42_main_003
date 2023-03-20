@@ -6,20 +6,29 @@ import { useState } from 'react';
 
 interface CardView {
   flex_dir?: string;
+  content_align?: string;
   bottom_justify?: string;
+  img_width?: string;
+  radius?: string;
+  content_rd?: string;
+  line?: string;
+  content_pd?: string;
+  wrap?: string;
+  img_height?: string;
+  ratio?: string;
+  content_width?: string;
+  webkit?: string;
+  //
   fs_h1?: string;
   body?: string;
   heart?: string;
-  radius?: string;
-  img_width?: string;
-  content_align?: string;
-  line?: string;
   data?: any;
   key?: any;
   bg?: URL;
 }
 
 const Container = styled('div')<CardView>`
+  display: flex;
   flex-direction: ${props => props.flex_dir || 'column'};
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   height: auto;
@@ -28,12 +37,45 @@ const Container = styled('div')<CardView>`
   background-size: cover;
 
   .content {
-    border-radius: 0px 0px 25px 25px;
+    width: ${props => props.content_width || 'auto'};
+    flex: 0.5;
+    border-radius: ${props => props.content_rd || '0px 0px 25px 25px;'};
     background-color: white;
     display: flex;
     flex-direction: column;
     align-items: ${props => props.content_align || 'center'};
-    padding: 0 15px 15px 15px;
+    padding: ${props => props.content_pd || '0 15px 15px 15px'};
+  }
+  .img_box {
+    flex: ${props => props.ratio || ''};
+    position: relative;
+    height: ${props => props.img_height || '120px'};
+    width: ${props => props.img_width || ''};
+    background-image: ${props => `url(${props.bg})`};
+    background-size: cover;
+    border-radius: ${props => props.radius || '25px 25px 0px 0px'};
+    .heart {
+      position: absolute;
+      right: 8%;
+      top: 8%;
+      width: 30px;
+      stroke: white;
+      stroke-width: 2px;
+      z-index: 1;
+      fill: white;
+      fill-opacity: 0;
+    }
+    .active {
+      position: absolute;
+      right: 8%;
+      top: 8%;
+      width: 30px;
+      stroke: white;
+      stroke-width: 2px;
+      z-index: 1;
+      fill: var(--chamong__color);
+      fill-opacity: 1;
+    }
   }
   .card_bottom {
     display: flex;
@@ -66,7 +108,10 @@ const Container = styled('div')<CardView>`
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    display: ${props => props.webkit || 'block'};
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    white-space: ${props => props.wrap || 'nowrap'};
     word-break: break-all;
     font-size: ${props => props.body || 'var(--fs__small)'};
     color: var(--fontBlack__700);
@@ -89,42 +134,6 @@ const Container = styled('div')<CardView>`
       margin-right: 15px;
     }
   }
-  .img_box {
-    position: relative;
-    height: auto;
-    width: ${props => props.img_width || ''};
-    background-image: ${props => `url(${props.bg})`};
-    background-size: cover;
-    height: 150px;
-    border-radius: ${props => props.radius || '25px 25px 0px 0px'};
-    img {
-      width: 100%;
-      height: stretch;
-      object-fit: cover;
-    }
-    .heart {
-      position: absolute;
-      right: 8%;
-      top: 8%;
-      width: 30px;
-      stroke: white;
-      stroke-width: 2px;
-      z-index: 1;
-      fill: white;
-      fill-opacity: 0;
-    }
-    .active {
-      position: absolute;
-      right: 8%;
-      top: 8%;
-      width: 30px;
-      stroke: white;
-      stroke-width: 2px;
-      z-index: 1;
-      fill: var(--chamong__color);
-      fill-opacity: 1;
-    }
-  }
 `;
 
 function ContentCard({
@@ -132,9 +141,16 @@ function ContentCard({
   bottom_justify,
   img_width,
   radius,
+  content_rd,
   content_align,
   line,
   data,
+  content_pd,
+  wrap,
+  img_height,
+  ratio,
+  content_width,
+  webkit,
 }: CardView) {
   const [isLike, setIsLike] = useState(false);
   return (
@@ -144,17 +160,26 @@ function ContentCard({
         bottom_justify={bottom_justify}
         img_width={img_width}
         radius={radius}
+        content_rd={content_rd}
         content_align={content_align}
         line={line}
         bg={data.firstImageUrl}
+        content_pd={content_pd}
+        wrap={wrap}
+        img_height={img_height}
+        ratio={ratio}
+        content_width={content_width}
+        webkit={webkit}
       >
         <div key={data.contentId} className="img_box">
-          {/* <img src={data.firstImageUrl} alt="img" sizes="160" /> */}
           <svg
             viewBox="0 0 24 24"
             className={!isLike ? 'heart' : 'active'}
             fill="none"
-            onClick={() => setIsLike(!isLike)}
+            onClick={e => {
+              e.preventDefault();
+              setIsLike(!isLike);
+            }}
           >
             <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z" />
           </svg>

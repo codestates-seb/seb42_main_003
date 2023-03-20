@@ -7,7 +7,19 @@ import { getArea, getTheme } from '../api/api';
 const Container = styled.div`
   @media (max-width: 768px) {
     padding: 10px;
+    margin-top: -15px;
   }
+  /* animation: fadeInRight 1s;
+  @keyframes fadeInRight {
+    0% {
+      opacity: 0.9;
+      transform: translateZ(0);
+    }
+    to {
+      opacity: 0;
+      transform: translate3d(-100%, 0, 0);
+    }
+  } */
 `;
 
 const Main = styled.div`
@@ -19,17 +31,18 @@ const Main = styled.div`
     left: 0;
     z-index: 900;
     opacity: 90%;
-    animation: fadeInLeft 1s;
-    @keyframes fadeInLeft {
-      0% {
-        opacity: 0;
-        transform: translate3d(-100%, 0, 0);
-      }
-      to {
-        opacity: 0.9;
-        transform: translateZ(0);
-      }
-    }
+  }
+  &.active {
+    transition: all 700ms linear;
+  }
+  &.hidden {
+    position: absolute;
+    left: -100%;
+    top: 0;
+    bottom: 0;
+    right: 100%;
+    transition: all 1000ms linear;
+    opacity: 0;
   }
   background-color: white;
   display: flex;
@@ -86,11 +99,12 @@ const Section = styled.div`
 
 interface SearchState {
   isKeyword: { id: string; title: string | null }[];
+  isClicked: boolean;
   setIsKeyword: (foo: any) => void;
   // onClick: (foo: any) => void;
 }
 
-function SearchModal({ isKeyword, setIsKeyword }: SearchState) {
+function SearchModal({ isKeyword, setIsKeyword, isClicked }: SearchState) {
   useEffect(() => {
     getArea().then(res => setArea(res));
     getTheme().then(res => setTheme(res));
@@ -120,7 +134,7 @@ function SearchModal({ isKeyword, setIsKeyword }: SearchState) {
 
   return (
     <Container onClick={e => e.stopPropagation()}>
-      <Main>
+      <Main className={isClicked ? 'active' : 'hidden'}>
         <Section>
           <div className="title_field">
             <h1 className="title">지역</h1>

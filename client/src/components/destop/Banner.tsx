@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useRef, useState } from 'react';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { AiOutlineRight } from 'react-icons/ai';
+import { BsDot } from 'react-icons/bs';
 import { images } from '../../assets/banner/banner';
 
 const Container = styled.div`
@@ -24,23 +25,24 @@ const Container = styled.div`
   }
   .pointer_L {
     font-size: 45px;
-    top: -220px;
+    top: -190px;
     left: 50px;
     color: white;
     position: absolute;
+    opacity: 0.5;
     cursor: pointer;
   }
   .pointer_R {
     cursor: pointer;
     font-size: 45px;
     right: 50px;
-    top: -220px;
+    top: -190px;
     color: white;
+    opacity: 0.5;
     position: absolute;
   }
   .controller {
     position: relative;
-    margin-top: 20px;
     display: flex;
     justify-content: center;
     gap: 30px;
@@ -58,6 +60,24 @@ const Container = styled.div`
     font-size: 25px;
     font-weight: 600;
   }
+  .controller_dot {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px 20px 10px;
+  }
+  .dot {
+    color: var(--fontBlack__100);
+    font-size: 45px;
+    margin-right: -10px;
+    path {
+      cursor: pointer;
+    }
+    &.active {
+      color: var(--fontBlack__500);
+    }
+  }
 `;
 
 type OnSelectImageType = {
@@ -68,7 +88,6 @@ type OnSelectImageType = {
 function Banner() {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const imageRef = useRef<HTMLDivElement[] | null[]>([]);
-
   function onSelectImage({
     currentIndex,
     behavior = 'smooth',
@@ -111,11 +130,6 @@ function Banner() {
               alt={`carousel-img-${index}`}
               src={image.location}
             />
-            {/* {currentImageIndex === 0 ? (
-              <div className="img_text">
-                차와 함께 떠나는 가볍고 자유로운 여행
-              </div>
-            ) : null} */}
           </div>
         ))}
       </section>
@@ -128,6 +142,21 @@ function Banner() {
         <AiOutlineRight
           className="pointer_R"
           onClick={() => handleImageMove(currentImageIndex + 1)}
+        />
+      </section>
+
+      <section className="controller_dot">
+        <BsDot
+          className={currentImageIndex === 0 ? 'dot active' : 'dot'}
+          onClick={() => handleImageMove(0)}
+        />
+        <BsDot
+          className={currentImageIndex === 1 ? 'dot active' : 'dot'}
+          onClick={() => handleImageMove(1)}
+        />
+        <BsDot
+          className={currentImageIndex === 2 ? 'dot active' : 'dot'}
+          onClick={() => handleImageMove(2)}
         />
       </section>
     </Container>

@@ -5,6 +5,7 @@ import { FaUserCircle } from 'react-icons/fa';
 interface SearchState {
   isKeyword: { id: string; title: string | null }[];
   isClicked: boolean;
+  setIsLogin: (foo: any) => void;
   setIsClicked: (foo: any) => void;
   setIsKeyword: (foo: any) => void;
 }
@@ -24,6 +25,7 @@ export const Container = styled.div`
     /* border: 1px solid teal; */
     width: 100%;
     max-width: 1268px;
+    border-bottom: 1px solid #e0e0e0;
   }
   @media (max-width: 768px) {
     display: none;
@@ -31,7 +33,7 @@ export const Container = styled.div`
   svg {
     /* flex-grow: 0.2; */
     /* margin-right: 5px; */
-    z-index: 999;
+    z-index: 997;
   }
   .left_side {
     display: flex;
@@ -68,11 +70,11 @@ function Header({
   setIsKeyword,
   isClicked,
   setIsClicked,
+  setIsLogin,
 }: SearchState) {
   return (
     <Container>
       <div className="header">
-        {/* <div className="left_side"> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="10%"
@@ -87,8 +89,9 @@ function Header({
         <div className="right_side">
           <h1>위시리스트</h1>
           <h1>커뮤니티</h1>
-          <FaUserCircle className="user" />{' '}
+          <FaUserCircle className="user" onClick={() => setIsLogin(true)} />
           <div className="search">
+            {/* <HeaderSearchStyle> */}
             <HeaderSearch
               isKeyword={isKeyword}
               setIsKeyword={setIsKeyword}
@@ -99,6 +102,7 @@ function Header({
               input={'45px'}
               size={'22px'}
             />
+            {/* </HeaderSearchStyle>  */}
           </div>
         </div>
       </div>
@@ -108,4 +112,5 @@ function Header({
   );
 }
 
+// const HeaderSearchStyle = styled.div``;
 export default Header;

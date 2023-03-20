@@ -86,6 +86,7 @@ interface SearchState {
   size?: string;
 }
 type Info = { view?: string; input?: string; place?: string; size?: string };
+
 function HeaderSearch({
   isKeyword,
   setIsKeyword,

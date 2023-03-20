@@ -9,21 +9,27 @@ import Category from '../components/Category';
 import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
 import Banner from '../components/destop/Banner';
-const Container = styled.div``;
+import Login from '../components/Login';
+const Container = styled.div`
+  /* background-color: rgba(0, 0, 0, 0.2); */
+`;
 
 function Main() {
   type Info = { id: string; title: string | null };
 
-  const [isClicked, setIsClicked] = useState(false);
+  const [isClicked, setIsClicked] = useState<boolean>(false);
   const [isKeyword, setIsKeyword] = useState<Info[]>([]);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
 
   return (
     <Container onClick={() => setIsClicked(false)}>
+      {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}
       <Header
         isKeyword={isKeyword}
         setIsKeyword={setIsKeyword}
         isClicked={isClicked}
         setIsClicked={setIsClicked}
+        setIsLogin={setIsLogin}
       ></Header>
       <HeaderSearch
         isKeyword={isKeyword}
@@ -42,15 +48,16 @@ function Main() {
           <ContentList></ContentList>
         </>
       )} */}
-      {isClicked ? (
-        <SearchModal
-          isKeyword={isKeyword}
-          setIsKeyword={setIsKeyword}
-          // onClick={(e: any) => {
-          //   e.stopPropagation();
-          // }}
-        />
-      ) : null}
+      {/* {isClicked ? ( */}
+      <SearchModal
+        isKeyword={isKeyword}
+        isClicked={isClicked}
+        setIsKeyword={setIsKeyword}
+        // onClick={(e: any) => {
+        //   e.stopPropagation();
+        // }}
+      />
+      {/* ) : null} */}
 
       <Banner></Banner>
       <Category></Category>

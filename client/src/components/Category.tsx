@@ -5,17 +5,18 @@ import { Button } from '../styles/Button';
 
 export const Container = styled.div`
   width: 100%;
-  overflow-x: scroll; // PC
-  -webkit-overflow-scrolling: touch; // mobile
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   white-space: nowrap;
   margin-bottom: 5px;
   display: flex;
   align-items: center;
+  margin-top: -15px;
 
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera*/
+    display: none;
   }
   @media (min-width: 768px) {
     justify-content: center;
@@ -24,10 +25,6 @@ export const Container = styled.div`
     }
   }
 `;
-// interface CategoryType {
-//   isCategory: { id: string; keyword: string | null }[];
-//   setIsCategory: (foo: any) => void;
-// }
 function Category() {
   type CategoryType = { id: string; keyword: string | null };
   const [isCategory, setIsCategory] = useState<CategoryType[]>([]);

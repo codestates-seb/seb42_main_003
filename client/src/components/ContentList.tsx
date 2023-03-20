@@ -118,7 +118,25 @@ function ContentList({}: CardList) {
         <div className="main">
           {data &&
             data.map((e: any, idx: number) => {
-              return <ContentCard key={idx} data={e} />;
+              return (
+                <ContentCard
+                  key={idx}
+                  data={e}
+                  // flex_dir="row"
+                  // content_align="start"
+                  // bottom_justify="start"
+                  // img_width="auto"
+                  // radius="25px 0px 0px 25px"
+                  // content_rd="0px 25px 25px 0px"
+                  // line="1.2"
+                  // content_pd="15px"
+                  // wrap="wrap"
+                  // img_height="auto"
+                  // ratio="0.5"
+                  // content_width="50%"
+                  // webkit="-webkit-box"
+                />
+              );
             })}
           {/* <ContentCard data={data} /> */}
           <div ref={setTarget}>
