@@ -13,22 +13,21 @@ declare global {
 }
 
 interface MapProps {
-  campList: any;
+  campList: any[];
+  isMyPage?:boolean;
 }
-export function MapContainer({ campList }: MapProps) {
+export function MapContainer({ campList,isMyPage }: MapProps) {
   let lastestMarker: any = null;
-  let firstCamp: any;
   const container = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<any>(null);
   const [currentCamp, setCurrentCamp] = useState<any>(null);
   const [markerList, setMarkerList] = useState<any>([]);
 
   useEffect(() => {
-    if (campList) firstCamp = campList[0];
-    lastestMarker = null;
     // container.current=null;
     // console.log(container)
     if (container && campList) {
+      let firstCamp = campList[0];
       // const container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
       let options = {
         //지도를 생성할 때 필요한 기본 옵션
@@ -37,15 +36,11 @@ export function MapContainer({ campList }: MapProps) {
           firstCamp.mapX
         ), //지도의 중심좌표.
         level: 13, //지도의 레벨(확대, 축소 정도)
-      };
+      }
       setMap(new window.kakao.maps.Map(container.current, options)); //지도 생성 및 객체 리턴
-    } else if (container) {
-      let options = {
-        //지도를 생성할 때 필요한 기본 옵션
-        center: new window.kakao.maps.LatLng(37.541, 126, 986), //지도의 중심좌표.
-        level: 13, //지도의 레벨(확대, 축소 정도)
-      };
-      setMap(new window.kakao.maps.Map(container.current, options)); //지도 생성 및 객체 리턴
+
+     
+      
     }
   }, []);
 
@@ -64,8 +59,20 @@ export function MapContainer({ campList }: MapProps) {
   useEffect(() => {
     //마커 클래스 배열 생성
     if (map && campList) {
+      if(Object.keys(campList).length>=1) map.panTo(new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX));
+      setCurrentCamp(null);
       mapReload();
       map.relayout();
+      //마커가 아닌 지도 클릭시 currentCamp=null, 마커사이즈 초기화
+      kakao.maps.event.addListener(
+        map,
+        'click',
+        function (mouseEvent: any) {
+          setCurrentCamp(null);
+          if(lastestMarker) lastestMarker.setImage(markerImageNormal);
+        }
+      );
+
       for (let camp of campList) {
         const markerPosition = new kakao.maps.LatLng(camp.mapY, camp.mapX);
         //마커 클래스 생성
@@ -95,13 +102,9 @@ export function MapContainer({ campList }: MapProps) {
         //클릭 이벤트리스너 추가
         kakao.maps.event.addListener(marker, 'click', () => {
           console.log('clicked');
-          // map.setLevel(8, {anchor: marker.getPosition(),animate: {
-          //   duration:500, //확대 애니메이션 시간
-          //   }});
           map.panTo(new kakao.maps.LatLng(camp.mapY, camp.mapX));
           markerSizeHandler(marker);
           setCurrentCamp(camp);
-          // marker.setImage(markerImageBig)
         });
         marker.setMap(map);
       }
@@ -155,11 +158,8 @@ function MapInfoContainer({ camp }: any) {
     <MapInfoWrapper>
       <div style={{ zIndex: '999', padding: '16px' }}>
         <ContentCard
-          // data={camp}
+          data={camp}
           flex_dir='row'
-          content_align='start'
-          bottom_justify='start'
-          img_width='50%'
           radius='25px 0px 0px 25px'
           line='1.2'
         />

@@ -118,7 +118,7 @@ export function ContentDetail({}: ContentInfo) {
   const [isContent, setIsContent] = useState<any>({});
   const [isLike, setIsLike] = useState(false);
   useEffect(() => {
-    getContent().then(res => setIsContent(res[10]));
+    getContent().then(res => setIsContent(res[9]));
   }, []);
   console.log(isContinue);
   return (
@@ -201,7 +201,9 @@ export function ContentDetail({}: ContentInfo) {
       </div>
       <div className="info">
         <h1>지도</h1>
-        {/* <MapContainer campList={[isContent]}></MapContainer> */}
+        <div style={{width:'100%',height:'300px'}}>
+        {isContent&&<MapContainer campList={[isContent]}></MapContainer>}
+        </div>
       </div>
       <div className="info">
         <div className="review_box">
