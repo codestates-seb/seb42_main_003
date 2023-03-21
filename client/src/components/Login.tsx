@@ -9,6 +9,12 @@ export const Background = styled.div`
   z-index: 998;
 `;
 export const Container = styled.div`
+  @media (max-width: 768px) {
+    height: 100vh;
+    width: 100%;
+    max-width: 768px;
+    border-radius: 0px;
+  }
   background-color: white;
   position: fixed;
   width: 100%;
