@@ -11,9 +11,11 @@ import { BiStore } from 'react-icons/bi';
 import { TbDog } from 'react-icons/tb';
 import { FaFish } from 'react-icons/fa';
 import { GiIsland } from 'react-icons/gi';
+import { AiFillStar } from 'react-icons/ai';
 import MapContainer from '../map/MapContainer';
 import { Button } from '../../styles/Button';
 import Review from '../Review';
+import { ReviewSubmit } from '../ReviewSubmit';
 import { Link } from 'react-router-dom';
 
 interface ContentInfo {
@@ -36,6 +38,7 @@ const Container = styled('div')<ContentInfo>`
   }
   .body {
     flex: 0.5;
+    padding: 0px 0px 0 30px;
   }
   .background {
     flex: 0.5;
@@ -48,6 +51,7 @@ const Container = styled('div')<ContentInfo>`
     border-radius: 16px;
     background-image: ${props => `url(${props.bg})`};
     background-repeat: no-repeat;
+    object-fit: contain;
     height: ${props => props.height || '300px'};
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
   }
@@ -55,6 +59,7 @@ const Container = styled('div')<ContentInfo>`
     display: flex;
     flex-direction: row;
     margin-bottom: 20px;
+    padding: 0px 15px;
   }
 
   .map {
@@ -65,25 +70,26 @@ const Container = styled('div')<ContentInfo>`
   .header {
     display: flex;
     flex-direction: row;
-    /* justify-content: space-between; */
-    align-items: center;
-    height: 70px;
-    padding: 10px 15px 10px 15px;
+    flex: 0.5;
+    justify-content: space-between;
+    /* align-items: center; */
+    /* height: 70px; */
+    padding: 20px 15px 10px 15px;
   }
   .title {
     font-size: 22px;
     font-weight: 500;
-    margin-right: 10px;
+    margin-bottom: 8px;
   }
   .heart {
-    width: 30px;
+    width: 15px;
     stroke-width: 2px;
     z-index: 1;
     fill: var(--fontBlack__100);
     cursor: pointer;
   }
   .active {
-    width: 30px;
+    width: 15px;
     stroke-width: 2px;
     z-index: 1;
     fill: var(--chamong__color);
@@ -94,10 +100,10 @@ const Container = styled('div')<ContentInfo>`
   .keyword_icon {
     display: grid;
     gap: 17px 12px;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
   .icon {
-    font-size: 50px;
+    font-size: 45px;
     width: 100%;
     color: var(--fontBlack__700);
     border: 1px solid white;
@@ -112,14 +118,15 @@ const Container = styled('div')<ContentInfo>`
     margin-top: 5px;
   }
   h1 {
-    font-size: var(--fs__h2);
+    font-size: var(--fs__big);
     color: var(--fontBlack__700);
     font-weight: 600;
     margin-bottom: 12px;
-    /* margin-bottom: 12px; */
+    &.mg_left {
+      margin-left: 3px;
+    }
   }
   .info {
-    padding: 20px 20px 0px 20px;
     &.intro {
       padding: 20px 15px;
     }
@@ -129,7 +136,8 @@ const Container = styled('div')<ContentInfo>`
     }
   }
   .adress {
-    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 35px;
   }
   .slice {
     line-height: 1.5;
@@ -146,46 +154,71 @@ const Container = styled('div')<ContentInfo>`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
   }
-  .review_input {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    border: 1px solid var(--fontBlack__200);
-    border-radius: 16px;
-  }
+
   .back {
     font-size: 35px;
   }
   p {
     font-size: 15px;
   }
-  .userInfo {
+  .section {
+    margin-top: 5px;
+    max-width: 730px;
+    border-top: 1px solid #eae5e2;
+  }
+
+  .line_intro {
+    font-size: var(--fs__h2);
+    font-weight: 600;
+    color: var(--chamong__color);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  .review_title {
     display: flex;
     flex-direction: row;
-    padding: 20px;
   }
-  textarea {
-    align-self: center;
-    padding-left: 10px;
-    padding-top: 10px;
-    width: 95%;
-    height: 10em;
-    border: 1px solid var(--fontBlack__200);
-    border-radius: 5px;
-    ::placeholder {
-      text-align: start;
+  .review_grade {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    &.pointer {
+      cursor: pointer;
+      :hover {
+        background-color: var(--searchbar__color);
+
+        border-radius: 16px;
+      }
     }
   }
-  .button_field {
-    align-self: flex-end;
-    margin: 15px 18px 15px 20px;
+  .review_grade_bottom {
+    display: flex;
+    flex-direction: row;
   }
-  hr {
-    margin-top: 10px;
-    border-top: 1px solid var(--fontBlack__200);
+  .average {
+    text-align: center;
+    margin-left: 3px;
+    color: var(--fontBlack__700);
+    font-size: var(--fs__small);
+    font-weight: 550;
+  }
+  .bar {
+    font-size: var(--fs__big);
+    color: var(--fontBlack__700);
+    font-weight: 600;
+    padding: 0 15px;
+  }
+  .header_review {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .rating {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 0;
   }
 `;
 
@@ -193,34 +226,66 @@ export function ContentD({}: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
   const [isContent, setIsContent] = useState<any>({});
   const [isLike, setIsLike] = useState(false);
+
   useEffect(() => {
-    getContent().then(res => setIsContent(res[10]));
+    getContent().then(res => setIsContent(res[100]));
   }, []);
 
   return (
     <Container bg={isContent.firstImageUrl}>
       <main>
+        <div className="header">
+          <div className="title">{isContent.facltNm}</div>
+          <hr className="title_line"></hr>
+          <div className="header_review">
+            <div className="review_grade">
+              <p className="average">리뷰 {isContent.contentId} </p>
+            </div>
+            <div className="review_grade">
+              <AiFillStar
+                size="15px"
+                style={{ color: 'var(--chamong__color)' }}
+              />
+              <p className="average">4.5</p>
+            </div>
+            <div>
+              <div
+                className="review_grade pointer"
+                onClick={() => setIsLike(!isLike)}
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  className={!isLike ? 'heart' : 'active'}
+                  fill="none"
+                >
+                  <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z" />
+                </svg>
+                <p className="average">저장</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="top_field">
           <div className="background">
             <div className="backimg"></div>
           </div>
-
           <div className="body">
-            <div className="header">
-              <div className="title">{isContent.facltNm}</div>
-              <svg
-                viewBox="0 0 24 24"
-                className={!isLike ? 'heart' : 'active'}
-                fill="none"
-                onClick={() => setIsLike(!isLike)}
-              >
-                <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z" />
-              </svg>
+            <div className="line_intro">
+              {isContent.lineIntro && isContent.lineIntro
+                ? isContent.lineIntro
+                : isContent.themaEnvrnCl
+                ? isContent.themaEnvrnCl
+                : isContent.featureNm
+                ? isContent.featureNm
+                : `${isContent.facltNm}입니다.`}
             </div>
+            <hr className="section"></hr>
             <div className="adress">
               <h1>주소</h1>
               <p>{isContent.addr1}</p>
             </div>
+
             <div className="info">
               <h1>키워드</h1>
               <div className="keyword_icon">
@@ -298,33 +363,25 @@ export function ContentD({}: ContentInfo) {
             </div>
           </div>
         </div>
+
         <div className="bottom_field">
           <div className="info line">
             <div className="review_box">
               <div className="review_top">
-                <h1>리뷰 {isContent.contentId}</h1>
+                <div className="review_title">
+                  <h1>리뷰 {isContent.contentId}</h1>
+                  <div className="bar">|</div>
+                  <div className="review_grade_bottom">
+                    <AiFillStar
+                      size="20px"
+                      style={{ color: 'var(--chamong__color)' }}
+                    />
+                    <h1 className="mg_left">4.5</h1>
+                  </div>
+                </div>
+
                 <div className="review_input">
-                  <div className="userInfo">
-                    <div>아바타</div>
-                    <div>차몽</div>
-                  </div>
-                  <textarea placeholder="내용을 작성해주세요"></textarea>
-                  <hr />
-                  <div className="button_field">
-                    <Button
-                      margin="-5px 0"
-                      padding="8px 15px"
-                      border="var(--chamong__color)"
-                      color="white"
-                      bg="var(--chamong__color)"
-                      hover="white"
-                      hcolor="var(--chamong__color)"
-                      hborder="var(--chamong__color)"
-                      font="12px"
-                    >
-                      작성
-                    </Button>
-                  </div>
+                  <ReviewSubmit></ReviewSubmit>
                 </div>
               </div>
               <Review></Review>

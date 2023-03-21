@@ -28,7 +28,9 @@ function Content() {
         isClicked={isClicked}
         setIsClicked={setIsClicked}
         setIsLogin={setIsLogin}
+        width_M={'1000px'}
       ></Header>
+
       {/* <HeaderSearch
         isKeyword={isKeyword}
         setIsKeyword={setIsKeyword}
@@ -44,7 +46,7 @@ function Content() {
       <ContentM></ContentM>
       <ContentD></ContentD>
       <Nav></Nav>
-      <Footer></Footer>
+      <Footer width_mobile={'1000px'}></Footer>
     </Container>
   );
 }

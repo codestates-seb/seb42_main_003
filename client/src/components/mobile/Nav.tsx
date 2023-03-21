@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
 import { AiOutlineUnorderedList } from 'react-icons/ai';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { AiOutlineUser } from 'react-icons/ai';
+import { HiOutlineLocationMarker } from 'react-icons/hi';
 
 export const Container = styled.div`
   display: flex;
@@ -14,7 +15,7 @@ export const Container = styled.div`
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 4.5em;
+  height: 4.3em;
   background-color: var(--chamong__color);
   border-radius: 25px 25px 0 0;
   padding: 0 15px;
@@ -24,24 +25,32 @@ export const Container = styled.div`
     display: none;
   }
   .nav_box {
-    width: 78px;
+    width: 70px;
     height: 3.7em;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    &.active {
-      background-color: white;
-      border-radius: 12px;
-    }
+  }
+  .nav_box_active {
+    width: 70px;
+    height: 3.7em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 12px;
   }
   .svg {
     color: white;
     font-size: 25px;
     margin-bottom: 3px;
-    &.active {
-      color: var(--chamong__color);
-    }
+  }
+  .svg_active {
+    color: var(--chamong__color);
+    font-size: 25px;
+    margin-bottom: 3px;
   }
   .nav_title {
     color: white;
@@ -52,7 +61,7 @@ export const Container = styled.div`
     }
   }
 `;
-
+export const MenuLink = styled(Link)``;
 type Title = {
   id: number;
   text: string;
@@ -63,61 +72,83 @@ const title: Title = [
   {
     id: 1,
     text: '메인',
-    link: '#',
+    link: '/',
   },
   {
     id: 2,
+    text: '유저픽',
+    link: '/',
+  },
+  {
+    id: 3,
     text: '커뮤니티',
     link: '#',
   },
   {
-    id: 3,
+    id: 4,
     text: '위시리스트',
     link: '#',
   },
   {
-    id: 4,
+    id: 5,
     text: '마이페이지',
-    link: '#',
+    link: '/mypage',
   },
 ];
 
 function Nav() {
-  const [isNav, setIsNav] = useState<NavNumber | null>(null);
+  const [isNav, setIsNav] = useState<Number>(1);
   type CustomMouseEvent = MouseEvent<HTMLElement>;
 
   const clickHandler = (event: CustomMouseEvent) => {
+    // console.log((event.target as HTMLLIElement).id);
+    // localStorage.setItem('nav', (event.target as HTMLLIElement).id);
     setIsNav(Number((event.target as HTMLLIElement).id));
   };
+  // useEffect(() => {
+  //   setIsNav(Number(localStorage.getItem('nav')));
+  //   console.log('new', isNav);
+  // }, [isNav]);
   return (
     <Container>
       {title.map(ele => {
         return (
-          <Link key={ele.id} to={ele.link}>
+          <MenuLink
+            id={String(ele.id)}
+            key={ele.id}
+            to={ele.link}
+            onClick={clickHandler}
+          >
             <div
               id={String(ele.id)}
-              className={isNav !== ele.id ? 'nav_box' : 'nav_box active'}
-              onClick={clickHandler}
+              key={ele.id}
+              className={isNav !== ele.id ? 'nav_box' : 'nav_box_active'}
+              // onClick={clickHandler}
             >
               {ele.id === 1 ? (
                 <AiOutlineHome
                   id={String(ele.id)}
-                  className={isNav !== ele.id ? 'svg' : 'svg active'}
+                  className={isNav !== ele.id ? 'svg' : 'svg_active'}
                 />
               ) : ele.id === 2 ? (
-                <AiOutlineUnorderedList
+                <HiOutlineLocationMarker
                   id={String(ele.id)}
-                  className={isNav !== ele.id ? 'svg' : 'svg active'}
+                  className={isNav !== ele.id ? 'svg' : 'svg_active'}
                 />
               ) : ele.id === 3 ? (
+                <AiOutlineUnorderedList
+                  id={String(ele.id)}
+                  className={isNav !== ele.id ? 'svg' : 'svg_active'}
+                />
+              ) : ele.id === 4 ? (
                 <AiOutlineHeart
                   id={String(ele.id)}
-                  className={isNav !== ele.id ? 'svg' : 'svg active'}
+                  className={isNav !== ele.id ? 'svg' : 'svg_active'}
                 />
               ) : (
                 <AiOutlineUser
                   id={String(ele.id)}
-                  className={isNav !== ele.id ? 'svg' : 'svg active'}
+                  className={isNav !== ele.id ? 'svg' : 'svg_active'}
                 />
               )}
               <div
@@ -127,7 +158,7 @@ function Nav() {
                 {ele.text}
               </div>
             </div>
-          </Link>
+          </MenuLink>
         );
       })}
     </Container>

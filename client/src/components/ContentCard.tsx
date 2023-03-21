@@ -196,7 +196,7 @@ function ContentCard({
               ? data.themaEnvrnCl
               : data.featureNm.length !== 0
               ? data.featureNm
-              : '캠핑장입니다'}
+              : `${data.facltNm}입니다.`}
           </div>
           <div className="card_bottom">
             <div className="box">

@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import HeaderSearch from '../HeaderSearch';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 interface SearchState {
   isKeyword: { id: string; title: string | null }[];
@@ -8,12 +11,14 @@ interface SearchState {
   setIsLogin: (foo: any) => void;
   setIsClicked: (foo: any) => void;
   setIsKeyword: (foo: any) => void;
+  width_M?: string;
 }
-type Info = { view: string };
+type Info = { width_M?: string };
 
-export const Container = styled.div`
+export const Container = styled.div<Info>`
   display: flex;
   justify-content: center;
+  border-bottom: 1px solid #e0e0e0;
   .header {
     display: flex;
     justify-content: space-between;
@@ -24,8 +29,7 @@ export const Container = styled.div`
     font-weight: bold;
     /* border: 1px solid teal; */
     width: 100%;
-    max-width: 1268px;
-    border-bottom: 1px solid #e0e0e0;
+    max-width: ${props => props.width_M || '1268px'};
   }
   @media (max-width: 768px) {
     display: none;
@@ -34,6 +38,7 @@ export const Container = styled.div`
     /* flex-grow: 0.2; */
     /* margin-right: 5px; */
     z-index: 997;
+    cursor: pointer;
   }
   .left_side {
     display: flex;
@@ -56,6 +61,9 @@ export const Container = styled.div`
     font-weight: 500;
     padding: 0 10px;
     cursor: pointer;
+    &.active {
+      color: var(--chamong__color);
+    }
   }
   .user {
     color: var(--fontBlack__600);
@@ -71,13 +79,34 @@ function Header({
   isClicked,
   setIsClicked,
   setIsLogin,
+  width_M,
 }: SearchState) {
+  const navigate = useNavigate();
+  const [isNav, setIsNav] = useState<Number | null>(null);
+  const navMenu = [
+    {
+      id: 1,
+      title: '유저픽',
+      link: '/',
+    },
+    {
+      id: 2,
+      title: '위시리스트',
+      link: '#',
+    },
+    {
+      id: 3,
+      title: '커뮤니티',
+      link: '#',
+    },
+  ];
   return (
-    <Container>
+    <Container width_M={width_M}>
       <div className="header">
         <svg
+          onClick={() => navigate('/')}
           xmlns="http://www.w3.org/2000/svg"
-          width="10%"
+          width="15%"
           viewBox="0 0 532 75"
           fill="none"
         >
@@ -87,11 +116,26 @@ function Header({
           />
         </svg>
         <div className="right_side">
-          <h1>위시리스트</h1>
-          <h1>커뮤니티</h1>
-          <FaUserCircle className="user" onClick={() => setIsLogin(true)} />
+          {navMenu.map(menu => {
+            return (
+              <h1
+                key={menu.id}
+                id={String(menu.id)}
+                onClick={() => setIsNav(menu.id)}
+                className={isNav === menu.id ? 'active' : ''}
+              >
+                <Link to={menu.link}>{menu.title}</Link>
+              </h1>
+            );
+          })}
+          <FaUserCircle
+            className="user"
+            onClick={() => {
+              setIsLogin(true);
+              setIsNav(null);
+            }}
+          />
           <div className="search">
-            {/* <HeaderSearchStyle> */}
             <HeaderSearch
               isKeyword={isKeyword}
               setIsKeyword={setIsKeyword}
@@ -102,15 +146,10 @@ function Header({
               input={'45px'}
               size={'22px'}
             />
-            {/* </HeaderSearchStyle>  */}
           </div>
         </div>
       </div>
-
-      {/* </div> */}
     </Container>
   );
 }
-
-// const HeaderSearchStyle = styled.div``;
 export default Header;
