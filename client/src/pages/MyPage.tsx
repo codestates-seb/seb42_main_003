@@ -11,86 +11,10 @@ import { HiPlus, HiOutlineX } from 'react-icons/hi';
 import Nav from '../components/mobile/Nav';
 import { Input, TextArea, KeywordInput, ImageInput } from '../styles/Input';
 import { MapGetPosition } from '../components/map/MapGetPosition';
+import { PageMain,PageArticle,MyPageMemberInfo } from '../styles/pageStyle';
 // import useUploadImage from '../hooks/useUploadImage';
 
-const MyPageMain = styled.main`
-  padding-bottom: 64px;
-  padding-top: 50px;
-`;
 
-const MyPageArticle = styled.article`
-  width: 100%;
-  padding: 12px;
-  border-bottom: 1px solid #d9d9d9;
-  h2 {
-    font-size: var(--fs__h2);
-    font-weight: 700;
-    padding-bottom: 16px;
-  }
-  > div {
-    display: flex;
-  }
-  .map-container {
-    display: flex;
-    width: 100%;
-    height: 350px;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    ${Tab} {
-      position: absolute;
-      z-index: 500;
-      width: 270px;
-      padding-top: 16px;
-    }
-    ${FloatButton} {
-      position: absolute;
-      z-index: 500;
-      bottom: 25px;
-      right: 25px;
-    }
-    @media screen and (min-width: 481px) {
-      height: 450px;
-    }
-    @media screen and (min-width: 768px) {
-      height: 600px;
-    }
-  }
-`;
-
-const MyPageMemberInfo = styled(MyPageArticle)`
-  width: 100%;
-
-  img {
-    width: 60px;
-    height: 60px;
-    border-radius: 30px;
-  }
-  > div {
-    display: flex;
-    justify-content: space-between;
-    > div {
-      display: flex;
-      align-items: center;
-    }
-  }
-  .member-info-upper {
-    padding-left: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: baseline;
-    .member-info-nickname {
-      font-size: var(--fs__h1);
-      padding-bottom: 5px;
-    }
-  }
-  button {
-  }
-  p {
-    padding-top: 16px;
-    font-size: var(--fs__mid);
-  }
-`;
 
 //멤버 정보 타입
 interface MemberData {
@@ -148,7 +72,7 @@ function MyPage() {
       <MobileHeader>
         <h1>마이페이지</h1>
       </MobileHeader>
-      <MyPageMain>
+      <PageMain>
         {memberData && (
           <MyPageMemberInfo>
             <h2>나의 프로필</h2>
@@ -179,12 +103,12 @@ function MyPage() {
           </MyPageMemberInfo>
         )}
         {
-          <MyPageArticle>
+          <PageArticle>
             <h2>나의 차박지</h2>
             <MyPageMapContainer floatButtonHandler={floatButtonHandler} />
-          </MyPageArticle>
+          </PageArticle>
         }
-        <MyPageArticle>
+        <PageArticle>
           <h2>커뮤니티</h2>
           <Button
             border={'var(--chamong__color)'}
@@ -198,8 +122,8 @@ function MyPage() {
           >
             커뮤니티 활동기록
           </Button>
-        </MyPageArticle>
-        <MyPageArticle>
+        </PageArticle>
+        <PageArticle>
           <h2>메뉴</h2>
           <Button
             border={'var(--chamong__color)'}
@@ -213,8 +137,8 @@ function MyPage() {
           >
             로그아웃
           </Button>
-        </MyPageArticle>
-      </MyPageMain>
+        </PageArticle>
+      </PageMain>
       {addCampModal && <AddCampModal floatButtonHandler={floatButtonHandler} />}
       {editProfileModal && (
         <EditProfileModal editProfileHandler={editProfileHandler} />
