@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Modal = styled.div`
   width: 100%;
   height: 100%;
-  z-index: 999;
+  z-index: 500;
   display: flex;
   align-items: center;
   top: 50px;
@@ -38,7 +38,7 @@ export const Modal = styled.div`
         text-align: center;
       }
       button {
-        z-index: 999;
+        z-index: 500;
         font-size: 28px;
         /* border:1px solid red; */
         cursor: pointer;
@@ -58,6 +58,3 @@ export const Modal = styled.div`
   }
 `;
 
-const keywordOffer=styled.div`
-  
-`

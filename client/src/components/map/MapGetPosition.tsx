@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { MapWrapper, MapInfoWrapper } from '../../styles/mapStyle';
 import mapMarker from '../../assets/map/map_marker.svg';
@@ -9,10 +10,16 @@ declare global {
   }
 }
 
-export function MapGetPosition() {
-  let marker: any = null;
+interface GetPositionProps {
+  setPosition: React.Dispatch<
+    React.SetStateAction<[number, number] | null>
+  >;
+  setAddress: (T: string|null) => void;
+}
 
-  const [position, setPosition] = useState<number[] | null>(null);
+export function MapGetPosition({ setPosition,setAddress }: GetPositionProps) {
+  var geocoder = new kakao.maps.services.Geocoder();
+  let marker: any = null;
   const container = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<any>(null);
 
@@ -54,22 +61,26 @@ export function MapGetPosition() {
     });
   };
 
+  const getAddressCallback = (result: any) => {
+    try {
+      setAddress(result[0].address.address_name)
+    }
+    catch {
+      console.log('error address')
+      setAddress(null)
+    }
+  };
+
   const mapClickHandler = (mouseEvent: any) => {
     let latlng = mouseEvent.latLng;
 
     // 마커 위치를 클릭한 위치로 옮깁니다
     marker.setPosition(latlng);
     marker.setMap(map);
+    map.panTo(new kakao.maps.LatLng(latlng.getLat(), latlng.getLng()));
+    geocoder.coord2Address(latlng.getLng(), latlng.getLat(),getAddressCallback);
     setPosition([latlng.getLat(), latlng.getLng()]);
   };
-
-  //test
-  useEffect(() => {
-    if (position) {
-      console.log(position);
-      map.panTo(new kakao.maps.LatLng(position[0],position[1]));
-    }
-  }, [position]);
 
   return (
     <MapWrapper>
