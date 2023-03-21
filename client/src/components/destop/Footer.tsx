@@ -1,18 +1,25 @@
 import styled from 'styled-components';
 
-const Container = styled.div`
+const Container = styled.div<Info>`
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
+  /* flex-direction: row; */
+  justify-content: center;
+  height: auto;
+  background-color: var(--searchbar__color);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   width: 100%;
-  padding: 20px;
+  z-index: 800;
   position: fixed;
   bottom: 0;
-  background-color: var(--searchbar__color);
-  z-index: 800;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px 16px;
+    max-width: ${props => props.width_mobile || '1268px'};
+  }
   @media (max-width: 768px) {
     display: none;
   }
@@ -39,16 +46,19 @@ const Container = styled.div`
     font-weight: 500;
   }
 `;
-
-function Footer() {
+type Info = { width_mobile?: string };
+function Footer({ width_mobile }: Info) {
   return (
-    <Container>
-      <h1 className="title">Chamong</h1>
-      <div className="body">
-        <div className="member">최준영 박진선 김연주 이세환 신현민 김윤혜</div>
-        {/* <div className="line"></div> */}
-        <div className="sub_title">
-          build by codestates main project team_That's coding.
+    <Container width_mobile={width_mobile}>
+      <div className="wrapper">
+        <h1 className="title">Chamong</h1>
+        <div className="body">
+          <div className="member">
+            최준영 박진선 김연주 이세환 신현민 김윤혜
+          </div>
+          <div className="sub_title">
+            build by codestates main project team_That's coding.
+          </div>
         </div>
       </div>
     </Container>

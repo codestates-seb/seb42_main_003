@@ -5,7 +5,7 @@ import { AiFillStar } from 'react-icons/ai';
 const Container = styled.div`
   @media (min-width: 768px) {
     display: grid;
-    gap: 17px 12px;
+    gap: 17px 50px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-bottom: 90px;
   }
@@ -18,7 +18,8 @@ const Container = styled.div`
   .top_mid {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
+    height: 100%;
     margin-right: 10px;
   }
   img {
@@ -40,9 +41,12 @@ const Container = styled.div`
     }
   }
   .bottom {
-    max-width: 400px;
     line-height: 1.2;
     margin-bottom: 20px;
+  }
+  .date {
+    padding-top: 3px;
+    color: var(--fontBlack__400);
   }
 `;
 
@@ -60,7 +64,7 @@ function Review() {
               <img src={ele.image} alt="img"></img>
               <div className="top_mid">
                 <div>{ele.user}</div>
-                <div>{ele.createAt}</div>
+                <div className="date">{ele.createdAt}</div>
               </div>
               <div className="top_right">
                 <AiFillStar className="star" />
