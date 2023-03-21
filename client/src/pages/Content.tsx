@@ -8,41 +8,19 @@ import Footer from '../components/destop/Footer';
 import Login from '../components/Login';
 import { ContentM } from '../components/mobile/ContentM';
 import { ContentD } from '../components/destop/ContentD';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
+import { click } from '../store/clickedSlice';
 const Container = styled.div`
   /* background-color: rgba(0, 0, 0, 0.2); */
 `;
 
 function Content() {
-  type Info = { id: string; title: string | null };
-
-  const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [isKeyword, setIsKeyword] = useState<Info[]>([]);
-  const [isLogin, setIsLogin] = useState<boolean>(false);
-
+  const dispatch = useAppDispatch();
   return (
-    <Container onClick={() => setIsClicked(false)}>
-      {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}
-      <Header
-        isKeyword={isKeyword}
-        setIsKeyword={setIsKeyword}
-        isClicked={isClicked}
-        setIsClicked={setIsClicked}
-        setIsLogin={setIsLogin}
-        width_M={'1000px'}
-      ></Header>
-
-      {/* <HeaderSearch
-        isKeyword={isKeyword}
-        setIsKeyword={setIsKeyword}
-        isClicked={isClicked}
-        setIsClicked={setIsClicked}
-        view={'none'}
-      /> */}
-      <SearchModal
-        isKeyword={isKeyword}
-        isClicked={isClicked}
-        setIsKeyword={setIsKeyword}
-      />
+    <Container onClick={() => dispatch(click(false))}>
+      <Header width_M={'1000px'}></Header>
+      {/* <HeaderSearch view={'none'} /> */}
+      {/* <SearchModal /> */}
       <ContentM></ContentM>
       <ContentD></ContentD>
       <Nav></Nav>

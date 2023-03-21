@@ -14,7 +14,7 @@ import { GiIsland } from 'react-icons/gi';
 import { AiFillStar } from 'react-icons/ai';
 import MapContainer from '../map/MapContainer';
 import { Button } from '../../styles/Button';
-import Review from '../Review';
+import { Review } from '../Review';
 import { ReviewSubmit } from '../ReviewSubmit';
 import { Link } from 'react-router-dom';
 
