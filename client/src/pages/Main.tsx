@@ -10,61 +10,23 @@ import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
 import Banner from '../components/destop/Banner';
 import Login from '../components/Login';
-const Container = styled.div`
-  /* background-color: rgba(0, 0, 0, 0.2); */
-`;
+import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
+import { click } from '../store/clickedSlice';
+const Container = styled.div``;
 
 function Main() {
   type Info = { id: string; title: string | null };
-
   const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [isKeyword, setIsKeyword] = useState<Info[]>([]);
-  const [isLogin, setIsLogin] = useState<boolean>(false);
-
+  const dispatch = useAppDispatch();
   return (
-    <Container onClick={() => setIsClicked(false)}>
-      {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}
-      <Header
-        isKeyword={isKeyword}
-        setIsKeyword={setIsKeyword}
-        isClicked={isClicked}
-        setIsClicked={setIsClicked}
-        setIsLogin={setIsLogin}
-      ></Header>
-      <HeaderSearch
-        isKeyword={isKeyword}
-        setIsKeyword={setIsKeyword}
-        isClicked={isClicked}
-        setIsClicked={setIsClicked}
-        view={'none'}
-      />
-      {/* {isClicked ? (
-        <SearchModal isKeyword={isKeyword} setIsKeyword={setIsKeyword} />
-      ) : (
-        <>
-          <Banner></Banner>
-          <Category></Category>
-          <CommunityBestM></CommunityBestM>
-          <ContentList></ContentList>
-        </>
-      )} */}
-      {/* {isClicked ? ( */}
-      <SearchModal
-        isKeyword={isKeyword}
-        isClicked={isClicked}
-        setIsKeyword={setIsKeyword}
-        // onClick={(e: any) => {
-        //   e.stopPropagation();
-        // }}
-      />
-      {/* ) : null} */}
-
+    <Container onClick={() => dispatch(click(false))}>
+      <Header></Header>
+      <HeaderSearch view={'none'} />
+      {/* <SearchModal /> */}
       <Banner></Banner>
       <Category></Category>
       <CommunityBestM></CommunityBestM>
       <ContentList></ContentList>
-
-      <Nav></Nav>
       <Footer></Footer>
     </Container>
   );

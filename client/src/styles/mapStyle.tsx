@@ -18,7 +18,7 @@ export const MapWrapper = styled.article`
   justify-content: center;
 `;
 
-export const MapFloatButton = styled.button`
+export const FloatButton = styled.button`
   cursor: pointer;
   font-size: 24px;
   min-width: 42px;

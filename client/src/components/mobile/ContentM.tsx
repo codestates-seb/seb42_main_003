@@ -13,7 +13,7 @@ import { FaFish } from 'react-icons/fa';
 import { GiIsland } from 'react-icons/gi';
 import MapContainer from '../map/MapContainer';
 import { Button } from '../../styles/Button';
-import Review from '../Review';
+import { Review } from '../Review';
 import { Link } from 'react-router-dom';
 import { AiFillStar } from 'react-icons/ai';
 import { MobileHeader } from '../../styles/mobileStyle';
@@ -56,10 +56,10 @@ const Container = styled('div')<ContentInfo>`
     background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg');
     background-repeat: no-repeat;
     /* border-radius: 16px; */
-    margin-top: 45px;
+    margin-top: 60px;
   }
   .backimg {
-    margin-top: 45px;
+    margin-top: 60px;
     /* border-radius: 16px; */
     background-image: ${props => `url(${props.bg})`};
     width: 100%;

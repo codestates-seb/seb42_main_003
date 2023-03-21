@@ -20,8 +20,13 @@ export const MobileHeader = styled.header`
     text-align: center;
     font-size: 23px;
     font-weight: 500;
+    /* color: var() */
   }
   button {
+    cursor: pointer;
+    /* padding: 12px 16px; */
+  }
+  Link {
     cursor: pointer;
     /* padding: 12px 16px; */
   }

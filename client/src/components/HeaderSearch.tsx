@@ -1,6 +1,10 @@
 import styled from 'styled-components';
+import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { HiOutlineSearch } from 'react-icons/hi';
 import { FiArrowLeft } from 'react-icons/fi';
+import { remove, reset } from '../store/keywordSlice';
+import { click } from '../store/clickedSlice';
+import SearchModal from './SearchModal';
 
 const Container = styled('div')<Info>`
   padding: 10px 10px 10px 10px;
@@ -16,6 +20,7 @@ const Main = styled('div')<Info>`
     font-size: 35px;
     margin-top: 12px;
     color: var(--fontBlack__600);
+    cursor: pointer;
     @media (min-width: 768px) {
       display: none;
     }
@@ -76,29 +81,19 @@ const Main = styled('div')<Info>`
 `;
 
 interface SearchState {
-  isKeyword: { id: string; title: string | null }[];
-  isClicked: boolean;
-  setIsClicked: (foo: any) => void;
-  setIsKeyword: (foo: any) => void;
-  view: string;
+  view?: string;
   input?: string;
   place?: string;
   size?: string;
 }
 type Info = { view?: string; input?: string; place?: string; size?: string };
+function HeaderSearch({ view, input, place, size }: SearchState) {
+  const dispatch = useAppDispatch();
+  const isKeyword = useAppSelector(state => state.keyword);
+  const isClicked = useAppSelector(state => state.clicked);
 
-function HeaderSearch({
-  isKeyword,
-  setIsKeyword,
-  isClicked,
-  setIsClicked,
-  view,
-  input,
-  place,
-  size,
-}: SearchState) {
-  const removeKeyword = (index: string) => {
-    setIsKeyword(isKeyword.filter(keyword => keyword.id !== index));
+  const removeKeyword = (index: number) => {
+    dispatch(remove(index));
   };
   return (
     <Container view={view}>
@@ -108,8 +103,8 @@ function HeaderSearch({
             <div
               className="back"
               onClick={() => {
-                setIsClicked(false);
-                setIsKeyword([]);
+                dispatch(click(false));
+                dispatch(reset([]));
               }}
             >
               <FiArrowLeft />
@@ -119,7 +114,7 @@ function HeaderSearch({
             className="input_field"
             onClick={e => {
               e.stopPropagation();
-              setIsClicked(true);
+              dispatch(click(true));
             }}
           >
             <HiOutlineSearch className="search_icon" />
@@ -128,7 +123,7 @@ function HeaderSearch({
                 isKeyword.map(keyword => {
                   return (
                     <li key={keyword.id} className="keyword_box">
-                      <span className="keyword_title">{keyword.title}</span>
+                      <span className="keyword_title">{keyword.keyword}</span>
                       <span
                         className="box_close"
                         onClick={() => removeKeyword(keyword.id)}
@@ -147,6 +142,7 @@ function HeaderSearch({
           </div>
         </div>
       </Main>
+      <SearchModal />
     </Container>
   );
 }

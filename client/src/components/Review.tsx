@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getReview } from '../api/api';
+import { getReview, getCommunity } from '../api/api';
 import { AiFillStar } from 'react-icons/ai';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTextCenter } from 'react-icons/bs';
+import { BiLike } from 'react-icons/bi';
+
 const Container = styled.div`
-  @media (min-width: 768px) {
-    display: grid;
-    gap: 17px 50px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin-bottom: 90px;
+  .review {
+    @media (min-width: 768px) {
+      display: grid;
+      gap: 17px 50px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 90px;
+    }
   }
   .top {
     display: flex;
@@ -48,9 +54,48 @@ const Container = styled.div`
     padding-top: 3px;
     color: var(--fontBlack__400);
   }
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    /* position: relative; */
+    width: 100%;
+  }
+  .header_left {
+    display: flex;
+    flex-direction: row;
+  }
+  .header_right {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* position: absolute;
+    left: 62%; */
+  }
+  .field {
+    flex-grow: 1;
+    width: 3em;
+    display: flex;
+    flex-direction: row;
+    justify-self: flex-start;
+    margin-left: 0.5em;
+  }
+  span {
+    margin-top: 2px;
+    font-size: var(--fs__small);
+    margin-left: 3px;
+  }
+  .active {
+    color: var(--chamong__color);
+  }
+  .wrap {
+    margin: 25px 0;
+    border-bottom: 2px solid #ebe1dd;
+  }
 `;
 
-function Review() {
+export function Review() {
   const [isReview, setIsReview] = useState<any>([]);
   useEffect(() => {
     getReview().then(res => setIsReview(res));
@@ -79,4 +124,46 @@ function Review() {
   );
 }
 
-export default Review;
+export function Post() {
+  const [isCommunity, setIsCommunity] = useState<any>([]);
+  useEffect(() => {
+    getCommunity().then(res => setIsCommunity(res));
+  }, []);
+  return (
+    <Container className="review">
+      {isCommunity.map((ele: any) => {
+        return (
+          <div key={ele.id} className="wrap">
+            <div className="header">
+              <div className="header_left">
+                <img src={ele.image} alt="img"></img>
+                <div className="top_mid">
+                  <div>{ele.user}</div>
+                  <div className="date">{ele.createdAt}</div>
+                </div>
+              </div>
+              <div className="header_right">
+                <div className="field">
+                  <AiOutlineEye style={{ fontSize: '16px' }} />
+                  <span>{ele.views}</span>
+                </div>
+                <div className="field">
+                  <BsTextCenter style={{ fontSize: '16px' }} />
+                  <span>{ele.comment}</span>
+                </div>
+                <div className="field">
+                  <BiLike
+                    style={{ fontSize: '16px' }}
+                    className={ele.islike ? 'active' : ''}
+                  />
+                  <span>{ele.like}</span>
+                </div>
+              </div>
+            </div>
+            <p className="bottom">{ele.title}</p>
+          </div>
+        );
+      })}
+    </Container>
+  );
+}

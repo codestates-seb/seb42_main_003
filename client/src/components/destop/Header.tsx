@@ -1,16 +1,13 @@
 import styled from 'styled-components';
 import HeaderSearch from '../HeaderSearch';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxTK';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import Login from '../Login';
 
 interface SearchState {
-  isKeyword: { id: string; title: string | null }[];
-  isClicked: boolean;
-  setIsLogin: (foo: any) => void;
-  setIsClicked: (foo: any) => void;
-  setIsKeyword: (foo: any) => void;
   width_M?: string;
 }
 type Info = { width_M?: string };
@@ -73,16 +70,10 @@ export const Container = styled.div<Info>`
     cursor: pointer;
   }
 `;
-function Header({
-  isKeyword,
-  setIsKeyword,
-  isClicked,
-  setIsClicked,
-  setIsLogin,
-  width_M,
-}: SearchState) {
+function Header({ width_M }: SearchState) {
   const navigate = useNavigate();
   const [isNav, setIsNav] = useState<Number | null>(null);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   const navMenu = [
     {
       id: 1,
@@ -100,8 +91,10 @@ function Header({
       link: '#',
     },
   ];
+  const isClicked = useAppSelector(state => state.clicked);
   return (
     <Container width_M={width_M}>
+      {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}
       <div className="header">
         <svg
           onClick={() => navigate('/')}
@@ -137,10 +130,6 @@ function Header({
           />
           <div className="search">
             <HeaderSearch
-              isKeyword={isKeyword}
-              setIsKeyword={setIsKeyword}
-              isClicked={isClicked}
-              setIsClicked={setIsClicked}
               view={'block'}
               place={'13px'}
               input={'45px'}
