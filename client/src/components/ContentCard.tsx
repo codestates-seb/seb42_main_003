@@ -154,7 +154,7 @@ function ContentCard({
 }: CardView) {
   const [isLike, setIsLike] = useState(false);
   return (
-    <Link to="/content" style={{ width: '100%' }}>
+    <Link to={`/content/${data.contentId}`} style={{ width: '100%' }}>
       <Container
         flex_dir={flex_dir}
         bottom_justify={bottom_justify}

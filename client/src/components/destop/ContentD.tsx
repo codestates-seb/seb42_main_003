@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 interface ContentInfo {
   bg?: URL;
   height?: string;
+  contentId?: string;
 }
 
 const Container = styled('div')<ContentInfo>`
@@ -222,13 +223,13 @@ const Container = styled('div')<ContentInfo>`
   }
 `;
 
-export function ContentD({}: ContentInfo) {
+export function ContentD({ contentId }: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
   const [isContent, setIsContent] = useState<any>({});
   const [isLike, setIsLike] = useState(false);
 
   useEffect(() => {
-    getContent().then(res => setIsContent(res[100]));
+    getContent().then(res => setIsContent(res[Number(contentId)]));
   }, []);
 
   return (

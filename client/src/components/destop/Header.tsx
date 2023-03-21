@@ -88,10 +88,10 @@ function Header({ width_M }: SearchState) {
     {
       id: 3,
       title: '커뮤니티',
-      link: '#',
+      link: '/community',
     },
   ];
-  const isClicked = useAppSelector(state => state.clicked);
+  // const isClicked = useAppSelector(state => state.clicked);
   return (
     <Container width_M={width_M}>
       {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}

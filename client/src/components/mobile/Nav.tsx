@@ -119,8 +119,8 @@ function Nav() {
   //   setIsNav(Number(localStorage.getItem('nav')));
   //   console.log('new', isNav);
   // }, [isNav]);
-  const userInfo = localStorage.getItem('userInfo');
-  console.log(userInfo);
+  // const userInfo = localStorage.getItem('userInfo');
+
   return (
     <Container>
       {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}

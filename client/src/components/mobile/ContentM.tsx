@@ -11,7 +11,6 @@ import { BiStore } from 'react-icons/bi';
 import { TbDog } from 'react-icons/tb';
 import { FaFish } from 'react-icons/fa';
 import { GiIsland } from 'react-icons/gi';
-import MapContainer from '../map/MapContainer';
 import { Button } from '../../styles/Button';
 import { Review } from '../Review';
 import { Link } from 'react-router-dom';
@@ -19,10 +18,12 @@ import { AiFillStar } from 'react-icons/ai';
 import { MobileHeader } from '../../styles/mobileStyle';
 import { ReviewSubmit } from '../ReviewSubmit';
 import { Modal } from '../../styles/Modal';
+import MapContainer from '../map/MapContainer';
 
 interface ContentInfo {
   bg?: URL;
   height?: string;
+  contentId?: string;
 }
 
 const Container = styled('div')<ContentInfo>`
@@ -53,13 +54,24 @@ const Container = styled('div')<ContentInfo>`
     cursor: pointer;
   }
   .background {
+    /* animation: smoothAppear 1s; */
     background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg');
     background-repeat: no-repeat;
     /* border-radius: 16px; */
-    margin-top: 60px;
+    margin-top: 50px;
+    /* @keyframes smoothAppear {
+      from {
+        opacity: 0.5;
+        transform: translateY(-5%);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    } */
   }
   .backimg {
-    margin-top: 60px;
+    margin-top: 50px;
     /* border-radius: 16px; */
     background-image: ${props => `url(${props.bg})`};
     width: 100%;
@@ -148,15 +160,22 @@ const Container = styled('div')<ContentInfo>`
   }
 `;
 
-export function ContentM({}: ContentInfo) {
+export function ContentM({ contentId }: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
   const [isContent, setIsContent] = useState<any>({});
   const [isLike, setIsLike] = useState(false);
   const [isModal, setIsModal] = useState(false);
+  console.log(contentId);
   useEffect(() => {
-    getContent().then(res => setIsContent(res[1]));
-  }, []);
-
+    getContent().then(res => {
+      const content = res.filter((ele: any) => {
+        return ele.contentId === contentId;
+      });
+      setIsContent(content[0]);
+    });
+    window.scrollTo(0, 0);
+  }, [contentId]);
+  console.log(isContent);
   return (
     <Container bg={isContent.firstImageUrl}>
       <MobileHeader>
