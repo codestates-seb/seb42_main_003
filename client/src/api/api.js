@@ -31,3 +31,10 @@ export const getReview = () => {
     .then(res => res.data)
     .catch(err => console.log(err));
 };
+
+export const getCommunity = () => {
+  return axios
+    .get('http://localhost:3001/community')
+    .then(res => res.data)
+    .catch(err => console.log(err));
+};

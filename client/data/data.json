@@ -68822,6 +68822,68 @@
     "body": "주변 정리가 잘 되어있고 한적해서 시간 보내기 좋았어요. 내년 여름에도 한번 더 방문하고 싶어요. 추천합니다."
   }
 ],
+"community": [
+  {
+    "id": 1,
+    "image": "https://cdn.pixabay.com/photo/2023/03/04/15/08/rabbit-7829706_1280.png",
+    "user": "코딩코딩",
+    "createdAt": "2023. 3. 16",
+    "views": 100,
+    "comment": 50,
+    "islike": true,
+    "like": 3,
+    "title": "인천 차박지 추천해주세요",
+    "body": "주변 정리가 잘 되어있고 한적해서 시간 보내기 좋았어요. 내년 여름에도 한번 더 방문하고 싶어요. 추천합니다."
+  },
+  {
+    "id": 2,
+    "image": "https://cdn.pixabay.com/photo/2023/03/04/15/08/rabbit-7829706_1280.png",
+    "user": "코딩코딩",
+    "createdAt": "2023. 3. 16",
+    "views": 100,
+    "comment": 10,
+    "islike": true,
+    "like": 50,
+    "title": "인천 차박지 추천해주세요",
+    "body": "주변 정리가 잘 되어있고 한적해서 시간 보내기 좋았어요. 내년 여름에도 한번 더 방문하고 싶어요. 추천합니다."
+  },
+  {
+    "id": 3,
+    "image": "https://cdn.pixabay.com/photo/2023/03/04/15/08/rabbit-7829706_1280.png",
+    "user": "코딩코딩",
+    "createdAt": "2023. 3. 16",
+    "views": 10,
+    "comment": 0,
+    "islike": false,
+    "like": 5,
+    "title": "인천 차박지 추천해주세요",
+    "body": "주변 정리가 잘 되어있고 한적해서 시간 보내기 좋았어요. 내년 여름에도 한번 더 방문하고 싶어요. 추천합니다."
+  },
+    {
+    "id": 4,
+    "image": "https://cdn.pixabay.com/photo/2023/03/04/15/08/rabbit-7829706_1280.png",
+    "user": "코딩코딩",
+    "createdAt": "2023. 3. 16",
+    "views": 50,
+    "comment": 0,
+    "islike": false,
+    "like": 2,
+    "title": "인천 차박지 추천해주세요",
+    "body": "주변 정리가 잘 되어있고 한적해서 시간 보내기 좋았어요. 내년 여름에도 한번 더 방문하고 싶어요. 추천합니다."
+  },
+    {
+    "id": 5,
+    "image": "https://cdn.pixabay.com/photo/2023/03/04/15/08/rabbit-7829706_1280.png",
+    "user": "코딩코딩",
+    "createdAt": "2023. 3. 16",
+    "views": 49,
+    "comment": 1,
+    "islike": false,
+    "like": 10,
+    "title": "인천 차박지 추천해주세요",
+    "body": "주변 정리가 잘 되어있고 한적해서 시간 보내기 좋았어요. 내년 여름에도 한번 더 방문하고 싶어요. 추천합니다."
+  }
+],
 "member":{
   "member_id":1,
   "email":"test@gmail.com",
