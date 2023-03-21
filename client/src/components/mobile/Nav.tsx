@@ -6,6 +6,9 @@ import { AiOutlineUnorderedList } from 'react-icons/ai';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { AiOutlineUser } from 'react-icons/ai';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
+import { useNavigate } from 'react-router-dom';
+import { is } from 'immer/dist/internal';
+import Login from '../Login';
 
 export const Container = styled.div`
   display: flex;
@@ -19,7 +22,7 @@ export const Container = styled.div`
   background-color: var(--chamong__color);
   border-radius: 25px 25px 0 0;
   padding: 0 15px;
-  z-index: 999;
+  z-index: 997;
   //TODO모바일 반응형
   @media (min-width: 768px) {
     display: none;
@@ -65,9 +68,9 @@ export const MenuLink = styled(Link)``;
 type Title = {
   id: number;
   text: string;
-  link: string;
+  link: string | any;
 }[];
-type NavNumber = number;
+
 const title: Title = [
   {
     id: 1,
@@ -82,7 +85,7 @@ const title: Title = [
   {
     id: 3,
     text: '커뮤니티',
-    link: '#',
+    link: '/community',
   },
   {
     id: 4,
@@ -98,32 +101,38 @@ const title: Title = [
 
 function Nav() {
   const [isNav, setIsNav] = useState<Number>(1);
+  const [isLogin, setIsLogin] = useState<Boolean>(false);
   type CustomMouseEvent = MouseEvent<HTMLElement>;
+  // const navigate = useNavigate();
 
   const clickHandler = (event: CustomMouseEvent) => {
     // console.log((event.target as HTMLLIElement).id);
     // localStorage.setItem('nav', (event.target as HTMLLIElement).id);
+    // const location = title.filter((ele: any) => {
+    //   return String(ele.id) === (event.target as HTMLLIElement).id;
+    // });
+    // console.log();
     setIsNav(Number((event.target as HTMLLIElement).id));
+    // navigate(location[0].link);
   };
   // useEffect(() => {
   //   setIsNav(Number(localStorage.getItem('nav')));
   //   console.log('new', isNav);
   // }, [isNav]);
+  const userInfo = localStorage.getItem('userInfo');
+  console.log(userInfo);
   return (
     <Container>
+      {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}
       {title.map(ele => {
         return (
-          <MenuLink
-            id={String(ele.id)}
-            key={ele.id}
-            to={ele.link}
-            onClick={clickHandler}
-          >
-            <div
+          <div id={String(ele.id)} key={ele.id} onClick={clickHandler}>
+            <MenuLink
               id={String(ele.id)}
               key={ele.id}
+              to={ele.id === 5 ? (isLogin ? ele.link : '#') : ele.link}
+              onClick={() => (ele.id === 5 ? setIsLogin(true) : null)}
               className={isNav !== ele.id ? 'nav_box' : 'nav_box_active'}
-              // onClick={clickHandler}
             >
               {ele.id === 1 ? (
                 <AiOutlineHome
@@ -157,8 +166,8 @@ function Nav() {
               >
                 {ele.text}
               </div>
-            </div>
-          </MenuLink>
+            </MenuLink>
+          </div>
         );
       })}
     </Container>

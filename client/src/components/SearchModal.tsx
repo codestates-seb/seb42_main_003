@@ -3,23 +3,14 @@ import { Button } from '../styles/Button';
 import { useState, useEffect } from 'react';
 import { MouseEvent } from 'react';
 import { getArea, getTheme } from '../api/api';
+import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
+import { add, remove } from '../store/keywordSlice';
 
 const Container = styled.div`
   @media (max-width: 768px) {
     padding: 10px;
     margin-top: -15px;
   }
-  /* animation: fadeInRight 1s;
-  @keyframes fadeInRight {
-    0% {
-      opacity: 0.9;
-      transform: translateZ(0);
-    }
-    to {
-      opacity: 0;
-      transform: translate3d(-100%, 0, 0);
-    }
-  } */
 `;
 
 const Main = styled.div`
@@ -97,14 +88,7 @@ const Section = styled.div`
   }
 `;
 
-interface SearchState {
-  isKeyword: { id: string; title: string | null }[];
-  isClicked: boolean;
-  setIsKeyword: (foo: any) => void;
-  // onClick: (foo: any) => void;
-}
-
-function SearchModal({ isKeyword, setIsKeyword, isClicked }: SearchState) {
+function SearchModal() {
   useEffect(() => {
     getArea().then(res => setArea(res));
     getTheme().then(res => setTheme(res));
@@ -112,7 +96,7 @@ function SearchModal({ isKeyword, setIsKeyword, isClicked }: SearchState) {
 
   //* id값으로 number 타입 지정이 안됨.
   //* 백엔드로 넘길 때 키워드들 number 타입으로 바꿔서 보내기.
-
+  const dispatch = useAppDispatch();
   type Area = { id: number; keyword: string | null };
   type CustomMouseEvent = MouseEvent<HTMLElement>;
 
@@ -122,15 +106,18 @@ function SearchModal({ isKeyword, setIsKeyword, isClicked }: SearchState) {
   const clickHandler = (event: CustomMouseEvent) => {
     const newData = {
       id: (event.target as HTMLLIElement).id,
-      title: (event.target as HTMLLIElement).textContent,
+      keyword: (event.target as HTMLLIElement).textContent,
     };
+    dispatch(add(newData));
 
-    if (
-      isKeyword.length < 3 &&
-      isKeyword.filter(data => data.title === newData.title).length !== 1
-    )
-      setIsKeyword([...isKeyword, newData]);
+    // if (
+    //   isKeyword.length < 3 &&
+    //   isKeyword.filter(data => data.title === newData.title).length !== 1
+    // )
+    // setIsKeyword([...isKeyword, newData]);
   };
+  const isKeyword = useAppSelector(state => state.keyword);
+  const isClicked = useAppSelector(state => state.clicked);
 
   return (
     <Container onClick={e => e.stopPropagation()}>
@@ -149,7 +136,7 @@ function SearchModal({ isKeyword, setIsKeyword, isClicked }: SearchState) {
                     onClick={clickHandler}
                     className={
                       isKeyword.filter(keyword => {
-                        return keyword.title === area.keyword;
+                        return keyword.keyword === area.keyword;
                       }).length !== 0
                         ? 'active'
                         : ''
@@ -175,7 +162,7 @@ function SearchModal({ isKeyword, setIsKeyword, isClicked }: SearchState) {
                     onClick={clickHandler}
                     className={
                       isKeyword.filter(keyword => {
-                        return keyword.title === theme.keyword;
+                        return keyword.keyword === theme.keyword;
                       }).length !== 0
                         ? 'active'
                         : ''
