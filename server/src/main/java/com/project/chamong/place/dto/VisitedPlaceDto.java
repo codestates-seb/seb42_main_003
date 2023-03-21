@@ -11,17 +11,17 @@ public class VisitedPlaceDto {
     @Setter
     public static class Post{
         // 장소명
-        private String placeName;
+        private String name;
         // 주소
-        private String placeAddress;
+        private String address;
         // 장소 설명
-        private String placeDescription;
+        private String description;
         // 위도
         private Double latitude;
         // 경도
         private Double longitude;
         // 방문 날짜
-        private LocalDateTime placedAt;
+        private LocalDateTime createdAt;
         // 메모
         private String memo;
         private Long memberId;
@@ -30,19 +30,19 @@ public class VisitedPlaceDto {
     @Setter
     public static class Response{
         // 장소 ID
-        private Long placeId;
+        private Long id;
         // 장소명
-        private String placeName;
+        private String name;
         // 주소
-        private String placeAddress;
+        private String address;
         // 장소 설명
-        private String placeDescription;
+        private String description;
         // 위도
         private Double latitude;
         // 경도
         private Double longitude;
         // 방문 날짜
-        private LocalDateTime placedAt;
+        private LocalDateTime createdAt;
         // 수정 날짜
         private LocalDateTime updatedAt;
         // 메모
@@ -53,17 +53,17 @@ public class VisitedPlaceDto {
     @Setter
     public static class Patch{
         // 장소명
-        private String placeName;
+        private String name;
         // 주소
-        private String placeAddress;
+        private String address;
         // 장소 설명
-        private String placeDescription;
+        private String description;
         // 위도
         private Double latitude;
         // 경도
         private Double longitude;
         // 방문 날짜
-        private LocalDateTime placedAt;
+        private LocalDateTime createdAt;
         // 수정 날짜
         private LocalDateTime updatedAt;
         // 메모

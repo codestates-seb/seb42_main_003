@@ -14,9 +14,9 @@ public class MyPlaceDto {
         private String memo;
         private String keyword;
         private Long memberId;
-        private LocalDateTime placedAt;
+        private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-        private String placeImg;
+        private String img;
         private Double latitude;
         private Double longitude;
         private boolean shared;
@@ -28,12 +28,12 @@ public class MyPlaceDto {
     public static class Response {
         private String memo;
         private String keyword;
-        private Long placeId;
+        private Long id;
         private Double latitude;
         private Double longitude;
-        private LocalDateTime placedAt;
+        private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-        private String placeImg;
+        private String img;
         private Long memberId;
         private boolean shared;
 
@@ -44,9 +44,9 @@ public class MyPlaceDto {
     public static class Patch {
         private String memo;
         private String keyword;
-        private LocalDateTime placedAt;
+        private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-        private String placeImg;
+        private String img;
         private Double longitude;
         private Double latitude;
         private boolean shared;

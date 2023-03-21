@@ -15,20 +15,20 @@ public class VisitedPlace {
     // 장소 ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long placeId;
+    private Long id;
 
     // 장소명
-    private String placeName;
+    private String name;
     // 주소
-    private String placeAddress;
+    private String address;
     // 장소 설명
-    private String placeDescription;
+    private String description;
     // 위도
     private Double latitude;
     // 경도
     private Double longitude;
     // 방문 날짜
-    private LocalDateTime placedAt;
+    private LocalDateTime createdAt;
     // 수정 날짜
     private LocalDateTime updatedAt;
     // 메모
@@ -42,12 +42,12 @@ public class VisitedPlace {
 
     public static VisitedPlace createVisitedPlace(VisitedPlaceDto.Post postDto, Member member){
         VisitedPlace visitedPlace = new VisitedPlace();
-        visitedPlace.setPlaceName(postDto.getPlaceName());
-        visitedPlace.setPlaceAddress(postDto.getPlaceAddress());
-        visitedPlace.setPlaceDescription(postDto.getPlaceDescription());
+        visitedPlace.setName(postDto.getName());
+        visitedPlace.setAddress(postDto.getAddress());
+        visitedPlace.setDescription(postDto.getDescription());
         visitedPlace.setLatitude(postDto.getLatitude());
         visitedPlace.setLongitude(postDto.getLongitude());
-        visitedPlace.setPlacedAt(postDto.getPlacedAt());
+        visitedPlace.setCreatedAt(postDto.getCreatedAt());
         visitedPlace.setMember(member);
         visitedPlace.setMemo(postDto.getMemo());
         return visitedPlace;
@@ -55,14 +55,14 @@ public class VisitedPlace {
 
 
     public void update(VisitedPlaceDto.Patch patchDto) {
-        if (patchDto.getPlaceName() != null) {
-            this.setPlaceName(patchDto.getPlaceName());
+        if (patchDto.getName() != null) {
+            this.setName(patchDto.getName());
         }
-        if (patchDto.getPlaceAddress() != null) {
-            this.setPlaceAddress(patchDto.getPlaceAddress());
+        if (patchDto.getAddress() != null) {
+            this.setAddress(patchDto.getAddress());
         }
-        if (patchDto.getPlaceDescription() != null) {
-            this.setPlaceDescription(patchDto.getPlaceDescription());
+        if (patchDto.getDescription() != null) {
+            this.setDescription(patchDto.getDescription());
         }
         if (patchDto.getLatitude() != null) {
             this.setLatitude(patchDto.getLatitude());
@@ -70,8 +70,8 @@ public class VisitedPlace {
         if (patchDto.getLongitude() != null) {
             this.setLongitude(patchDto.getLongitude());
         }
-        if (patchDto.getPlacedAt() != null) {
-            this.setPlacedAt(patchDto.getPlacedAt());
+        if (patchDto.getCreatedAt() != null) {
+            this.setCreatedAt(patchDto.getCreatedAt());
         }
         if (patchDto.getMemo() != null) {
             this.setMemo(patchDto.getMemo());

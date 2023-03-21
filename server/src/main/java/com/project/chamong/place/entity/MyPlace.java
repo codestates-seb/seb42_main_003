@@ -19,25 +19,22 @@ public class MyPlace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // 설명
-    // 필수값
+    // 설명(필수)
     @NotEmpty
     private String memo;
     // 키워드
     private String keyword;
     // 내가 찾은 차박지에 관련 이미지
     private String image;
-    // 위도
-    // 필수값
+    // 위도(필수)
     @NotNull
     private Double latitude;
-    // 경도
-    // 필수값
+    // 경도(필수)
     @NotNull
     private Double longitude;
     // 생성 날짜
     @CreatedDate
-    private LocalDateTime placedAt;
+    private LocalDateTime createdAt;
     // 공유 상태
     private boolean shared;
 
