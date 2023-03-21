@@ -9,8 +9,14 @@ import { MapFloatButton } from '../styles/mapStyle';
 import { Tab } from '../styles/Tab';
 import { HiPlus, HiOutlineX } from 'react-icons/hi';
 import Nav from '../components/mobile/Nav';
-import { Input, TextArea } from '../styles/Input';
+import {
+  Input,
+  TextArea,
+  KeywordInput,
+  ImageInput,
+} from '../styles/Input';
 import { MapGetPosition } from '../components/map/MapGetPosition';
+// import useUploadImage from '../hooks/useUploadImage';
 
 const MyPageMain = styled.main`
   padding-bottom: 64px;
@@ -238,8 +244,8 @@ function MyPageMapContainer({ floatButtonHandler }: MyPageMapProps) {
   };
   useEffect(() => {
     let endpoint;
-    if(tabState===1) endpoint='mycamp';
-    else if(tabState===2) endpoint='history'
+    if (tabState === 1) endpoint = 'mycamp';
+    else if (tabState === 2) endpoint = 'history';
     axios({
       method: 'get',
       url: `http://localhost:3001/${endpoint}`,
@@ -280,27 +286,121 @@ function MyPageMapContainer({ floatButtonHandler }: MyPageMapProps) {
   );
 }
 
-interface AddCampmodalProps {
+interface AddCampModalProps {
   floatButtonHandler: () => void;
 }
 
-function AddCampModal({ floatButtonHandler }: AddCampmodalProps) {
-  const [title, setTitle] = useState<string>('');
+interface Themes {
+  keyword: string;
+  id: number;
+}
+
+function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
+  //내용을 저장합니다.
   const [text, setText] = useState<string>('');
-  const [keyword, setKeyword] = useState<string[]>([]);
+  //키워드 객체를 저장합니다.
+  const [keywords, setKeywords] = useState<Themes[]>([]);
+  //MapGetPosition 컴포넌트로부터 클릭한 좌표를 받습니다.
   const [position, setPosition] = useState<[number, number] | null>(null);
+  //MapGetPosition 컴포넌트로부터 좌표의 주소를 받습니다.
+  const [address, setAddress] = useState<any>(null);
+  //서버로부터 키워드 목록을 받아 추천 키워드로 띄워주는 state
+  const [themes, setThemes] = useState<Themes[]>([]);
+  //키워드를 눌렀을 시 포커스 효과와 키워드 목록을 띄워주는 state
+  const [isKeywordFocus, setIsKeywordFocus] = useState<boolean>(false);
+  //이미지를 저장하는 state
+  const [fileList, setFileList] = useState<FileList | null>(null);
+  
+
+  //아래 useEffect는 api화 해야함------------------------------------
+  useEffect(() => {
+    axios({
+      method: 'get',
+      url: 'http://localhost:3001/themes',
+    })
+      .then((res) => {
+        console.log(res.data);
+        setThemes(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  //-------------------------------------------------------------------
 
   const postCampHandler = () => {
     console.log({
-      title,
       text,
-      keyword,
+      keywords,
       position,
     });
   };
 
+  useEffect(() => {
+    console.log(position);
+  }, [position]);
+  useEffect(() => {
+    console.log(address);
+  }, [address]);
+
+  const keywordFocusHandler = () => {
+    setIsKeywordFocus(true);
+  };
+
+  const addKeywordHandler = (theme: Themes) => {
+    const isRepeat = keywords.find(
+      (prevTheme) => theme.id === prevTheme.id
+    );
+    if (keywords.length <= 2 && !isRepeat)
+      setKeywords((prevState: Themes[]) => [...prevState, theme]);
+  };
+
+  const removeKeywordHandler = (theme: Themes) => {
+    setKeywords((prevState: Themes[]) => {
+      return [
+        ...prevState.filter((prevTheme) => theme.id !== prevTheme.id),
+      ];
+    });
+  };
+
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const selectedFile = event.target.files;
+    if(selectedFile===null) return;
+    if (selectedFile[0] && selectedFile[0].type.match(/(png|jpg|jpeg)$/)) {
+      setFileList(selectedFile);
+    } else alert('jpg, png 확장자만 가능합니다!');
+  };
+
+  const imageForSend=()=>{
+        if(fileList===null) return null;
+        const formData = new FormData();
+        formData.append('image',fileList[0]);
+        return formData;
+      }
+
+  const sendImage = () => {
+    const formData=imageForSend();
+
+    axios({
+      method: 'post',
+      url: 'http://localhost:3002/img',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  };
+
+  useEffect(() => {
+    if(fileList) console.log(fileList[0]);
+  }, [fileList]);
+
   return (
-    <Modal>
+    <Modal
+      onClick={() => {
+        setIsKeywordFocus(false);
+        console.log('wat');
+      }}>
       <div className='wrapper'>
         <div className='header'>
           <h2>내가 찾은 차박지</h2>
@@ -309,24 +409,76 @@ function AddCampModal({ floatButtonHandler }: AddCampmodalProps) {
           </button>
         </div>
         <h3>정보</h3>
-        <Input
-          value={title}
-          onChange={(e: any) => setTitle(e.target.value)}
-          placeholder='제목'
-        />
+        <ImageInput
+          border={'var(--chamong__color)'}
+          color={'var(--chamong__color)'}
+          hcolor={'white'}
+          hover={'var(--chamong__color)'}
+          hborder={'var(--chamong__color)'}
+          padding='8px 14px'
+          radius='12px'>
+          <label htmlFor='file'>이미지 첨부</label>
+        <input
+          type='file'
+          id='file'
+          onChange={handleFileChange}></input>
+        {fileList && (
+          <span style={{ paddingLeft:'12px'}}>{fileList[0].name}</span>
+        )}
+        </ImageInput>
+        <button style={{ cursor: 'pointer',display:"block" }} onClick={sendImage}>임시 사진보내기!</button>
         <Input
           value={text}
           onChange={(e: any) => setText(e.target.value)}
           placeholder='내용'
         />
-        <Input
-          value={keyword}
-          onChange={(e: any) => setKeyword(e.target.value)}
-          placeholder='키워드'
-        />
+        <KeywordInput
+          isFocus={isKeywordFocus}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsKeywordFocus(true);
+          }}>
+          {keywords.length >= 1 ? (
+            <ul className='tags'>
+              {keywords.map((keyword) => {
+                return (
+                  <li key={keyword.id} className='keyword-box'>
+                    <span className='keyword-title'>
+                      {keyword.keyword}
+                    </span>
+                    <span
+                      className='box_close'
+                      onClick={() => removeKeywordHandler(keyword)}>
+                      &times;
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <span className='place-holder'>키워드</span>
+          )}
+          <div className='button-box'>
+            <h3>키워드</h3>
+            {themes &&
+              themes.map((theme) => {
+                return (
+                  <Button
+                    key={theme.id}
+                    id={String(theme.id)}
+                    onClick={() => addKeywordHandler(theme)}>
+                    {theme.keyword}
+                  </Button>
+                );
+              })}
+          </div>
+        </KeywordInput>
         <h3>위치</h3>
         <div className='map'>
-          <MapGetPosition />
+          <MapGetPosition
+            setAddress={setAddress}
+            setPosition={setPosition}
+          />
         </div>
         <Button
           onClick={postCampHandler}
@@ -346,13 +498,10 @@ function AddCampModal({ floatButtonHandler }: AddCampmodalProps) {
 }
 
 interface editProfileModalProps {
-  editProfileHandler:()=>void;
+  editProfileHandler: () => void;
 }
 
-function EditProfileModal({editProfileHandler}:editProfileModalProps) {
-
-
-
+function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
   return (
     <Modal>
       <div className='wrapper'>
@@ -362,10 +511,10 @@ function EditProfileModal({editProfileHandler}:editProfileModalProps) {
             <HiOutlineX />
           </button>
         </div>
-        <Input type='file'/>
-        <Input placeholder='이름'/>
-        <TextArea placeholder='자기소개'/>
-        <Input placeholder='내 차량'/>
+        <Input type='file' />
+        <Input placeholder='이름' />
+        <TextArea placeholder='자기소개' />
+        <Input placeholder='내 차량' />
         <Button
           border={'var(--chamong__color)'}
           color={'var(--chamong__color)'}

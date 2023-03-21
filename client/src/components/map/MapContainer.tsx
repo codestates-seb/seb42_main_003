@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import mapMarker from '../../assets/map/map_marker.svg';
 import ContentCard from '../ContentCard';
 import { MapWrapper, MapInfoWrapper } from '../../styles/mapStyle';
@@ -15,8 +14,9 @@ declare global {
 interface MapProps {
   campList: any[];
   isMyPage?:boolean;
+  level?:number;
 }
-export function MapContainer({ campList,isMyPage }: MapProps) {
+export function MapContainer({ campList,isMyPage,level=13 }: MapProps) {
   let lastestMarker: any = null;
   const container = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<any>(null);
@@ -35,7 +35,7 @@ export function MapContainer({ campList,isMyPage }: MapProps) {
           firstCamp.mapY,
           firstCamp.mapX
         ), //지도의 중심좌표.
-        level: 13, //지도의 레벨(확대, 축소 정도)
+        level: level, //지도의 레벨(확대, 축소 정도)
       }
       setMap(new window.kakao.maps.Map(container.current, options)); //지도 생성 및 객체 리턴
 
