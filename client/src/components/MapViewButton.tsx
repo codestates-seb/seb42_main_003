@@ -7,7 +7,7 @@ export const Container = styled.div`
   position: fixed;
   top: 85%;
   left: 35%;
-  z-index: 999;
+  z-index: 996;
 
   .button_box {
     cursor: pointer;
