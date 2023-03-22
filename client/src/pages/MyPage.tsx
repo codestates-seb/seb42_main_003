@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { MobileHeader } from '../styles/mobileStyle';
 import { Modal } from '../styles/Modal';
 import axios from 'axios';
@@ -8,89 +7,20 @@ import MapContainer from '../components/map/MapContainer';
 import { FloatButton } from '../styles/mapStyle';
 import { Tab } from '../styles/Tab';
 import { HiPlus, HiOutlineX } from 'react-icons/hi';
-import Nav from '../components/mobile/Nav';
-import { Input, TextArea, KeywordInput, ImageInput } from '../styles/Input';
+import {
+  Input,
+  TextArea,
+  KeywordInput,
+  ImageInput,
+} from '../styles/Input';
 import { MapGetPosition } from '../components/map/MapGetPosition';
+import {
+  PageMain,
+  PageArticle,
+  MyPageMemberInfo,
+} from '../styles/pageStyle';
+import ViewHistoryModal from '../components/mobile/ViewHistoryModal';
 // import useUploadImage from '../hooks/useUploadImage';
-
-const MyPageMain = styled.main`
-  padding-bottom: 64px;
-  padding-top: 50px;
-`;
-
-const MyPageArticle = styled.article`
-  width: 100%;
-  padding: 12px;
-  border-bottom: 1px solid #d9d9d9;
-  h2 {
-    font-size: var(--fs__h2);
-    font-weight: 700;
-    padding-bottom: 16px;
-  }
-  > div {
-    display: flex;
-  }
-  .map-container {
-    display: flex;
-    width: 100%;
-    height: 350px;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    ${Tab} {
-      position: absolute;
-      z-index: 500;
-      width: 270px;
-      padding-top: 16px;
-    }
-    ${FloatButton} {
-      position: absolute;
-      z-index: 500;
-      bottom: 25px;
-      right: 25px;
-    }
-    @media screen and (min-width: 481px) {
-      height: 450px;
-    }
-    @media screen and (min-width: 768px) {
-      height: 600px;
-    }
-  }
-`;
-
-const MyPageMemberInfo = styled(MyPageArticle)`
-  width: 100%;
-
-  img {
-    width: 60px;
-    height: 60px;
-    border-radius: 30px;
-  }
-  > div {
-    display: flex;
-    justify-content: space-between;
-    > div {
-      display: flex;
-      align-items: center;
-    }
-  }
-  .member-info-upper {
-    padding-left: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: baseline;
-    .member-info-nickname {
-      font-size: var(--fs__h1);
-      padding-bottom: 5px;
-    }
-  }
-  button {
-  }
-  p {
-    padding-top: 16px;
-    font-size: var(--fs__mid);
-  }
-`;
 
 //멤버 정보 타입
 interface MemberData {
@@ -112,17 +42,41 @@ interface MyPageProps {
 function MyPage() {
   const [addCampModal, setAddCampModal] = useState<boolean>(false);
   const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
+  //viewHistory state는 모바일에서만 사용
+  const [viewHistoryModal, setViewHistoryModal] = useState<boolean>(false);
+  //내부width를 기록하기 위한 state와 이벤트리스너
+  const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const resizeListener = () => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', resizeListener);
+  }, []);
+  //width가 768px 이상이 될 경우 커뮤니티 활동기록을 자동으로 false로 바꾸는 useEffect
+  useEffect(() => {
+    if (innerWidth >= 768) setViewHistoryModal(false);
+    console.log(innerWidth);
+  }, [innerWidth]);
 
   const floatButtonHandler = () => {
     console.log('addCampModal true');
     setEditProfileModal(false);
+    setViewHistoryModal(false);
     setAddCampModal(!addCampModal);
   };
 
   const editProfileHandler = () => {
     console.log('editProfileModal true');
     setAddCampModal(false);
+    setViewHistoryModal(false);
     setEditProfileModal(!editProfileModal);
+  };
+
+  const viewHistoryHandler = () => {
+    console.log('viewHistoryModal true');
+    setAddCampModal(false);
+    setEditProfileModal(false);
+    setViewHistoryModal(!viewHistoryModal);
   };
 
   //테스트가 끝나면 아래의 props를 사용해주세요.
@@ -135,31 +89,33 @@ function MyPage() {
         method: 'get',
         url: 'http://localhost:3001/member',
       })
-        .then(res => {
+        .then((res) => {
           setMemberData(res.data);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
   }, []);
   //테스트가 끝나면 위의 코드를 지워주세요.
 
   return (
     <>
-      <MobileHeader>
+      {!viewHistoryModal&&<MobileHeader>
         <h1>마이페이지</h1>
-      </MobileHeader>
-      <MyPageMain>
+      </MobileHeader>}
+      <PageMain>
         {memberData && (
           <MyPageMemberInfo>
             <h2>나의 프로필</h2>
             <div>
               <div>
-                <img src={memberData.profile_img} alt="profile-img"></img>
-                <div className="member-info-upper">
-                  <span className="member-info-nickname">
+                <img src={memberData.profile_img} alt='profile-img'></img>
+                <div className='member-info-upper'>
+                  <span className='member-info-nickname'>
                     {memberData.nickname}
                   </span>
-                  <span className="member-info-car">{memberData.car_name}</span>
+                  <span className='member-info-car'>
+                    {memberData.car_name}
+                  </span>
                 </div>
               </div>
               <Button
@@ -168,10 +124,9 @@ function MyPage() {
                 hcolor={'white'}
                 hover={'var(--chamong__color)'}
                 hborder={'var(--chamong__color)'}
-                padding="13px 15px"
-                radius="12px"
-                onClick={editProfileHandler}
-              >
+                padding='13px 15px'
+                radius='12px'
+                onClick={editProfileHandler}>
                 프로필 수정
               </Button>
             </div>
@@ -179,27 +134,27 @@ function MyPage() {
           </MyPageMemberInfo>
         )}
         {
-          <MyPageArticle>
+          <PageArticle>
             <h2>나의 차박지</h2>
             <MyPageMapContainer floatButtonHandler={floatButtonHandler} />
-          </MyPageArticle>
+          </PageArticle>
         }
-        <MyPageArticle>
+        <PageArticle>
           <h2>커뮤니티</h2>
           <Button
+            onClick={viewHistoryHandler}
             border={'var(--chamong__color)'}
             color={'var(--chamong__color)'}
             hcolor={'white'}
             hover={'var(--chamong__color)'}
             hborder={'var(--chamong__color)'}
-            padding="13px 15px"
-            radius="12px"
-            width="100%"
-          >
+            padding='13px 15px'
+            radius='12px'
+            width='100%'>
             커뮤니티 활동기록
           </Button>
-        </MyPageArticle>
-        <MyPageArticle>
+        </PageArticle>
+        <PageArticle>
           <h2>메뉴</h2>
           <Button
             border={'var(--chamong__color)'}
@@ -207,18 +162,20 @@ function MyPage() {
             hcolor={'white'}
             hover={'var(--chamong__color)'}
             hborder={'var(--chamong__color)'}
-            padding="13px 15px"
-            radius="12px"
-            width="100%"
-          >
+            padding='13px 15px'
+            radius='12px'
+            width='100%'>
             로그아웃
           </Button>
-        </MyPageArticle>
-      </MyPageMain>
-      {addCampModal && <AddCampModal floatButtonHandler={floatButtonHandler} />}
+        </PageArticle>
+      </PageMain>
+      {addCampModal && (
+        <AddCampModal floatButtonHandler={floatButtonHandler} />
+      )}
       {editProfileModal && (
         <EditProfileModal editProfileHandler={editProfileHandler} />
       )}
+      {viewHistoryModal && <ViewHistoryModal viewHistoryHandler={viewHistoryHandler}></ViewHistoryModal>}
       {/* <Nav></Nav> */}
     </>
   );
@@ -244,25 +201,24 @@ function MyPageMapContainer({ floatButtonHandler }: MyPageMapProps) {
       method: 'get',
       url: `http://localhost:3001/${endpoint}`,
     })
-      .then(res => {
+      .then((res) => {
         console.log(res.data);
         setCampData(res.data);
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }, [tabState]);
   //위의 코드는 api화 해주세요
 
   return (
-    <div className="map-container">
+    <div className='map-container'>
       <div
         style={{
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
           position: 'absolute',
-        }}
-      >
-        <Tab height="37px" state={tabState}>
+        }}>
+        <Tab height='37px' state={tabState}>
           <button value={1} onClick={setTabHandler}>
             내가 찾은 차박지
           </button>
@@ -271,7 +227,7 @@ function MyPageMapContainer({ floatButtonHandler }: MyPageMapProps) {
           </button>
         </Tab>
       </div>
-      {campData && <MapContainer campList={campData} />}
+      {campData && <MapContainer campList={campData} padding='16px' />}
       {tabState === 1 && (
         <FloatButton onClick={floatButtonHandler}>
           <HiPlus />
@@ -312,11 +268,11 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       method: 'get',
       url: 'http://localhost:3001/themes',
     })
-      .then(res => {
+      .then((res) => {
         console.log(res.data);
         setThemes(res.data);
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }, []);
   //-------------------------------------------------------------------
 
@@ -340,18 +296,24 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
   };
 
   const addKeywordHandler = (theme: Themes) => {
-    const isRepeat = keywords.find(prevTheme => theme.id === prevTheme.id);
+    const isRepeat = keywords.find(
+      (prevTheme) => theme.id === prevTheme.id
+    );
     if (keywords.length <= 2 && !isRepeat)
       setKeywords((prevState: Themes[]) => [...prevState, theme]);
   };
 
   const removeKeywordHandler = (theme: Themes) => {
     setKeywords((prevState: Themes[]) => {
-      return [...prevState.filter(prevTheme => theme.id !== prevTheme.id)];
+      return [
+        ...prevState.filter((prevTheme) => theme.id !== prevTheme.id),
+      ];
     });
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const selectedFile = event.target.files;
     if (selectedFile === null) return;
     if (selectedFile[0] && selectedFile[0].type.match(/(png|jpg|jpeg)$/)) {
@@ -388,10 +350,9 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       onClick={() => {
         setIsKeywordFocus(false);
         console.log('wat');
-      }}
-    >
-      <div className="wrapper">
-        <div className="header">
+      }}>
+      <div className='wrapper'>
+        <div className='header'>
           <h2>내가 찾은 차박지</h2>
           <button onClick={floatButtonHandler}>
             <HiOutlineX />
@@ -404,43 +365,41 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding="8px 14px"
-          radius="12px"
-        >
-          <label htmlFor="file">이미지 첨부</label>
-          <input type="file" id="file" onChange={handleFileChange}></input>
+          padding='8px 14px'
+          radius='12px'>
+          <label htmlFor='file'>이미지 첨부</label>
+          <input type='file' id='file' onChange={handleFileChange}></input>
           {fileList && (
             <span style={{ paddingLeft: '12px' }}>{fileList[0].name}</span>
           )}
         </ImageInput>
         <button
           style={{ cursor: 'pointer', display: 'block' }}
-          onClick={sendImage}
-        >
+          onClick={sendImage}>
           임시 사진보내기!
         </button>
         <Input
           value={text}
           onChange={(e: any) => setText(e.target.value)}
-          placeholder="내용"
+          placeholder='내용'
         />
         <KeywordInput
           isFocus={isKeywordFocus}
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation();
             setIsKeywordFocus(true);
-          }}
-        >
+          }}>
           {keywords.length >= 1 ? (
-            <ul className="tags">
-              {keywords.map(keyword => {
+            <ul className='tags'>
+              {keywords.map((keyword) => {
                 return (
-                  <li key={keyword.id} className="keyword-box">
-                    <span className="keyword-title">{keyword.keyword}</span>
+                  <li key={keyword.id} className='keyword-box'>
+                    <span className='keyword-title'>
+                      {keyword.keyword}
+                    </span>
                     <span
-                      className="box_close"
-                      onClick={() => removeKeywordHandler(keyword)}
-                    >
+                      className='box_close'
+                      onClick={() => removeKeywordHandler(keyword)}>
                       &times;
                     </span>
                   </li>
@@ -448,18 +407,17 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
               })}
             </ul>
           ) : (
-            <span className="place-holder">키워드</span>
+            <span className='place-holder'>키워드</span>
           )}
-          <div className="button-box">
+          <div className='button-box'>
             <h3>키워드</h3>
             {themes &&
-              themes.map(theme => {
+              themes.map((theme) => {
                 return (
                   <Button
                     key={theme.id}
                     id={String(theme.id)}
-                    onClick={() => addKeywordHandler(theme)}
-                  >
+                    onClick={() => addKeywordHandler(theme)}>
                     {theme.keyword}
                   </Button>
                 );
@@ -467,8 +425,11 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           </div>
         </KeywordInput>
         <h3>위치</h3>
-        <div className="map">
-          <MapGetPosition setAddress={setAddress} setPosition={setPosition} />
+        <div className='map'>
+          <MapGetPosition
+            setAddress={setAddress}
+            setPosition={setPosition}
+          />
         </div>
         <Button
           onClick={postCampHandler}
@@ -477,10 +438,9 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding="13px 15px"
-          radius="12px"
-          width="100%"
-        >
+          padding='13px 15px'
+          radius='12px'
+          width='100%'>
           작성 완료
         </Button>
       </div>
@@ -495,27 +455,26 @@ interface editProfileModalProps {
 function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
   return (
     <Modal>
-      <div className="wrapper">
-        <div className="header">
+      <div className='wrapper'>
+        <div className='header'>
           <h2>프로필 수정</h2>
           <button onClick={editProfileHandler}>
             <HiOutlineX />
           </button>
         </div>
-        <Input type="file" />
-        <Input placeholder="이름" />
-        <TextArea placeholder="자기소개" />
-        <Input placeholder="내 차량" />
+        <Input type='file' />
+        <Input placeholder='이름' />
+        <TextArea placeholder='자기소개' />
+        <Input placeholder='내 차량' />
         <Button
           border={'var(--chamong__color)'}
           color={'var(--chamong__color)'}
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding="13px 15px"
-          radius="12px"
-          width="100%"
-        >
+          padding='13px 15px'
+          radius='12px'
+          width='100%'>
           수정 완료
         </Button>
       </div>

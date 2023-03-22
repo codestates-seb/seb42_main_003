@@ -13,10 +13,16 @@ declare global {
 
 interface MapProps {
   campList: any[];
-  isMyPage?:boolean;
-  level?:number;
+  isMyPage?: boolean;
+  level?: number;
+  padding?: string;
 }
-export function MapContainer({ campList,isMyPage,level=13 }: MapProps) {
+export function MapContainer({
+  campList,
+  isMyPage,
+  level = 13,
+  padding
+}: MapProps) {
   let lastestMarker: any = null;
   const container = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<any>(null);
@@ -36,11 +42,8 @@ export function MapContainer({ campList,isMyPage,level=13 }: MapProps) {
           firstCamp.mapX
         ), //지도의 중심좌표.
         level: level, //지도의 레벨(확대, 축소 정도)
-      }
+      };
       setMap(new window.kakao.maps.Map(container.current, options)); //지도 생성 및 객체 리턴
-
-     
-      
     }
   }, []);
 
@@ -59,7 +62,10 @@ export function MapContainer({ campList,isMyPage,level=13 }: MapProps) {
   useEffect(() => {
     //마커 클래스 배열 생성
     if (map && campList) {
-      if(Object.keys(campList).length>=1) map.panTo(new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX));
+      if (Object.keys(campList).length >= 1)
+        map.panTo(
+          new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX)
+        );
       setCurrentCamp(null);
       mapReload();
       map.relayout();
@@ -69,7 +75,7 @@ export function MapContainer({ campList,isMyPage,level=13 }: MapProps) {
         'click',
         function (mouseEvent: any) {
           setCurrentCamp(null);
-          if(lastestMarker) lastestMarker.setImage(markerImageNormal);
+          if (lastestMarker) lastestMarker.setImage(markerImageNormal);
         }
       );
 
@@ -146,22 +152,31 @@ export function MapContainer({ campList,isMyPage,level=13 }: MapProps) {
           height: '100%',
           borderRadius: '12px',
         }}></div>
-      {currentCamp && <MapInfoContainer camp={currentCamp} />}
+      {currentCamp && <MapInfoContainer camp={currentCamp} padding={padding} />}
     </MapWrapper>
   );
 }
 
-
-function MapInfoContainer({ camp }: any) {
+function MapInfoContainer({ camp, padding='16px' }: any) {
   const navigate = useNavigate();
   return (
     <MapInfoWrapper>
-      <div style={{ zIndex: '999', padding: '16px' }}>
+      <div style={{ zIndex:'999', width:'100%',padding:`16px 16px ${padding}`,display:'flex',justifyContent:'center' }}>
         <ContentCard
-          data={camp}
+        data={camp}
           flex_dir='row'
+          content_align='start'
+          bottom_justify='start'
+          img_width='auto'
           radius='25px 0px 0px 25px'
+          content_rd='0px 25px 25px 0px'
           line='1.2'
+          content_pd='15px'
+          wrap='wrap'
+          img_height='auto'
+          ratio='0.5'
+          content_width='50%'
+          webkit='-webkit-box'
         />
       </div>
     </MapInfoWrapper>

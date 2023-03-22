@@ -6,8 +6,8 @@ import Main from './pages/Main';
 import MyPage from './pages/MyPage';
 import Content from './pages/Content';
 import { Community } from './pages/Community';
-import { CommunityContent } from './pages/CommunityContent';
 import Nav from './components/mobile/Nav';
+import PostDetail from './pages/PostDetail';
 
 function App() {
   return (
@@ -18,10 +18,7 @@ function App() {
         <Route path="/mypage" element={<MyPage></MyPage>} />
         <Route path="/content/:contentId" element={<Content></Content>} />
         <Route path="/community" element={<Community></Community>} />
-        <Route
-          path="/community/:id"
-          element={<CommunityContent></CommunityContent>}
-        />
+        <Route path='/community/:postId' element={<PostDetail></PostDetail>}/>
       </Routes>
       <Nav></Nav>
     </BrowserRouter>
