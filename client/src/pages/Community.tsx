@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 import { Post } from '../components/Review';
+import { HiOutlineSearch } from 'react-icons/hi';
 import SearchBar from '../components/SearchBar';
 import { MobileHeader } from '../styles/mobileStyle';
 import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
+import { SearchbarPlain } from '../styles/searchbarPlain';
 
 export const Container = styled.div`
   @media (max-width: 768px) {
@@ -21,14 +23,11 @@ export const Container = styled.div`
 
     @media (min-width: 768px) {
       .search_mobile {
-        /* display: none; */
         padding: 10px;
       }
       .wrapper {
         width: 100%;
         max-width: 900px;
-
-        /* justify-content: center; */
       }
     }
   }
@@ -38,6 +37,18 @@ export const Container = styled.div`
   .mobile {
     @media (min-width: 768px) {
       display: none;
+    }
+  }
+
+  .desktop_header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    .desktop_h1 {
+      font-size: var(--fs__h1);
+      font-weight: 500;
     }
   }
 `;
@@ -50,8 +61,14 @@ export function Community() {
           <MobileHeader className="mobile">
             <h1>커뮤니티</h1>
           </MobileHeader>
-          <div className="search_mobile">
-            <SearchBar></SearchBar>
+          <div className="desktop_header">
+            <h1 className="desktop_h1">커뮤니티</h1>
+            <div className="search_mobile">
+              <SearchbarPlain>
+                <HiOutlineSearch className="search_icon" />
+                <input placeholder="검색"></input>
+              </SearchbarPlain>
+            </div>{' '}
           </div>
           <div className="post">
             <Post />

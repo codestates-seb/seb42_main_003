@@ -12,6 +12,7 @@ import Banner from '../components/destop/Banner';
 import Login from '../components/Login';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { click } from '../store/clickedSlice';
+import { MapViewButton } from '../components/MapViewButton';
 const Container = styled.div``;
 
 function Main() {
@@ -20,6 +21,7 @@ function Main() {
   const dispatch = useAppDispatch();
   return (
     <Container onClick={() => dispatch(click(false))}>
+      <MapViewButton></MapViewButton>
       <Header></Header>
       <HeaderSearch view={'none'} />
       {/* <SearchModal /> */}
