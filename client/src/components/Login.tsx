@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { type } from '@testing-library/user-event/dist/type';
+import { Input } from '../styles/Input';
 export const Background = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
   width: 100%;
@@ -61,20 +62,20 @@ export const Container = styled.div`
     }
   }
   .input_field {
-    border: 2px solid var(--darkGreen__color);
+    /* border: 2px solid var(--darkGreen__color); */
     width: 100%;
     height: 3.5em;
     border-radius: 12px;
     margin-bottom: 15px;
   }
-  input {
+  /* input {
     height: 100%;
     width: 100%;
     padding-left: 10px;
     ::placeholder {
       vertical-align: center;
     }
-  }
+  } */
   .hello {
     font-size: 20px;
     color: #538b4a;
@@ -157,14 +158,21 @@ function Login({ setIsLogin }: LoginInfo) {
             </div>
             {!isUserState ? (
               <div className="input_field">
-                <input placeholder="닉네임"></input>
+                <Input color={'green'} placeholder="닉네임"></Input>
+                {/* <input ></input> */}
               </div>
             ) : null}
             <div className="input_field">
-              <input placeholder="이메일"></input>
+              <Input color={'green'} placeholder="이메일"></Input>
+              {/* <input ></input> */}
             </div>
             <div className="input_field">
-              <input placeholder="비밀번호"></input>
+              <Input
+                color={'green'}
+                placeholder="비밀번호"
+                type={'password'}
+              ></Input>
+              {/* <input ></input> */}
             </div>
           </div>
           <div className="bottom">

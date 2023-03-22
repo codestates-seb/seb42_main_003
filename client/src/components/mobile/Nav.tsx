@@ -34,6 +34,7 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
   }
   .nav_box_active {
     width: 70px;
@@ -80,7 +81,7 @@ const title: Title = [
   {
     id: 2,
     text: '유저픽',
-    link: '/',
+    link: '#',
   },
   {
     id: 3,

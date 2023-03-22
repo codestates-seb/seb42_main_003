@@ -11,7 +11,9 @@ export const SearchbarPlain = styled('div')<ExampleProps>`
   background-color: white;
   border-radius: 5px;
   height: 40px;
-  width: 100%;
+  width: 35%;
+  align-self: flex-end;
+  /* width: 100%; */
   position: relative;
 
   input {
