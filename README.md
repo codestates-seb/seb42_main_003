@@ -18,6 +18,9 @@
 
 
 @ FE
+- TypeScript 
+- React
+- Redux Toolkit
 - Visual Studio Code
 
 프로젝트 설명
