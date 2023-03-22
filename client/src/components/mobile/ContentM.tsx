@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getContent } from '../../api/api';
+import { getData } from '../../api/api';
 import { FiArrowLeft } from 'react-icons/fi';
 import { FaRestroom } from 'react-icons/fa';
 import { SiForestry } from 'react-icons/si';
@@ -167,7 +167,7 @@ export function ContentM({ contentId }: ContentInfo) {
   const [isModal, setIsModal] = useState(false);
 
   useEffect(() => {
-    getContent().then(res => {
+    getData('content').then(res => {
       const content = res.filter((ele: any) => {
         return ele.contentId === contentId;
       });

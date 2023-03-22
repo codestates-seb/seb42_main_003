@@ -53,6 +53,9 @@ export const Container = styled.div`
   }
 `;
 export function Community() {
+  // useEffect(() => {
+  //   getCommunity().then(res => setIsCommunity(res));
+  // }, []);
   return (
     <Container>
       <Header width_M={'1000px'}></Header>
