@@ -52,8 +52,9 @@ export const Input = styled.input<inputProps>`
   height: 44px;
   font-size: 15px;
   font-weight: 500;
-  color: ${(props) =>
-    props.color ? inputColor(props.color) : 'var(--chamong__color)'};
+  /* color: ${(props) =>
+    props.color ? inputColor(props.color) : 'var(--chamong__color)'}; */
+  color: var(--fontBlack__900);
   background-color: ${(props) =>
     props.color ? inputBackgroundColor(props.color) : 'white'};
   border: 1px solid
@@ -174,8 +175,8 @@ export const KeywordInput = styled.div<keywordInputProps>`
 `;
 
 export const ImageInput = styled.div<ButtonStyled>`
-display: flex;
-align-items:center;
+  display: flex;
+  align-items: center;
   > label {
     display: flex;
     align-items: center;

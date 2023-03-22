@@ -1,10 +1,19 @@
-import styled from "styled-components";
-import { Tab } from "./Tab";
-import { FloatButton } from "./mapStyle";
+import styled from 'styled-components';
+import { Tab } from './Tab';
+import { FloatButton } from './mapStyle';
 
-export const PageMain = styled.main`
-  padding-bottom: 64px;
-  padding-top: 50px;
+interface PageMainProps {
+  top?: string;
+  bottom?: string;
+}
+
+export const PageMain = styled.main<PageMainProps>`
+  padding-top: ${(props) => props.top || '50px'};
+  padding-bottom: ${(props) => props.bottom || '64px'};
+  @media screen and (min-width: 768px) {
+    padding-top: none;
+    padding-bottom: none;
+  }
 `;
 
 export const PageArticle = styled.article`
@@ -78,5 +87,70 @@ export const MyPageMemberInfo = styled(PageArticle)`
   p {
     padding-top: 16px;
     font-size: var(--fs__mid);
+  }
+`;
+
+export const PostArticle = styled(MyPageMemberInfo)`
+  img {
+    width: 35px;
+    height: 35px;
+  }
+  .member-info-upper {
+    .member-info-nickname {
+      font-size: 16px;
+      padding-bottom: 5px;
+    }
+    .member-created-at {
+      color: var(--fontBlack__100);
+    }
+  }
+  .post-info {
+    font-size: 16px;
+    span {
+      padding-right: 12px;
+      span {
+        padding-left: 4px;
+      }
+    }
+  }
+`;
+export const CommentArticle = styled(MyPageMemberInfo)`
+  img {
+    width: 35px;
+    height: 35px;
+  }
+  .member-info-upper {
+    flex-direction: row;
+    .member-info-nickname {
+      font-size: 16px;
+      padding-bottom: 5px;
+    }
+    .member-created-at {
+      color: var(--fontBlack__100);
+      margin-left: 12px;
+    }
+  }
+`;
+
+export const PostCommentStyle = styled.form`
+  position: fixed;
+  display: flex;
+  width:100%;
+  height:128px;
+  padding: 6px 12px 64px;
+  border-radius: 25px 25px 0px 0px;
+  background-color: var(--searchbar__color);
+  bottom: 0;
+  .post-comment-input {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    > button {
+      font-size: var(--fs__h1);
+      color:var(--chamong__color);
+      padding:12px;
+      cursor: pointer;
+    }
   }
 `;
