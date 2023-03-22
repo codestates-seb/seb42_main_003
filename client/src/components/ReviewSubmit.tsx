@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { AiFillStar } from 'react-icons/ai';
 import { Button } from '../styles/Button';
 
@@ -95,6 +96,23 @@ export const RatingBox = styled.div`
   }
 `;
 export function ReviewSubmit() {
+  const edit = useAppSelector(state => state.review);
+  useEffect(() => {
+    setIsEdit(edit);
+    handleStarClick(edit.grade - 1);
+    // setClicked(handleStarClick(edit.grade));
+    return () => {
+      setIsEdit({
+        id: 0,
+        image: '',
+        user: '',
+        createdAt: '',
+        grade: 0,
+        body: '',
+      });
+      handleStarClick(0);
+    };
+  }, [edit]);
   const [clicked, setClicked] = useState<boolean[] | any>([
     false,
     false,
@@ -102,7 +120,18 @@ export function ReviewSubmit() {
     false,
     false,
   ]);
+
+  type ReviewType = {
+    id: number;
+    image: string;
+    user: string;
+    createdAt: string;
+    grade: number;
+    body: string;
+  };
+  const [isEdit, setIsEdit] = useState<ReviewType>(edit);
   const array = [0, 1, 2, 3, 4];
+  const input = useRef(null);
 
   const handleStarClick = (index: number) => {
     let clickStates = [...clicked];
@@ -136,7 +165,12 @@ export function ReviewSubmit() {
           </div>
         </div>
         <div className="text_box">
-          <textarea placeholder="내용을 작성해주세요"></textarea>
+          <textarea
+            placeholder="내용을 작성해주세요"
+            ref={input}
+            value={isEdit.body}
+            onChange={e => setIsEdit({ ...isEdit, body: e.target.value })}
+          ></textarea>
         </div>
       </div>
       <div className="button_field">
@@ -152,7 +186,7 @@ export function ReviewSubmit() {
             hborder="var(--chamong__color)"
             font="12px"
           >
-            등록
+            {isEdit.body ? '수정' : '등록'}
           </Button>
         </div>
       </div>
