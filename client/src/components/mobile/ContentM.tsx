@@ -165,7 +165,7 @@ export function ContentM({ contentId }: ContentInfo) {
   const [isContent, setIsContent] = useState<any>({});
   const [isLike, setIsLike] = useState(false);
   const [isModal, setIsModal] = useState(false);
-  console.log(contentId);
+
   useEffect(() => {
     getContent().then(res => {
       const content = res.filter((ele: any) => {
@@ -175,7 +175,7 @@ export function ContentM({ contentId }: ContentInfo) {
     });
     window.scrollTo(0, 0);
   }, [contentId]);
-  console.log(isContent);
+
   return (
     <Container bg={isContent.firstImageUrl}>
       <MobileHeader>

@@ -229,8 +229,14 @@ export function ContentD({ contentId }: ContentInfo) {
   const [isLike, setIsLike] = useState(false);
 
   useEffect(() => {
-    getContent().then(res => setIsContent(res[Number(contentId)]));
-  }, []);
+    getContent().then(res => {
+      const content = res.filter((ele: any) => {
+        return ele.contentId === contentId;
+      });
+      setIsContent(content[0]);
+    });
+    window.scrollTo(0, 0);
+  }, [contentId]);
 
   return (
     <Container bg={isContent.firstImageUrl}>
