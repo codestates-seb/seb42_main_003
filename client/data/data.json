@@ -69644,6 +69644,74 @@
     "createdtime": "2023-01-16 16:46:49",
     "modifiedtime": "2023-01-16 16:46:49"
   }
-]
+],
+"post": [{
+  "id":1,
+  "post": {
+    "like":5,
+    "view":39,
+    "title": "낚시하기 좋은 장소 추천해주세요.",
+    "author": "김차몽",
+    "authorProfileImg":"http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+    "createdAt":"2023. 3. 22",
+    "isLike":false,
+    "content": "로렘 입숨 돌로르 싯 아멧, 콘세두르 아딥리싱 엘리트, 세드도 이모드 템퍼 쏘르티드 융 라보레 엣 도로레 마그나 알리콰. 닐 틴쿤트이트 에것 눈난. 퀴스 헨드러릿 돌로르 막나 에것 엣 로렘 입숨 돌로르 싯. 볼룻팟 오디오 팔리시시스 마우리스 싯 아멧 막사. 콤모도 오디오 아에넨 세드 아딥리싱 디암 도넥 아딥리싱 트리스뚜이크. 미 에것 마우리스 파레트라 엣. 논 텔루스 오르치 악 아우커토르 아우게. 엘리트 엣 임퍼디에트 뒤 악쿰산 싯. 오르나레 아르쿠 도위 비바무스 아르쿠 펠리스. 에게스타스 인테저 에것 알리콰트 닙 프레젠트. 인 학 하빗타쎄 플라테아 딕툼스트 퀴스쿠에 사지티스 푸루스. 풀비나르 엘레멘툼 인테저 엔임 네쿠에 볼룻팟 악."
+  },
+  "comment": [
+    {
+      "author": "박낚시",
+      "createdAt":"2023. 3. 22",
+      "authorProfileImg":"http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+      "text": "낚시 아무데서나 하면 불법이에요."
+    },
+    {
+      "author": "최배스",
+      "createdAt":"2023. 3. 22",
+      "authorProfileImg":"http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+      "text": "낚시터 가서 하세요."
+    },
+    { "author": "강태공", "createdAt":"2023. 3. 22","authorProfileImg":"http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg","text": "쓰레기는 줍고 가셔야 합니다." },
+    {
+      "author": "로렘",
+      "createdAt":"2023. 3. 22",
+      "authorProfileImg":"http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+      "text": "로렘 입숨 돌로르 싯 아멧, 콘세두르 아딥리싱 엘리트, 세드도 이모드 템퍼 쏘르티드 융 라보레 엣."
+    }
+  ]
+},
+{
+  "id":2,
+  "post": {
+    "like":5,
+    "view":39,
+    "title": "두번째 글입니다.",
+    "author": "김차몽",
+    "createdAt":"2023. 3. 23",
+    "isLike":true,
+    "authorProfileImg":"http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+    "content": "로렘 입숨 돌로르 싯 아멧, 콘세두르 아딥리싱 엘리트, 세드도 이모드 템퍼 쏘르티드 융 라보레 엣 도로레 마그나 알리콰. 닐 틴쿤트이트 에것 눈난. 퀴스 헨드러릿 돌로르 막나 에것 엣 로렘 입숨 돌로르 싯. 볼룻팟 오디오 팔리시시스 마우리스 싯 아멧 막사. 콤모도 오디오 아에넨 세드 아딥리싱 디암 도넥 아딥리싱 트리스뚜이크. 미 에것 마우리스 파레트라 엣. 논 텔루스 오르치 악 아우커토르 아우게. 엘리트 엣 임퍼디에트 뒤 악쿰산 싯. 오르나레 아르쿠 도위 비바무스 아르쿠 펠리스. 에게스타스 인테저 에것 알리콰트 닙 프레젠트. 인 학 하빗타쎄 플라테아 딕툼스트 퀴스쿠에 사지티스 푸루스. 풀비나르 엘레멘툼 인테저 엔임 네쿠에 볼룻팟 악."
+  },
+  "comment": [
+    {
+      "author": "박낚시",
+      "createdAt":"2023. 3. 23",
+      "authorProfileImg":"http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+      "text": "두번째 글 첫번째 댓글."
+    },
+    {
+      "author": "최배스",
+      "createdAt":"2023. 3. 23",
+      "authorProfileImg":"http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+      "text": "두번째 글 두번째 댓글."
+    },
+    { "author": "강태공","createdAt":"2023. 3. 23","authorProfileImg":"http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg", "text": "두번째 글 세번째 댓글" },
+    {
+      "author": "로렘",
+      "createdAt":"2023. 3. 23",
+      "authorProfileImg":"http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+      "text": "두번째 글 네번째 댓글"
+    }
+  ]
+}]
 }
 
