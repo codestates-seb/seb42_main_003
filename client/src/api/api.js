@@ -1,8 +1,9 @@
 import axios from 'axios';
+const url = process.env.REACT_APP_API_URL;
 
-export const getContent = () => {
+export const getData = endpoint => {
   return axios
-    .get('http://localhost:3001/content')
+    .get(`${url}/${endpoint}`)
     .then(res => res.data)
     .catch(err => console.log(err));
 };
