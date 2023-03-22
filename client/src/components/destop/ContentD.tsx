@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getData } from '../../api/api';
-import { FiArrowLeft } from 'react-icons/fi';
 import { FaRestroom } from 'react-icons/fa';
 import { SiForestry } from 'react-icons/si';
 import { BiWater } from 'react-icons/bi';
@@ -14,9 +13,7 @@ import { GiIsland } from 'react-icons/gi';
 import { AiFillStar } from 'react-icons/ai';
 import MapContainer from '../map/MapContainer';
 import { Button } from '../../styles/Button';
-import { Review } from '../Review';
 import { ReviewSubmit } from '../ReviewSubmit';
-import { Link } from 'react-router-dom';
 
 interface ContentInfo {
   bg?: URL;
@@ -391,7 +388,6 @@ export function ContentD({ contentId }: ContentInfo) {
                   <ReviewSubmit></ReviewSubmit>
                 </div>
               </div>
-              <Review></Review>
             </div>
           </div>
         </div>
