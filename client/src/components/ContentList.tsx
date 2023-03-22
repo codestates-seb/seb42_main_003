@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import ContentCard from './ContentCard';
 import { useState, useEffect } from 'react';
 import useIntersectionObserver from '../hooks/useIO';
-import { getContent } from '../api/api';
 import axios from 'axios';
 import CommunityBestD from './destop/CommunityBestD';
 import MyPick from './destop/MyPick';
@@ -67,11 +66,6 @@ function ContentList({}: CardList) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [itemIndex, setItemIndex] = useState(6);
   const [data, setData] = useState<Info>([]);
-
-  // useEffect(() => {
-  //   getContent().then(res => setContent(res));
-  //   if (content) setData([...content.slice(0, 6)]);
-  // }, []);
 
   useEffect(() => {
     axios.get('http://localhost:3001/content').then(res => {

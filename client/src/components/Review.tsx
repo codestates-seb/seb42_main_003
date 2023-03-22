@@ -162,9 +162,6 @@ export function Review() {
 
 export function Post() {
   const [isCommunity, setIsCommunity] = useState<any>([]);
-  useEffect(() => {
-    getCommunity().then(res => setIsCommunity(res));
-  }, []);
   return (
     <Container className="post">
       {isCommunity.map((ele: any) => {
