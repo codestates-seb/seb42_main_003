@@ -138,7 +138,6 @@ export function ReviewSubmit() {
         <div className="text_box">
           <textarea placeholder="내용을 작성해주세요"></textarea>
         </div>
-        {/* <Button>등록</Button> */}
       </div>
       <div className="button_field">
         <div className="button_wrap">
