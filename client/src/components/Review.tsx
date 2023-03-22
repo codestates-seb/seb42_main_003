@@ -4,10 +4,12 @@ import { getReview, getCommunity } from '../api/api';
 import { AiFillStar } from 'react-icons/ai';
 import { AiOutlineEye } from 'react-icons/ai';
 import { BsTextCenter } from 'react-icons/bs';
-import { BiLike } from 'react-icons/bi';
+import { FcLikePlaceholder } from 'react-icons/fc';
+import { FcLike } from 'react-icons/fc';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
-  .review {
+  .post {
     @media (min-width: 768px) {
       display: grid;
       gap: 17px 50px;
@@ -50,6 +52,28 @@ const Container = styled.div`
     line-height: 1.2;
     margin-bottom: 20px;
   }
+  .post_bottom {
+    line-height: 1.2;
+    margin-bottom: 20px;
+    @media (min-width: 768px) {
+      display: none;
+    }
+  }
+  .post_body {
+    padding: 5px 0 0 10px;
+    font-size: 16px;
+    color: var(--fontBlack__600);
+    font-weight: 500;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  .post_left {
+    @media (min-width: 768px) {
+      display: flex;
+      flex-direction: row;
+    }
+  }
   .date {
     padding-top: 3px;
     color: var(--fontBlack__400);
@@ -58,8 +82,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 15px;
-    /* position: relative; */
+    margin-bottom: 12px;
     width: 100%;
   }
   .header_left {
@@ -69,29 +92,42 @@ const Container = styled.div`
   .header_right {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    margin-bottom: 5px;
     justify-content: space-between;
-    /* position: absolute;
-    left: 62%; */
   }
   .field {
     flex-grow: 1;
     width: 3em;
     display: flex;
     flex-direction: row;
-    justify-self: flex-start;
-    margin-left: 0.5em;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+    /* margin-left: 0.5em; */
+    &.heart {
+      :hover {
+        cursor: pointer;
+        background-color: #f4f2f1;
+        border-radius: 16px;
+      }
+    }
   }
   span {
     margin-top: 2px;
     font-size: var(--fs__small);
     margin-left: 3px;
   }
-  .active {
-    color: var(--chamong__color);
-  }
+
   .wrap {
     margin: 25px 0;
     border-bottom: 2px solid #ebe1dd;
+  }
+  .post_icon {
+    font-size: 16px;
+    &.active {
+      color: var(--chamong__color);
+    }
   }
 `;
 
@@ -130,37 +166,45 @@ export function Post() {
     getCommunity().then(res => setIsCommunity(res));
   }, []);
   return (
-    <Container className="review">
+    <Container className="post">
       {isCommunity.map((ele: any) => {
         return (
           <div key={ele.id} className="wrap">
             <div className="header">
-              <div className="header_left">
-                <img src={ele.image} alt="img"></img>
-                <div className="top_mid">
-                  <div>{ele.user}</div>
-                  <div className="date">{ele.createdAt}</div>
+              <div className="post_left">
+                <div className="header_left">
+                  <img src={ele.image} alt="img"></img>
+                  <div className="top_mid">
+                    <div>{ele.user}</div>
+                    <div className="date">{ele.createdAt}</div>
+                  </div>
                 </div>
+                <p className="post_body">
+                  <Link to={`/community/${ele.id}`}>{ele.title}</Link>
+                </p>
               </div>
               <div className="header_right">
                 <div className="field">
-                  <AiOutlineEye style={{ fontSize: '16px' }} />
+                  <AiOutlineEye className="post_icon" />
                   <span>{ele.views}</span>
                 </div>
                 <div className="field">
-                  <BsTextCenter style={{ fontSize: '16px' }} />
+                  <BsTextCenter className="post_icon" />
                   <span>{ele.comment}</span>
                 </div>
-                <div className="field">
-                  <BiLike
-                    style={{ fontSize: '16px' }}
-                    className={ele.islike ? 'active' : ''}
-                  />
+                <div className="field heart">
+                  {ele.islike ? (
+                    <FcLike className="post_icon" />
+                  ) : (
+                    <FcLikePlaceholder className="post_icon" />
+                  )}
                   <span>{ele.like}</span>
                 </div>
               </div>
             </div>
-            <p className="bottom">{ele.title}</p>
+            <p className="post_bottom">
+              <Link to={`/community/${ele.id}`}>{ele.title}</Link>
+            </p>
           </div>
         );
       })}
