@@ -9,18 +9,9 @@ import { Tab } from '../styles/Tab';
 import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
 import { HiPlus, HiOutlineX } from 'react-icons/hi';
-import {
-  Input,
-  TextArea,
-  KeywordInput,
-  ImageInput,
-} from '../styles/Input';
+import { Input, TextArea, KeywordInput, ImageInput } from '../styles/Input';
 import { MapGetPosition } from '../components/map/MapGetPosition';
-import {
-  PageMain,
-  PageArticle,
-  MyPageMemberInfo,
-} from '../styles/pageStyle';
+import { PageMain, PageArticle, MyPageMemberInfo } from '../styles/pageStyle';
 import ViewHistoryModal from '../components/mobile/ViewHistoryModal';
 import useUploadImage from '../hooks/useUploadImage';
 import { uploadImageType } from '../hooks/useUploadImage';
@@ -95,17 +86,17 @@ function MyPage() {
         method: 'get',
         url: 'http://localhost:3001/member',
       })
-        .then((res) => {
+        .then(res => {
           setMemberData(res.data);
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     }
   }, []);
   //테스트가 끝나면 위의 코드를 지워주세요.
 
   return (
     <>
-    <Header width_M={'1000px'}></Header>
+      <Header width_M={'1000px'}></Header>
       {!viewHistoryModal && (
         <MobileHeader>
           <h1>마이페이지</h1>
@@ -117,14 +108,12 @@ function MyPage() {
             <h2>나의 프로필</h2>
             <div>
               <div>
-                <img src={memberData.profile_img} alt='profile-img'></img>
-                <div className='member-info-upper'>
-                  <span className='member-info-nickname'>
+                <img src={memberData.profile_img} alt="profile-img"></img>
+                <div className="member-info-upper">
+                  <span className="member-info-nickname">
                     {memberData.nickname}
                   </span>
-                  <span className='member-info-car'>
-                    {memberData.car_name}
-                  </span>
+                  <span className="member-info-car">{memberData.car_name}</span>
                 </div>
               </div>
               <Button
@@ -133,9 +122,10 @@ function MyPage() {
                 hcolor={'white'}
                 hover={'var(--chamong__color)'}
                 hborder={'var(--chamong__color)'}
-                padding='13px 15px'
-                radius='12px'
-                onClick={editProfileHandler}>
+                padding="13px 15px"
+                radius="12px"
+                onClick={editProfileHandler}
+              >
                 프로필 수정
               </Button>
             </div>
@@ -157,9 +147,10 @@ function MyPage() {
             hcolor={'white'}
             hover={'var(--chamong__color)'}
             hborder={'var(--chamong__color)'}
-            padding='13px 15px'
-            radius='12px'
-            width='100%'>
+            padding="13px 15px"
+            radius="12px"
+            width="100%"
+          >
             커뮤니티 활동기록
           </Button>
         </PageArticle>
@@ -171,22 +162,22 @@ function MyPage() {
             hcolor={'white'}
             hover={'var(--chamong__color)'}
             hborder={'var(--chamong__color)'}
-            padding='13px 15px'
-            radius='12px'
-            width='100%'>
+            padding="13px 15px"
+            radius="12px"
+            width="100%"
+          >
             로그아웃
           </Button>
         </PageArticle>
       </PageMain>
-      {addCampModal && (
-        <AddCampModal floatButtonHandler={floatButtonHandler} />
-      )}
+      {addCampModal && <AddCampModal floatButtonHandler={floatButtonHandler} />}
       {editProfileModal && (
         <EditProfileModal editProfileHandler={editProfileHandler} />
       )}
       {viewHistoryModal && (
         <ViewHistoryModal
-          viewHistoryHandler={viewHistoryHandler}></ViewHistoryModal>
+          viewHistoryHandler={viewHistoryHandler}
+        ></ViewHistoryModal>
       )}
       {/* <Nav></Nav> */}
       <Footer></Footer>
@@ -202,36 +193,38 @@ function MyPageMapContainer({ floatButtonHandler }: MyPageMapProps) {
   const [campData, setCampData] = useState<any>(null);
   const [tabState, setTabState] = useState<number>(1);
   //campList를 이 컴포넌트에서 부를것
+  console.log(campData);
   const setTabHandler = (e: any) => {
     const value = Number(e.target.value);
     if (tabState !== value) setTabState(value);
   };
   useEffect(() => {
     let endpoint;
-    if (tabState === 1) endpoint = 'mycamp';
+    if (tabState === 1) endpoint = 'userpick';
     else if (tabState === 2) endpoint = 'history';
     axios({
       method: 'get',
       url: `http://localhost:3001/${endpoint}`,
     })
-      .then((res) => {
+      .then(res => {
         console.log(res.data);
         setCampData(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   }, [tabState]);
   //위의 코드는 api화 해주세요
 
   return (
-    <div className='map-container'>
+    <div className="map-container">
       <div
         style={{
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
           position: 'absolute',
-        }}>
-        <Tab height='37px' state={tabState}>
+        }}
+      >
+        <Tab height="37px" state={tabState}>
           <button value={1} onClick={setTabHandler}>
             내가 찾은 차박지
           </button>
@@ -240,7 +233,7 @@ function MyPageMapContainer({ floatButtonHandler }: MyPageMapProps) {
           </button>
         </Tab>
       </div>
-      {campData && <MapContainer campList={campData} padding='16px' />}
+      {campData && <MapContainer campList={campData} padding="16px" />}
       {tabState === 1 && (
         <FloatButton onClick={floatButtonHandler}>
           <HiPlus />
@@ -274,7 +267,7 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
   const [isKeywordFocus, setIsKeywordFocus] = useState<boolean>(false);
   //이미지를 저장하는 state
   // const [fileList, setFileList] = useState<FileList | null>(null);
-  const {imageSrc, imageChange, imageFormData, imageDelete } =
+  const { imageSrc, imageChange, imageFormData, imageDelete } =
     useUploadImage();
 
   //아래 useEffect는 api화 해야함------------------------------------
@@ -283,11 +276,11 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       method: 'get',
       url: 'http://localhost:3001/themes',
     })
-      .then((res) => {
+      .then(res => {
         console.log(res.data);
         setThemes(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   }, []);
   //-------------------------------------------------------------------
 
@@ -311,23 +304,17 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
   };
 
   const addKeywordHandler = (theme: Themes) => {
-    const isRepeat = keywords.find(
-      (prevTheme) => theme.id === prevTheme.id
-    );
+    const isRepeat = keywords.find(prevTheme => theme.id === prevTheme.id);
     if (keywords.length <= 2 && !isRepeat)
       setKeywords((prevState: Themes[]) => [...prevState, theme]);
   };
 
   const removeKeywordHandler = (theme: Themes) => {
     setKeywords((prevState: Themes[]) => {
-      return [
-        ...prevState.filter((prevTheme) => theme.id !== prevTheme.id),
-      ];
+      return [...prevState.filter(prevTheme => theme.id !== prevTheme.id)];
     });
   };
   const sendImage = () => {
-    
-
     axios({
       method: 'post',
       url: 'http://localhost:3002/img',
@@ -343,9 +330,10 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       onClick={() => {
         setIsKeywordFocus(false);
         console.log('wat');
-      }}>
-      <div className='wrapper'>
-        <div className='header'>
+      }}
+    >
+      <div className="wrapper">
+        <div className="header">
           <h2>내가 찾은 차박지</h2>
           <button onClick={floatButtonHandler}>
             <HiOutlineX />
@@ -358,14 +346,20 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding='8px 14px'
-          radius='12px'>
-          {imageSrc.length>=1?<div className='preview'>
-            <img alt='preview' src={imageSrc}></img>
-            <button onClick={imageDelete}><HiOutlineX/></button>
-          </div>:
-          <label htmlFor='file'>이미지 첨부</label>}
-          <input type='file' id='file' onChange={imageChange}></input>
+          padding="8px 14px"
+          radius="12px"
+        >
+          {imageSrc.length >= 1 ? (
+            <div className="preview">
+              <img alt="preview" src={imageSrc}></img>
+              <button onClick={imageDelete}>
+                <HiOutlineX />
+              </button>
+            </div>
+          ) : (
+            <label htmlFor="file">이미지 첨부</label>
+          )}
+          <input type="file" id="file" onChange={imageChange}></input>
         </ImageInput>
         {/* <button
           style={{ cursor: 'pointer', display: 'block' }}
@@ -375,25 +369,25 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
         <Input
           value={text}
           onChange={(e: any) => setText(e.target.value)}
-          placeholder='내용'
+          placeholder="내용"
         />
         <KeywordInput
           isFocus={isKeywordFocus}
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             setIsKeywordFocus(true);
-          }}>
+          }}
+        >
           {keywords.length >= 1 ? (
-            <ul className='tags'>
-              {keywords.map((keyword) => {
+            <ul className="tags">
+              {keywords.map(keyword => {
                 return (
-                  <li key={keyword.id} className='keyword-box'>
-                    <span className='keyword-title'>
-                      {keyword.keyword}
-                    </span>
+                  <li key={keyword.id} className="keyword-box">
+                    <span className="keyword-title">{keyword.keyword}</span>
                     <span
-                      className='box_close'
-                      onClick={() => removeKeywordHandler(keyword)}>
+                      className="box_close"
+                      onClick={() => removeKeywordHandler(keyword)}
+                    >
                       &times;
                     </span>
                   </li>
@@ -401,17 +395,18 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
               })}
             </ul>
           ) : (
-            <span className='place-holder'>키워드</span>
+            <span className="place-holder">키워드</span>
           )}
-          <div className='button-box'>
+          <div className="button-box">
             <h3>키워드</h3>
             {themes &&
-              themes.map((theme) => {
+              themes.map(theme => {
                 return (
                   <Button
                     key={theme.id}
                     id={String(theme.id)}
-                    onClick={() => addKeywordHandler(theme)}>
+                    onClick={() => addKeywordHandler(theme)}
+                  >
                     {theme.keyword}
                   </Button>
                 );
@@ -419,11 +414,8 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           </div>
         </KeywordInput>
         <h3>위치</h3>
-        <div className='map'>
-          <MapGetPosition
-            setAddress={setAddress}
-            setPosition={setPosition}
-          />
+        <div className="map">
+          <MapGetPosition setAddress={setAddress} setPosition={setPosition} />
         </div>
         <Button
           onClick={postCampHandler}
@@ -432,9 +424,10 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding='13px 15px'
-          radius='12px'
-          width='100%'>
+          padding="13px 15px"
+          radius="12px"
+          width="100%"
+        >
           작성 완료
         </Button>
       </div>
@@ -447,14 +440,13 @@ interface editProfileModalProps {
 }
 
 function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
-
-  const {imageSrc, imageChange, imageFormData, imageDelete } =
+  const { imageSrc, imageChange, imageFormData, imageDelete } =
     useUploadImage();
 
   return (
     <Modal>
-      <div className='wrapper'>
-        <div className='header'>
+      <div className="wrapper">
+        <div className="header">
           <h2>프로필 수정</h2>
           <button onClick={editProfileHandler}>
             <HiOutlineX />
@@ -466,27 +458,34 @@ function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding='8px 14px'
-          radius='12px'>
-          {imageSrc.length>=1?<div className='preview'>
-            <img alt='preview' src={imageSrc}></img>
-            <button onClick={imageDelete}><HiOutlineX/></button>
-          </div>:
-          <label htmlFor='file'>프로필 이미지 등록</label>}
-          <input type='file' id='file' onChange={imageChange}></input>
+          padding="8px 14px"
+          radius="12px"
+        >
+          {imageSrc.length >= 1 ? (
+            <div className="preview">
+              <img alt="preview" src={imageSrc}></img>
+              <button onClick={imageDelete}>
+                <HiOutlineX />
+              </button>
+            </div>
+          ) : (
+            <label htmlFor="file">프로필 이미지 등록</label>
+          )}
+          <input type="file" id="file" onChange={imageChange}></input>
         </ImageInput>
-        <Input placeholder='이름' />
-        <TextArea placeholder='자기소개' />
-        <Input placeholder='내 차량' />
+        <Input placeholder="이름" />
+        <TextArea placeholder="자기소개" />
+        <Input placeholder="내 차량" />
         <Button
           border={'var(--chamong__color)'}
           color={'var(--chamong__color)'}
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding='13px 15px'
-          radius='12px'
-          width='100%'>
+          padding="13px 15px"
+          radius="12px"
+          width="100%"
+        >
           수정 완료
         </Button>
       </div>

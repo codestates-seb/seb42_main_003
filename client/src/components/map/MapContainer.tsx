@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import mapMarker from '../../assets/map/map_marker.svg';
-import ContentCard from '../ContentCard';
+import { ContentCardRow } from '../ContentCard';
 import { MapWrapper, MapInfoWrapper } from '../../styles/mapStyle';
 const { kakao } = window;
 
@@ -21,7 +21,7 @@ export function MapContainer({
   campList,
   isMyPage,
   level = 13,
-  padding
+  padding,
 }: MapProps) {
   let lastestMarker: any = null;
   const container = useRef<HTMLDivElement | null>(null);
@@ -37,10 +37,7 @@ export function MapContainer({
       // const container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
       let options = {
         //지도를 생성할 때 필요한 기본 옵션
-        center: new window.kakao.maps.LatLng(
-          firstCamp.mapY,
-          firstCamp.mapX
-        ), //지도의 중심좌표.
+        center: new window.kakao.maps.LatLng(firstCamp.mapY, firstCamp.mapX), //지도의 중심좌표.
         level: level, //지도의 레벨(확대, 축소 정도)
       };
       setMap(new window.kakao.maps.Map(container.current, options)); //지도 생성 및 객체 리턴
@@ -54,30 +51,21 @@ export function MapContainer({
     mapMarker,
     imageSizeNormal
   );
-  const markerImageBig = new kakao.maps.MarkerImage(
-    mapMarker,
-    imageSizeBig
-  );
+  const markerImageBig = new kakao.maps.MarkerImage(mapMarker, imageSizeBig);
 
   useEffect(() => {
     //마커 클래스 배열 생성
     if (map && campList) {
       if (Object.keys(campList).length >= 1)
-        map.panTo(
-          new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX)
-        );
+        map.panTo(new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX));
       setCurrentCamp(null);
       mapReload();
       map.relayout();
       //마커가 아닌 지도 클릭시 currentCamp=null, 마커사이즈 초기화
-      kakao.maps.event.addListener(
-        map,
-        'click',
-        function (mouseEvent: any) {
-          setCurrentCamp(null);
-          if (lastestMarker) lastestMarker.setImage(markerImageNormal);
-        }
-      );
+      kakao.maps.event.addListener(map, 'click', function (mouseEvent: any) {
+        setCurrentCamp(null);
+        if (lastestMarker) lastestMarker.setImage(markerImageNormal);
+      });
 
       for (let camp of campList) {
         const markerPosition = new kakao.maps.LatLng(camp.mapY, camp.mapX);
@@ -145,44 +133,39 @@ export function MapContainer({
   return (
     <MapWrapper>
       <div
-        id='map'
+        id="map"
         ref={container}
         style={{
           width: '100%',
           height: '100%',
           borderRadius: '12px',
-        }}></div>
+        }}
+      ></div>
       {currentCamp && <MapInfoContainer camp={currentCamp} padding={padding} />}
     </MapWrapper>
   );
 }
 
-function MapInfoContainer({ camp, padding='16px' }: any) {
+function MapInfoContainer({ camp, padding = '16px' }: any) {
   const navigate = useNavigate();
-const contentHandler=()=>{
-  navigate(`/content/${camp.contentId}`)
-}
+  const contentHandler = () => {
+    navigate(`/content/${camp.contentId}`);
+  };
 
   return (
     <MapInfoWrapper>
-      <div style={{ zIndex:'800', width:'100%',padding:`16px 16px ${padding}`,display:'flex',justifyContent:'center',alignItems:'center'}} onClick={contentHandler}>
-        <ContentCard
-        data={camp}
-          flex_dir='row'
-          content_align='start'
-          bottom_justify='start'
-          img_width='auto'
-          radius='25px 0px 0px 25px'
-          content_rd='0px 25px 25px 0px'
-          line='1.2'
-          content_pd='15px'
-          wrap='wrap'
-          img_height='auto'
-          ratio='0.5'
-          content_width='50%'
-          webkit='-webkit-box'
-          maxWidth='500px'
-        />
+      <div
+        style={{
+          zIndex: '800',
+          width: '100%',
+          padding: `16px 16px ${padding}`,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        onClick={contentHandler}
+      >
+        <ContentCardRow data={camp} remove="inline" />
       </div>
     </MapInfoWrapper>
   );
