@@ -17,6 +17,20 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
+    // 인기글 보여주기 - web
+    @GetMapping("/articles/popular-web")
+    public ResponseEntity<List<ArticleDto.Response>> getPopularArticlesForWeb(){
+        List<ArticleDto.Response> popularArticles = articleService.getPopularArticlesForWeb();
+        return ResponseEntity.ok(popularArticles);
+    }
+
+    // 인기글 보여주기 - app
+    @GetMapping("/articles/popular-app")
+    public ResponseEntity<List<ArticleDto.Response>> getPopularArticlesForApp(){
+        List<ArticleDto.Response> popularArticles = articleService.getPopularArticlesForApp();
+        return ResponseEntity.ok(popularArticles);
+    }
+    // 15개씩 보여주기
     @GetMapping("/articles")
     public ResponseEntity<Page<ArticleDto.Response>> getAllArticles(@RequestParam(value = "keyword", required = false) String keyword,
                                                                     @RequestParam(value = "page", defaultValue = "0") int page,
@@ -27,7 +41,7 @@ public class ArticleController {
         return ResponseEntity.ok(articles);
     }
 
-    // 게시글에서 댓글 수, 좋아요 수 보이기
+    // 특정 게시글 보이기
     @GetMapping("/articles/{id}")
     public ResponseEntity<ArticleDto.Response> getArticle(@PathVariable Long id) {
         ArticleDto.Response article = articleService.getArticle(id);
@@ -35,6 +49,7 @@ public class ArticleController {
         article.setLikeCnt(articleService.getArticleLikeCnt(id));
         return ResponseEntity.ok(article);
     }
+
 
     @PostMapping("/articles")
     public ResponseEntity<ArticleDto.Response> createArticle(@RequestBody ArticleDto.Post postDto) {

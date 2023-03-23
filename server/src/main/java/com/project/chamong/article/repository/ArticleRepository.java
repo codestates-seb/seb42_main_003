@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-    //List<Article> findByTitleContaining(String keyword, Pageable pageable);
     Page<Article> findAll(Pageable pageable);
     Page<Article> findByTitleContaining(String keyword, Pageable pageable);
 }
