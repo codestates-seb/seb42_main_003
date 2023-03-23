@@ -5,7 +5,10 @@ import SearchBar from '../components/SearchBar';
 import { MobileHeader } from '../styles/mobileStyle';
 import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
+import { useEffect, useState } from 'react';
 import { SearchbarPlain } from '../styles/searchbarPlain';
+import { getData } from '../api/api';
+import { PageHeader } from '../components/destop/PageHeader';
 
 export const Container = styled.div`
   @media (max-width: 768px) {
@@ -19,15 +22,18 @@ export const Container = styled.div`
       display: flex;
       flex-direction: column;
       align-items: center;
+      .search_mobile {
+        display: none;
+      }
     }
-
     @media (min-width: 768px) {
       .search_mobile {
         padding: 10px;
       }
-      .wrapper {
+      .max_width {
         width: 100%;
         max-width: 900px;
+        margin-bottom: 50px;
       }
     }
   }
@@ -40,45 +46,60 @@ export const Container = styled.div`
     }
   }
 
-  .desktop_header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    .desktop_h1 {
-      font-size: var(--fs__h1);
-      font-weight: 500;
+  @media (max-width: 768px) {
+    .desktop_header {
+      display: none;
+    }
+  }
+  @media (min-width: 768px) {
+    .desktop_header {
+      display: flex;
+      flex-direction: column;
+      /* align-items: center; */
+      justify-content: space-between;
+      padding: 20px;
+      .desktop_h1 {
+        justify-self: flex-start;
+        font-size: var(--fs__h1);
+        font-weight: 500;
+        flex-grow: 1;
+      }
+      .header_bg {
+      }
     }
   }
 `;
 export function Community() {
-  // useEffect(() => {
-  //   getCommunity().then(res => setIsCommunity(res));
-  // }, []);
+  const [isCommunity, setIsCommunity] = useState<any>([]);
+  useEffect(() => {
+    getData('community').then(res => setIsCommunity(res));
+  }, []);
   return (
     <Container>
       <Header width_M={'1000px'}></Header>
       <div className="desktop">
-        <div className="wrapper">
+        <PageHeader title={'커뮤니티'}></PageHeader>
+        <div className="max_width">
+          <div className="desktop_header">
+            <SearchbarPlain>
+              <HiOutlineSearch className="search_icon" />
+              <input placeholder="검색"></input>
+            </SearchbarPlain>
+          </div>
           <MobileHeader className="mobile">
             <h1>커뮤니티</h1>
           </MobileHeader>
-          <div className="desktop_header">
-            <h1 className="desktop_h1">커뮤니티</h1>
-            <div className="search_mobile">
-              <SearchbarPlain>
-                <HiOutlineSearch className="search_icon" />
-                <input placeholder="검색"></input>
-              </SearchbarPlain>
-            </div>{' '}
+          <div className="search_mobile">
+            <SearchBar></SearchBar>
           </div>
           <div className="post">
-            <Post />
+            {isCommunity.map((ele: any) => (
+              <Post key={ele.id} data={ele} />
+            ))}
           </div>
         </div>
       </div>
-      <Footer></Footer>
+      <Footer width_page={'1000px'} fix={'none'}></Footer>
     </Container>
   );
 }

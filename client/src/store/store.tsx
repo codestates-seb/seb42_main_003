@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import keywordSlice from './keywordSlice';
 import clickedSlice from './clickedSlice';
+import reviewSlice from './reviewSlice';
 
 export const store = configureStore({
   reducer: {
     keyword: keywordSlice.reducer,
     clicked: clickedSlice.reducer,
+    review: reviewSlice.reducer,
   },
 });
 

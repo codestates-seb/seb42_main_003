@@ -2,14 +2,18 @@ import styled from 'styled-components';
 import { BiMapAlt } from 'react-icons/bi';
 
 export const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
+  width: 100%;
+  height: 100%;
   top: 85%;
-  left: 35%;
-  z-index: 999;
+  left: 45%;
+  transform: transition(-50%);
 
   .button_box {
+    z-index: 996;
+    position: fixed;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     cursor: pointer;
     display: flex;
     flex-direction: row;

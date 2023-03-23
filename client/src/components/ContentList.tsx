@@ -6,6 +6,7 @@ import useIntersectionObserver from '../hooks/useIO';
 import axios from 'axios';
 import CommunityBestD from './destop/CommunityBestD';
 import MyPick from './destop/MyPick';
+import { getData } from '../api/api';
 
 interface CardList {
   flex_dir?: string;
@@ -68,9 +69,10 @@ function ContentList({}: CardList) {
   const [data, setData] = useState<Info>([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/content').then(res => {
-      setContent(res.data);
-      setData([...res.data.slice(0, 6)]);
+    // getData('main?page=1').then(res => {
+    getData('content').then(res => {
+      setContent(res);
+      setData([...res.slice(0, 6)]);
     });
   }, []);
 

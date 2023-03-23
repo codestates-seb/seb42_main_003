@@ -2,14 +2,13 @@ import styled from 'styled-components';
 
 const Container = styled.div<Info>`
   display: flex;
-  /* flex-direction: row; */
   justify-content: center;
   height: auto;
   background-color: var(--searchbar__color);
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   width: 100%;
   z-index: 800;
-  position: fixed;
+  position: ${props => props.fix || 'fixed'};
   bottom: 0;
   .wrapper {
     display: flex;
@@ -18,7 +17,7 @@ const Container = styled.div<Info>`
     justify-content: space-between;
     width: 100%;
     padding: 20px 16px;
-    max-width: ${props => props.width_mobile || '1268px'};
+    max-width: ${props => props.width_page || '1268px'};
   }
   @media (max-width: 768px) {
     display: none;
@@ -46,10 +45,10 @@ const Container = styled.div<Info>`
     font-weight: 500;
   }
 `;
-type Info = { width_mobile?: string };
-function Footer({ width_mobile }: Info) {
+type Info = { width_page?: string; fix?: string };
+function Footer({ width_page, fix }: Info) {
   return (
-    <Container width_mobile={width_mobile}>
+    <Container width_page={width_page} fix={fix}>
       <div className="wrapper">
         <h1 className="title">Chamong</h1>
         <div className="body">

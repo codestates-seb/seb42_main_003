@@ -18,6 +18,7 @@ const Container = styled('div')<ExampleProps>`
 
   input {
     padding-left: ${props => props.padding || '10px'};
+    width: 100%;
     ::placeholder {
       font-size: 15px;
     }

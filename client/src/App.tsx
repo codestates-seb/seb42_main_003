@@ -8,6 +8,8 @@ import Content from './pages/Content';
 import { Community } from './pages/Community';
 import Nav from './components/mobile/Nav';
 import PostDetail from './pages/PostDetail';
+import Wishlist from './pages/Wishlist';
+import UserPick from './pages/UserPick';
 
 function App() {
   return (
@@ -18,7 +20,9 @@ function App() {
         <Route path="/mypage" element={<MyPage></MyPage>} />
         <Route path="/content/:contentId" element={<Content></Content>} />
         <Route path="/community" element={<Community></Community>} />
-        <Route path='/community/:postId' element={<PostDetail></PostDetail>}/>
+        <Route path="/community/:postId" element={<PostDetail></PostDetail>} />
+        <Route path="/wishlist" element={<Wishlist></Wishlist>} />
+        <Route path="/userpick" element={<UserPick></UserPick>} />
       </Routes>
       <Nav></Nav>
     </BrowserRouter>

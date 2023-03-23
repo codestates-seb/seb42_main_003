@@ -2,14 +2,11 @@ import styled from 'styled-components';
 import ContentList from '../components/ContentList';
 import HeaderSearch from '../components/HeaderSearch';
 import CommunityBestM from '../components/mobile/CommunityBestM';
-import { useState } from 'react';
-import SearchModal from '../components/SearchModal';
-import Nav from '../components/mobile/Nav';
 import Category from '../components/Category';
 import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
 import Banner from '../components/destop/Banner';
-import Login from '../components/Login';
+import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { click } from '../store/clickedSlice';
 import { MapViewButton } from '../components/MapViewButton';
@@ -24,7 +21,6 @@ function Main() {
       <MapViewButton></MapViewButton>
       <Header></Header>
       <HeaderSearch view={'none'} />
-      {/* <SearchModal /> */}
       <Banner></Banner>
       <Category></Category>
       <CommunityBestM></CommunityBestM>

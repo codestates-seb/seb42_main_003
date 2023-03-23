@@ -12,7 +12,6 @@ import { TbDog } from 'react-icons/tb';
 import { FaFish } from 'react-icons/fa';
 import { GiIsland } from 'react-icons/gi';
 import { Button } from '../../styles/Button';
-import { Review } from '../Review';
 import { Link } from 'react-router-dom';
 import { AiFillStar } from 'react-icons/ai';
 import { MobileHeader } from '../../styles/mobileStyle';
@@ -54,25 +53,12 @@ const Container = styled('div')<ContentInfo>`
     cursor: pointer;
   }
   .background {
-    /* animation: smoothAppear 1s; */
     background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg');
     background-repeat: no-repeat;
-    /* border-radius: 16px; */
     margin-top: 50px;
-    /* @keyframes smoothAppear {
-      from {
-        opacity: 0.5;
-        transform: translateY(-5%);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    } */
   }
   .backimg {
     margin-top: 50px;
-    /* border-radius: 16px; */
     background-image: ${props => `url(${props.bg})`};
     width: 100%;
     height: ${props => props.height || '300px'};
@@ -99,9 +85,6 @@ const Container = styled('div')<ContentInfo>`
     text-align: center;
     font-size: 12px;
     margin-top: 5px;
-  }
-  .review_top {
-    display: flex;
   }
   .h1_title {
     font-size: var(--fs__h2);
@@ -134,7 +117,7 @@ const Container = styled('div')<ContentInfo>`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 12px;
+    /* margin-bottom: 12px; */
   }
   .back {
     font-size: 35px;
@@ -155,9 +138,9 @@ const Container = styled('div')<ContentInfo>`
     display: flex;
     flex-direction: row;
   }
-  .mg_b {
+  /* .mg_b {
     margin-bottom: 60px;
-  }
+  } */
 `;
 
 export function ContentM({ contentId }: ContentInfo) {
@@ -323,9 +306,6 @@ export function ContentM({ contentId }: ContentInfo) {
                 </div>
               </Modal>
             ) : null}
-          </div>
-          <div className="mg_b">
-            <Review></Review>
           </div>
         </div>
       </div>

@@ -52,24 +52,20 @@ export const Input = styled.input<inputProps>`
   height: 44px;
   font-size: 15px;
   font-weight: 500;
-  /* color: ${(props) =>
+  /* color: ${props =>
     props.color ? inputColor(props.color) : 'var(--chamong__color)'}; */
   color: var(--fontBlack__900);
-  background-color: ${(props) =>
+  background-color: ${props =>
     props.color ? inputBackgroundColor(props.color) : 'white'};
   border: 1px solid
-    ${(props) =>
-      props.color
-        ? inputBorderColor(props.color)
-        : 'var(--chamong__color)'};
+    ${props =>
+      props.color ? inputBorderColor(props.color) : 'var(--chamong__color)'};
   border-radius: 12px;
   padding: 0px 12px;
   &:focus {
     box-shadow: 0px 0px 0px 3px
-      ${(props) =>
-        props.color
-          ? inputFocusColor(props.color)
-          : 'rgba(249, 87, 56, 0.25)'};
+      ${props =>
+        props.color ? inputFocusColor(props.color) : 'rgba(249, 87, 56, 0.25)'};
   }
   &::placeholder {
     color: var(--fontBlack__300);
@@ -78,26 +74,22 @@ export const Input = styled.input<inputProps>`
 
 export const TextArea = styled.textarea<inputProps>`
   width: 100%;
-  height: ${(props) => props.height || '100px'};
+  height: ${props => props.height || '100px'};
   font-size: 15px;
   font-weight: 500;
-  color: ${(props) =>
+  color: ${props =>
     props.color ? inputColor(props.color) : 'var(--chamong__color)'};
-  background-color: ${(props) =>
+  background-color: ${props =>
     props.color ? inputBackgroundColor(props.color) : 'white'};
   border: 1px solid
-    ${(props) =>
-      props.color
-        ? inputBorderColor(props.color)
-        : 'var(--chamong__color)'};
+    ${props =>
+      props.color ? inputBorderColor(props.color) : 'var(--chamong__color)'};
   border-radius: 12px;
   padding: 12px 12px;
   &:focus {
     box-shadow: 0px 0px 0px 3px
-      ${(props) =>
-        props.color
-          ? inputFocusColor(props.color)
-          : 'rgba(249, 87, 56, 0.25)'};
+      ${props =>
+        props.color ? inputFocusColor(props.color) : 'rgba(249, 87, 56, 0.25)'};
   }
   &::placeholder {
     color: var(--fontBlack__300);
@@ -161,17 +153,15 @@ export const KeywordInput = styled.div<keywordInputProps>`
       font-size: var(--fs__h1);
       padding: 12px;
     }
-    display: ${(props) => (props.isFocus ? 'block' : 'none')};
+    display: ${props => (props.isFocus ? 'block' : 'none')};
     transform: translateY(44px);
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border-radius: 12px;
     border: 1px solid var(--fontBlack__300);
   }
-  ${(props) =>
-    props.isFocus
-      ? 'box-shadow: 0px 0px 0px 3px rgba(249, 87, 56, 0.25)'
-      : ''};
+  ${props =>
+    props.isFocus ? 'box-shadow: 0px 0px 0px 3px rgba(249, 87, 56, 0.25)' : ''};
 `;
 
 export const ImageInput = styled.div<ButtonStyled>`
@@ -180,28 +170,26 @@ export const ImageInput = styled.div<ButtonStyled>`
   > label {
     display: flex;
     align-items: center;
-    padding: ${(props) => props.padding || '12px 14px'};
+    padding: ${props => props.padding || '12px 14px'};
     width: fit-content;
     height: 44px;
     white-space: nowrap !important;
     background: var(--chamong__color);
     color: white;
-    border: 1px solid ${(props) => props.border || 'var(--fontBlack__600)'};
-    border-radius: ${(props) => props.radius || '8px'};
-    font-size: ${(props) => props.font || 'var(--fs--mid)'};
+    border: 1px solid ${props => props.border || 'var(--fontBlack__600)'};
+    border-radius: ${props => props.radius || '8px'};
+    font-size: ${props => props.font || 'var(--fs--mid)'};
     font-weight: 550;
     cursor: pointer;
     :hover {
       background: white;
       color: var(--chamong__color);
-      border: 1px solid
-        ${(props) => props.hborder || 'var(--fontBlack__500)'};
+      border: 1px solid ${props => props.hborder || 'var(--fontBlack__500)'};
     }
     &.active {
-      background: ${(props) => props.active || 'var(--fontBlack__500)'};
-      color: ${(props) => props.acolor || 'white'};
-      border: 1px solid
-        ${(props) => props.aborder || 'var(--fontBlack__500)'};
+      background: ${props => props.active || 'var(--fontBlack__500)'};
+      color: ${props => props.acolor || 'white'};
+      border: 1px solid ${props => props.aborder || 'var(--fontBlack__500)'};
     }
   }
   > input {
