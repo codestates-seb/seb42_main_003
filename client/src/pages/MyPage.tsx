@@ -6,6 +6,8 @@ import { Button } from '../styles/Button';
 import MapContainer from '../components/map/MapContainer';
 import { FloatButton } from '../styles/mapStyle';
 import { Tab } from '../styles/Tab';
+import Header from '../components/destop/Header';
+import Footer from '../components/destop/Footer';
 import { HiPlus, HiOutlineX } from 'react-icons/hi';
 import {
   Input,
@@ -20,7 +22,8 @@ import {
   MyPageMemberInfo,
 } from '../styles/pageStyle';
 import ViewHistoryModal from '../components/mobile/ViewHistoryModal';
-// import useUploadImage from '../hooks/useUploadImage';
+import useUploadImage from '../hooks/useUploadImage';
+import { uploadImageType } from '../hooks/useUploadImage';
 
 //멤버 정보 타입
 interface MemberData {
@@ -38,6 +41,9 @@ interface MemberData {
 interface MyPageProps {
   memberData?: MemberData;
 }
+
+/* 객체: (키, 값) imageName: string. imageChange: 함수 , imageForSend: 함수 */
+/* 배열: [string, 함수, 함수]  */
 
 function MyPage() {
   const [addCampModal, setAddCampModal] = useState<boolean>(false);
@@ -99,9 +105,12 @@ function MyPage() {
 
   return (
     <>
-      {!viewHistoryModal&&<MobileHeader>
-        <h1>마이페이지</h1>
-      </MobileHeader>}
+    <Header width_M={'1000px'}></Header>
+      {!viewHistoryModal && (
+        <MobileHeader>
+          <h1>마이페이지</h1>
+        </MobileHeader>
+      )}
       <PageMain>
         {memberData && (
           <MyPageMemberInfo>
@@ -175,8 +184,12 @@ function MyPage() {
       {editProfileModal && (
         <EditProfileModal editProfileHandler={editProfileHandler} />
       )}
-      {viewHistoryModal && <ViewHistoryModal viewHistoryHandler={viewHistoryHandler}></ViewHistoryModal>}
+      {viewHistoryModal && (
+        <ViewHistoryModal
+          viewHistoryHandler={viewHistoryHandler}></ViewHistoryModal>
+      )}
       {/* <Nav></Nav> */}
+      <Footer></Footer>
     </>
   );
 }
@@ -260,7 +273,9 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
   //키워드를 눌렀을 시 포커스 효과와 키워드 목록을 띄워주는 state
   const [isKeywordFocus, setIsKeywordFocus] = useState<boolean>(false);
   //이미지를 저장하는 state
-  const [fileList, setFileList] = useState<FileList | null>(null);
+  // const [fileList, setFileList] = useState<FileList | null>(null);
+  const {imageSrc, imageChange, imageFormData, imageDelete } =
+    useUploadImage();
 
   //아래 useEffect는 api화 해야함------------------------------------
   useEffect(() => {
@@ -310,40 +325,18 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       ];
     });
   };
-
-  const handleFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const selectedFile = event.target.files;
-    if (selectedFile === null) return;
-    if (selectedFile[0] && selectedFile[0].type.match(/(png|jpg|jpeg)$/)) {
-      setFileList(selectedFile);
-    } else alert('jpg, png 확장자만 가능합니다!');
-  };
-
-  const imageForSend = () => {
-    if (fileList === null) return null;
-    const formData = new FormData();
-    formData.append('image', fileList[0]);
-    return formData;
-  };
-
   const sendImage = () => {
-    const formData = imageForSend();
+    
 
     axios({
       method: 'post',
       url: 'http://localhost:3002/img',
-      data: formData,
+      data: imageFormData,
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
   };
-
-  useEffect(() => {
-    if (fileList) console.log(fileList[0]);
-  }, [fileList]);
 
   return (
     <Modal
@@ -367,17 +360,18 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           hborder={'var(--chamong__color)'}
           padding='8px 14px'
           radius='12px'>
-          <label htmlFor='file'>이미지 첨부</label>
-          <input type='file' id='file' onChange={handleFileChange}></input>
-          {fileList && (
-            <span style={{ paddingLeft: '12px' }}>{fileList[0].name}</span>
-          )}
+          {imageSrc.length>=1?<div className='preview'>
+            <img alt='preview' src={imageSrc}></img>
+            <button onClick={imageDelete}><HiOutlineX/></button>
+          </div>:
+          <label htmlFor='file'>이미지 첨부</label>}
+          <input type='file' id='file' onChange={imageChange}></input>
         </ImageInput>
-        <button
+        {/* <button
           style={{ cursor: 'pointer', display: 'block' }}
           onClick={sendImage}>
           임시 사진보내기!
-        </button>
+        </button> */}
         <Input
           value={text}
           onChange={(e: any) => setText(e.target.value)}
@@ -453,6 +447,10 @@ interface editProfileModalProps {
 }
 
 function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
+
+  const {imageSrc, imageChange, imageFormData, imageDelete } =
+    useUploadImage();
+
   return (
     <Modal>
       <div className='wrapper'>
@@ -462,7 +460,21 @@ function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
             <HiOutlineX />
           </button>
         </div>
-        <Input type='file' />
+        <ImageInput
+          border={'var(--chamong__color)'}
+          color={'var(--chamong__color)'}
+          hcolor={'white'}
+          hover={'var(--chamong__color)'}
+          hborder={'var(--chamong__color)'}
+          padding='8px 14px'
+          radius='12px'>
+          {imageSrc.length>=1?<div className='preview'>
+            <img alt='preview' src={imageSrc}></img>
+            <button onClick={imageDelete}><HiOutlineX/></button>
+          </div>:
+          <label htmlFor='file'>프로필 이미지 등록</label>}
+          <input type='file' id='file' onChange={imageChange}></input>
+        </ImageInput>
         <Input placeholder='이름' />
         <TextArea placeholder='자기소개' />
         <Input placeholder='내 차량' />

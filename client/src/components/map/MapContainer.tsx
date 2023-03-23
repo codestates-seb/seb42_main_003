@@ -159,9 +159,13 @@ export function MapContainer({
 
 function MapInfoContainer({ camp, padding='16px' }: any) {
   const navigate = useNavigate();
+const contentHandler=()=>{
+  navigate(`/content/${camp.contentId}`)
+}
+
   return (
     <MapInfoWrapper>
-      <div style={{ zIndex:'999', width:'100%',padding:`16px 16px ${padding}`,display:'flex',justifyContent:'center' }}>
+      <div style={{ zIndex:'800', width:'100%',padding:`16px 16px ${padding}`,display:'flex',justifyContent:'center',alignItems:'center'}} onClick={contentHandler}>
         <ContentCard
         data={camp}
           flex_dir='row'
@@ -177,6 +181,7 @@ function MapInfoContainer({ camp, padding='16px' }: any) {
           ratio='0.5'
           content_width='50%'
           webkit='-webkit-box'
+          maxWidth='500px'
         />
       </div>
     </MapInfoWrapper>

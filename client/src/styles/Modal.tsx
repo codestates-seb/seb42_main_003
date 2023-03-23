@@ -6,22 +6,27 @@ export const Modal = styled.div`
   z-index: 500;
   display: flex;
   align-items: center;
+  justify-content: center;
   top: 50px;
   box-sizing: border-box;
   padding-bottom: 64px;
   left: 0px;
   position: fixed;
-  border: 1px solid red;
   background-color: rgba(0, 0, 0, 0.5);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
+  @media screen {
+   top:0px;
+   padding-bottom : 0px;
+  }
+
   .wrapper {
+    max-width: 1000px;
     width: 100%;
     background-color: white;
     padding: 16px;
     margin: 16px 16px 64px;
     border-radius: 16px;
-    border: 1px solid blue;
     > * {
       margin: 8px 0px;
     }

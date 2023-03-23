@@ -25,6 +25,7 @@ interface CardView {
   data?: any;
   key?: any;
   bg?: URL;
+  maxWidth?:string;
 }
 
 const Container = styled('div')<CardView>`
@@ -151,10 +152,11 @@ function ContentCard({
   ratio,
   content_width,
   webkit,
+  maxWidth
 }: CardView) {
   const [isLike, setIsLike] = useState(false);
   return (
-    <Link to={`/content/${data.contentId}`} style={{ width: '100%' }}>
+    <Link to={`/content/${data.contentId}`} style={{ width: '100%',maxWidth:`${maxWidth?maxWidth:'none'}` }}>
       <Container
         flex_dir={flex_dir}
         bottom_justify={bottom_justify}

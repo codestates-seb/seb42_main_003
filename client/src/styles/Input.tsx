@@ -167,6 +167,20 @@ export const KeywordInput = styled.div<keywordInputProps>`
 export const ImageInput = styled.div<ButtonStyled>`
   display: flex;
   align-items: center;
+  .preview {
+    position: relative;
+    > img {
+      width:auto;
+      height:100px;
+      border-radius: 12px;
+    }
+    > button {
+      font-size:var(--fs__h1);
+      position: absolute;
+      color:black;
+      cursor: pointer;
+    }
+  }
   > label {
     display: flex;
     align-items: center;
