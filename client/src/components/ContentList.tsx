@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 // import { content } from '../../data/content';
-import ContentCard from './ContentCard';
+import { ContentCard } from './ContentCard';
 import { useState, useEffect } from 'react';
 import useIntersectionObserver from '../hooks/useIO';
 import axios from 'axios';

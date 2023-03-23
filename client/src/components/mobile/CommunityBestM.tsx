@@ -15,6 +15,7 @@ const Container = styled('div')<CardList>`
   border-top: 0.5px solid var(--chamong__color);
   border-bottom: 0.5px solid var(--chamong__color);
   margin-bottom: 15px;
+  overflow: hidden;
 
   @media (min-width: 768px) {
     display: none;
@@ -26,12 +27,13 @@ const Container = styled('div')<CardList>`
     margin-bottom: 4px;
   }
   .carousel {
-    width: 100vw;
+    width: 300vw;
     height: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    /* flex-direction: row; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* transform: translate(100vw); */
   }
   .title {
     /* overflow-x: scroll;
@@ -39,7 +41,9 @@ const Container = styled('div')<CardList>`
     -ms-overflow-style: none;
     scrollbar-width: none;
     white-space: nowrap; */
-    align-items: center;
+    width: 100vw;
+    /* align-items: center; */
+    text-align: center;
     color: var(--fontBlack__700);
     font-weight: 400;
     font-size: var(--fs__big);

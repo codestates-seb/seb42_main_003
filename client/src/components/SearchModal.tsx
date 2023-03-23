@@ -12,7 +12,6 @@ const Container = styled.div`
     margin-top: -15px;
   }
 `;
-
 const Main = styled.div`
   @media (min-width: 768px) {
     padding: 100px 10px;
@@ -23,6 +22,7 @@ const Main = styled.div`
     z-index: 900;
     opacity: 90%;
   }
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   &.active {
     transition: all 700ms linear;
   }
@@ -109,12 +109,6 @@ function SearchModal() {
       keyword: (event.target as HTMLLIElement).textContent,
     };
     dispatch(add(newData));
-
-    // if (
-    //   isKeyword.length < 3 &&
-    //   isKeyword.filter(data => data.title === newData.title).length !== 1
-    // )
-    // setIsKeyword([...isKeyword, newData]);
   };
   const isKeyword = useAppSelector(state => state.keyword);
   const isClicked = useAppSelector(state => state.clicked);
