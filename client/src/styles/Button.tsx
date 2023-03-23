@@ -30,7 +30,7 @@ export const Button = styled('button')<ButtonStyled>`
   color: ${props => props.color || 'var(--fontBlack__600)'};
   border: 1px solid ${props => props.border || 'var(--fontBlack__600)'};
   margin: ${props => props.margin || '8px'};
-  border-radius: ${props => props.radius || '8px'};
+  border-radius: ${props => props.radius || '8px 8px 8px 8px'};
   font-size: ${props => props.font || 'var(--fs--mid)'};
   font-weight: 550;
   cursor: pointer;
