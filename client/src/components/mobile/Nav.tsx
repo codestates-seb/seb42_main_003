@@ -81,7 +81,7 @@ const title: Title = [
   {
     id: 2,
     text: '유저픽',
-    link: '#',
+    link: '/userpick',
   },
   {
     id: 3,
@@ -91,7 +91,7 @@ const title: Title = [
   {
     id: 4,
     text: '위시리스트',
-    link: '#',
+    link: '/wishlist',
   },
   {
     id: 5,
@@ -104,23 +104,10 @@ function Nav() {
   const [isNav, setIsNav] = useState<Number>(1);
   const [isLogin, setIsLogin] = useState<Boolean>(false);
   type CustomMouseEvent = MouseEvent<HTMLElement>;
-  // const navigate = useNavigate();
 
   const clickHandler = (event: CustomMouseEvent) => {
-    // console.log((event.target as HTMLLIElement).id);
-    // localStorage.setItem('nav', (event.target as HTMLLIElement).id);
-    // const location = title.filter((ele: any) => {
-    //   return String(ele.id) === (event.target as HTMLLIElement).id;
-    // });
-    // console.log();
     setIsNav(Number((event.target as HTMLLIElement).id));
-    // navigate(location[0].link);
   };
-  // useEffect(() => {
-  //   setIsNav(Number(localStorage.getItem('nav')));
-  //   console.log('new', isNav);
-  // }, [isNav]);
-  // const userInfo = localStorage.getItem('userInfo');
 
   return (
     <Container>

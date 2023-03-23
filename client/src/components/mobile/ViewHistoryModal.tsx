@@ -13,31 +13,43 @@ const ViewHistoryModalContainer = styled.section`
   height: 100%;
   z-index: 500;
   .view-history-modal-main {
-    padding:60px 12px 64px;
+    padding: 60px 12px 64px;
   }
 `;
 
-function ViewHistoryModal({ viewHistoryHandler, myPost, commentedPost, likePost }: any) {
+function ViewHistoryModal({
+  viewHistoryHandler,
+  myPost,
+  commentedPost,
+  likePost,
+}: any) {
+  const [tabState, setTabState] = useState(1);
 
-  const [tabState,setTabState]=useState(1);
-
-  const tabHandler=(e:any)=>{
+  const tabHandler = (e: any) => {
     setTabState(e.target.value);
-  }
+  };
 
   return (
     <ViewHistoryModalContainer>
       <MobileHeader>
         <h1>커뮤니티 활동기록</h1>
-        <button onClick={viewHistoryHandler}><FiArrowLeft/></button>
+        <button onClick={viewHistoryHandler}>
+          <FiArrowLeft />
+        </button>
       </MobileHeader>
-      <div className='view-history-modal-main'>
+      <div className="view-history-modal-main">
         <Tab state={tabState}>
-          <button value={1} onClick={tabHandler}>내가 쓴 글</button>
-          <button value={2} onClick={tabHandler}>댓글 단 글</button>
-          <button value={3} onClick={tabHandler}>좋아요 누른 글</button>
+          <button value={1} onClick={tabHandler}>
+            내가 쓴 글
+          </button>
+          <button value={2} onClick={tabHandler}>
+            댓글 단 글
+          </button>
+          <button value={3} onClick={tabHandler}>
+            좋아요 누른 글
+          </button>
         </Tab>
-        <Post></Post>
+        {/* <Post></Post> */}
       </div>
     </ViewHistoryModalContainer>
   );
