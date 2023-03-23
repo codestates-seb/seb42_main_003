@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
 export const MobileHeader = styled.header`
+  @media (min-width: 768px) {
+    display: none;
+  }
   position: fixed;
   z-index: 995;
   top: 0;
@@ -15,11 +18,12 @@ export const MobileHeader = styled.header`
   border-bottom: 1px solid #d9d9d9;
   padding: 10px 15px 10px 15px;
   h1 {
-    /* position: absolute; */
+    position: absolute;
     width: 100%;
     text-align: center;
     font-size: 23px;
     font-weight: 500;
+    pointer-events: none;
     /* color: var() */
   }
   button {
