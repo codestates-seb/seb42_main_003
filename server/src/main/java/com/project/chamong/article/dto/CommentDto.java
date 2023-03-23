@@ -13,7 +13,7 @@ public class CommentDto {
     @Setter
     public static class Post {
         private String content;
-        private String nickName;
+        //private String nickName;
         private Long articleId;
         private Long memberId;
     }

@@ -1,5 +1,6 @@
 package com.project.chamong.article.dto;
 
+import com.project.chamong.audit.Auditable;
 import com.project.chamong.member.dto.MemberDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ArticleDto {
+public class ArticleDto{
     @Getter
     @Setter
     public static class Response {
@@ -21,14 +22,12 @@ public class ArticleDto {
         @NotBlank(message = "내용을 입력해주세요")
         @Length(max = 1000, message = "content는 1000자 이하여야 합니다.")
         private String content;
-        private String nickName;
+        private String nickname;
         private String profileImg;
-        private String oilInfo;
+        private String carName;
         private String articleImg;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
         private boolean like;
-        private MemberDto.Response member;
+        private Long memberId;
         private int viewCnt;
         private int likeCnt;
         private int commentCnt;
@@ -46,9 +45,6 @@ public class ArticleDto {
         private String content;
         private String articleImg;
         private Long memberId;
-        //private String nickName;
-        private MemberDto.Response nickname;
-        protected LocalDateTime createdAt;
     }
 
     @Getter
@@ -61,6 +57,5 @@ public class ArticleDto {
         @Length(max = 1000, message = "content는 1000자 이하여야 합니다.")
         private String content;
         private String articleImg;
-        private LocalDateTime updatedAt;
     }
 }

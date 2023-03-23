@@ -1,6 +1,7 @@
 package com.project.chamong.article.entity;
 
 import com.project.chamong.article.dto.ArticleDto;
+import com.project.chamong.audit.Auditable;
 import com.project.chamong.member.entity.Member;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,12 +18,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Article {
+public class Article extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
     // 작성자 닉네임
     private String nickName;
+    private String carName;
     // 제목
     @NotEmpty
     private String title;
@@ -44,12 +46,6 @@ public class Article {
     // 좋아요
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleLike> articleLikes = new ArrayList<>();
-    // 생성 시간
-    @CreatedDate
-    private LocalDateTime createdAt;
-    // 업데이트 시간
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
     //private Long memberId;
 
@@ -60,6 +56,9 @@ public class Article {
     public Long getMemberId(){
         return member.getId();
     }
+    public String getProfileImg() {return member.getProfileImg();}
+    public String getNickname(){return member.getNickname();}
+    public String getCarName(){return member.getCarName();}
     public void increaseLikeCnt() {
         this.likeCnt++;
     }
@@ -93,11 +92,12 @@ public class Article {
         article.setTitle(postDto.getTitle());
         article.setContent(postDto.getContent());
         article.setMember(member);
-        article.setCreatedAt(LocalDateTime.now());
-        article.setUpdatedAt(LocalDateTime.now());
+        article.setNickName(member.getNickname());
+        article.setCarName(member.getCarName());
         article.setViewCnt(0);
         article.setCommentCnt(0);
         article.setLikeCnt(0);
+        article.setArticleImg(postDto.getArticleImg());
         return article;
     }
 }

@@ -12,6 +12,9 @@ import com.project.chamong.member.entity.Member;
 import com.project.chamong.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,59 +30,97 @@ public class ArticleService {
     private final ArticleMapper articleMapper;
     private final MemberRepository memberRepository;
 
-//    public List<ArticleDto.Response> getArticles(String keyword) {
-//        return StringUtils.isEmpty(keyword)
+    //    public List<ArticleDto.Response> getArticles(String keyword, int page) {
+//        int pageSize = 15;
+//        int offset = (page-1)*pageSize;
+//
+//        List<ArticleDto.Response> articleResponses = StringUtils.isEmpty(keyword)
 //                ? articleRepository.findAll().stream().map(articleMapper::articleResponse).collect(Collectors.toList())
-//                : articleRepository.findByTitleContaining(keyword).stream().map(articleMapper::articleResponse).collect(Collectors.toList())
-//                .stream().map(article -> {
-//                    Member member = memberRepository.findById(article.getMemberId())
-//                            .orElseThrow(() -> new IllegalArgumentException("Member not found ID: " + article.getMemberId()));
-//                    article.setNickName(member.getNickname());
-//                    article.setProfileImg(member.getProfileImg());
-//                    article.setOilInfo(member.getOilInfo());
-//                    return article;
-//                }).collect(Collectors.toList());
+//                : articleRepository.findByTitleContaining(keyword).stream().map(articleMapper::articleResponse).collect(Collectors.toList());
+//
+//        for (ArticleDto.Response articleResponse : articleResponses) {
+//            Article article = articleRepository.findById(articleResponse.getId())
+//                    .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + articleResponse.getId()));
+//            Member member = article.getMember();
+//            articleResponse.setNickname(member.getNickname());
+//            articleResponse.setProfileImg(member.getProfileImg());
+//            articleResponse.setOilInfo(member.getOilInfo());
+//        }
+//
+//        return articleResponses;
+//    }
+//    public List<ArticleDto.Response> getArticles(String keyword, int page) {
+//        int pageSize = 15;
+//        int offset = (page - 1) * pageSize;
+//
+//        List<ArticleDto.Response> articleResponses = StringUtils.isEmpty(keyword)
+//                ? articleRepository.findAll(PageRequest.of(offset, pageSize)).stream().map(articleMapper::articleResponse).collect(Collectors.toList())
+//                : articleRepository.findByTitleContaining(keyword, PageRequest.of(offset, pageSize)).stream().map(articleMapper::articleResponse).collect(Collectors.toList());
+//
+//        for (ArticleDto.Response articleResponse : articleResponses) {
+//            Article article = articleRepository.findById(articleResponse.getId())
+//                    .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + articleResponse.getId()));
+//            Member member = article.getMember();
+//            articleResponse.setNickname(member.getNickname());
+//            articleResponse.setProfileImg(member.getProfileImg());
+//            articleResponse.setOilInfo(member.getOilInfo());
+//        }
+//
+//        return articleResponses;
 //    }
 
-    public List<ArticleDto.Response> getArticles(String keyword) {
-        List<ArticleDto.Response> articleResponses = StringUtils.isEmpty(keyword)
-                ? articleRepository.findAll().stream().map(articleMapper::articleResponse).collect(Collectors.toList())
-                : articleRepository.findByTitleContaining(keyword).stream().map(articleMapper::articleResponse).collect(Collectors.toList());
+//    public List<ArticleDto.Response> getArticles(String keyword, Pageable pageable) {
+//        List<ArticleDto.Response> articleResponses = StringUtils.isEmpty(keyword)
+//                ? articleRepository.findAll(pageable).stream().map(articleMapper::articleResponse).collect(Collectors.toList())
+//                : articleRepository.findByTitleContaining(keyword, pageable).stream().map(articleMapper::articleResponse).collect(Collectors.toList());
+//        for (ArticleDto.Response articleResponse : articleResponses) {
+//            Article article = articleRepository.findById(articleResponse.getId())
+//                    .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + articleResponse.getId()));
+//            Member member = article.getMember();
+//            articleResponse.setNickname(member.getNickname());
+//            articleResponse.setProfileImg(member.getProfileImg());
+//            articleResponse.setOilInfo(member.getOilInfo());
+//        }
+//
+//        return articleResponses;
+//    }
 
-        for (ArticleDto.Response articleResponse : articleResponses) {
-            Member member = memberRepository.findById(articleResponse.getMember().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Member not found ID: " + articleResponse.getMember().getId()));
-            articleResponse.setNickName(member.getNickname());
+    public Page<ArticleDto.Response> getArticles(String keyword, Pageable pageable) {
+        Page<Article> articles = StringUtils.isEmpty(keyword)
+                ? articleRepository.findAll(pageable)
+                : articleRepository.findByTitleContaining(keyword, pageable);
+        return articles.map(articleMapper::articleResponse).map(articleResponse -> {
+            Member member = articleRepository.findById(articleResponse.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + articleResponse.getId())).getMember();
+            articleResponse.setNickname(member.getNickname());
             articleResponse.setProfileImg(member.getProfileImg());
-            articleResponse.setOilInfo(member.getOilInfo());
-        }
-
-        return articleResponses;
+            articleResponse.setCarName(member.getCarName());
+            return articleResponse;
+        });
     }
+
 
 
     public ArticleDto.Response getArticle(Long id) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + id));
-//        Member member = memberRepository.findById(article.getMember().getId())
-//                .orElseThrow(() -> new IllegalArgumentException("Member not found ID: " + article.getMemberId()));
+
         Member member = article.getMember();
         increaseViewCnt(id);
         ArticleDto.Response response = articleMapper.articleResponse(article);
-        response.setNickName(member.getNickname());
+        response.setNickname(member.getNickname());
         response.setProfileImg(member.getProfileImg());
-        response.setOilInfo(member.getOilInfo());
+        response.setCarName(member.getCarName());
         return response;
     }
 
     // Article 생성
     public ArticleDto.Response createArticle(ArticleDto.Post postDto) {
         Member member = memberRepository.findById(postDto.getMemberId())
-                .orElseThrow(()-> new IllegalArgumentException("Member not found with ID: "+ postDto.getMemberId()));
-        Article article = Article.createArticle(postDto,member);
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + postDto.getMemberId()));
+        Article article = Article.createArticle(postDto, member);
         article.setMember(member);
-//        article.setMember(memberRepository.findById(postDto.getMemberId())
-//                .orElseThrow(()-> new IllegalArgumentException("Member not found ID: "+ postDto.getMemberId())));
+
         return articleMapper.articleResponse(articleRepository.save(article));
     }
 
