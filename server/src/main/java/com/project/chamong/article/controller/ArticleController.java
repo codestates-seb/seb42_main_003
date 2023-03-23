@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,8 @@ public class ArticleController {
     public ResponseEntity<Page<ArticleDto.Response>> getAllArticles(@RequestParam(value = "keyword", required = false) String keyword,
                                                                     @RequestParam(value = "page", defaultValue = "0") int page,
                                                                     @RequestParam(value = "size", defaultValue = "15") int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+        // 신규 등록 순으로 정렬
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<ArticleDto.Response> articles = articleService.getArticles(keyword, pageRequest);
         return ResponseEntity.ok(articles);
     }

@@ -86,17 +86,23 @@ public class ArticleService {
 //    }
 
     public Page<ArticleDto.Response> getArticles(String keyword, Pageable pageable) {
-        Page<Article> articles = StringUtils.isEmpty(keyword)
+        Page<Article> articlePage = StringUtils.isEmpty(keyword)
                 ? articleRepository.findAll(pageable)
                 : articleRepository.findByTitleContaining(keyword, pageable);
-        return articles.map(articleMapper::articleResponse).map(articleResponse -> {
-            Member member = articleRepository.findById(articleResponse.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + articleResponse.getId())).getMember();
+
+        Page<ArticleDto.Response> articleResponsePage = articlePage.map(articleMapper::articleResponse);
+
+        // Set member info to each response
+        for (ArticleDto.Response articleResponse : articleResponsePage.getContent()) {
+            Article article = articleRepository.findById(articleResponse.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + articleResponse.getId()));
+            Member member = article.getMember();
             articleResponse.setNickname(member.getNickname());
             articleResponse.setProfileImg(member.getProfileImg());
             articleResponse.setCarName(member.getCarName());
-            return articleResponse;
-        });
+        }
+
+        return articleResponsePage;
     }
 
 
