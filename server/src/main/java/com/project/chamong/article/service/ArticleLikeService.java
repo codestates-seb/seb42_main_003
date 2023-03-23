@@ -4,6 +4,7 @@ import com.project.chamong.article.entity.Article;
 import com.project.chamong.article.entity.ArticleLike;
 import com.project.chamong.article.repository.ArticleLikeRepository;
 import com.project.chamong.article.repository.ArticleRepository;
+import com.project.chamong.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +18,9 @@ public class ArticleLikeService {
     @Transactional
     public void likeArticle(Long articleId, Long memberId) {
         ArticleLike articleLike = new ArticleLike();
+        Member member = articleLike.getMember();
         articleLike.setArticle(articleRepository.getOne(articleId));
-        articleLike.setMemberId(memberId);
+        articleLike.setMember(member);
         articleLikeRepository.save(articleLike);
 
         Article article = articleRepository.findById(articleId)

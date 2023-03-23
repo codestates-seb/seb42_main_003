@@ -156,9 +156,10 @@ public class ArticleService {
     public void likeArticle(Long memberId, Long articleId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("Article not found ID:" + articleId));
+        Member member = article.getMember();
         ArticleLike articleLike = new ArticleLike();
         articleLike.setArticle(article);
-        articleLike.setMemberId(memberId);
+        articleLike.setMember(member);
         articleLikeRepository.save(articleLike);
         article.increaseLikeCnt();
     }

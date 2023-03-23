@@ -23,8 +23,9 @@ public class Article extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
     // 작성자 닉네임
-    private String nickName;
+    private String nickname;
     private String carName;
+    private String profileImg;
     // 제목
     @NotEmpty
     private String title;
@@ -92,7 +93,8 @@ public class Article extends Auditable {
         article.setTitle(postDto.getTitle());
         article.setContent(postDto.getContent());
         article.setMember(member);
-        article.setNickName(member.getNickname());
+        article.setProfileImg(member.getProfileImg());
+        article.setNickname(member.getNickname());
         article.setCarName(member.getCarName());
         article.setViewCnt(0);
         article.setCommentCnt(0);
@@ -100,4 +102,6 @@ public class Article extends Auditable {
         article.setArticleImg(postDto.getArticleImg());
         return article;
     }
+
+
 }

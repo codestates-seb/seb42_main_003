@@ -51,7 +51,10 @@ public class Member {
   private Member member;
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
   private List<Article> articles;
-
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  private List<Comment> comments;
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  private List<ArticleLike> articleLikes;
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
   private List<VisitedPlace> visitedPlaces;
 

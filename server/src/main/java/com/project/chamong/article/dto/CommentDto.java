@@ -13,21 +13,25 @@ public class CommentDto {
     @Setter
     public static class Post {
         private String content;
-        //private String nickName;
+        private String nickName;
+        private String profileImg;
+        private String carName;
         private Long articleId;
         private Long memberId;
+        private String createdAt;
     }
     @Getter
     @Setter
     public static class Response {
         private Long id;
         private String content;
+        private String carName;
         private Long articleId;
         private Long memberId;
         private String nickName;
         private String profileImg;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
+        private String createdAt;
+        private String modifiedAt;
 
     }
 
@@ -35,9 +39,10 @@ public class CommentDto {
     @Setter
     public static class Patch{
         private String content;
-        public void update(Comment comment){
-            comment.setContent(content);
-        }
+        private String modifiedAt;
+//        public void update(Comment comment){
+//            comment.setContent(content);
+//        }
     }
 
 }

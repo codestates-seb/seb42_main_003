@@ -31,6 +31,8 @@ public class ArticleDto{
         private int viewCnt;
         private int likeCnt;
         private int commentCnt;
+        private String createAt;
+        private String modifiedAt;
 
     }
 
@@ -45,6 +47,8 @@ public class ArticleDto{
         private String content;
         private String articleImg;
         private Long memberId;
+        private String profileImg;
+        private String createdAt;
     }
 
     @Getter
@@ -57,5 +61,6 @@ public class ArticleDto{
         @Length(max = 1000, message = "content는 1000자 이하여야 합니다.")
         private String content;
         private String articleImg;
+        private String modifiedAt;
     }
 }
