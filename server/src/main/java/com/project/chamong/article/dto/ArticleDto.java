@@ -28,9 +28,9 @@ public class ArticleDto{
         private String articleImg;
         private boolean like;
         private Long memberId;
-        private int viewCnt;
-        private int likeCnt;
-        private int commentCnt;
+        private Integer viewCnt;
+        private Integer likeCnt;
+        private Integer commentCnt;
         private String createAt;
         private String modifiedAt;
 

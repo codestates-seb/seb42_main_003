@@ -36,11 +36,11 @@ public class Article extends Auditable {
     @Column(name = "image_url")
     private String articleImg;
     // 조회수
-    private int viewCnt;
+    private Integer viewCnt;
     // 좋아요 수
-    private int likeCnt;
+    private Integer likeCnt;
     // 댓글 수
-    private int commentCnt;
+    private Integer commentCnt;
     // 댓글
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();

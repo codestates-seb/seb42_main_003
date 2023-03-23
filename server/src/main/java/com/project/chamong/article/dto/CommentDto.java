@@ -40,9 +40,7 @@ public class CommentDto {
     public static class Patch{
         private String content;
         private String modifiedAt;
-//        public void update(Comment comment){
-//            comment.setContent(content);
-//        }
+
     }
 
 }
