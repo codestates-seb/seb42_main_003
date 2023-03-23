@@ -22,10 +22,6 @@ public class Article extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
-    // 작성자 닉네임
-    private String nickname;
-    private String carName;
-    private String profileImg;
     // 제목
     @NotEmpty
     private String title;
@@ -36,30 +32,45 @@ public class Article extends Auditable {
     @Column(name = "image_url")
     private String articleImg;
     // 조회수
-    private Integer viewCnt;
+    private Integer viewCnt = 0;
     // 좋아요 수
-    private Integer likeCnt;
+    private Integer likeCnt = 0;
     // 댓글 수
-    private Integer commentCnt;
+    private Integer commentCnt = 0;
+//    // 댓글
+//    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+//    private List<Comment> comments = new ArrayList<>();
+
     // 댓글
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "article_id")
     private List<Comment> comments = new ArrayList<>();
     // 좋아요
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleLike> articleLikes = new ArrayList<>();
 
-    //private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
-    public Long getMemberId(){
+    public Long getMemberId() {
         return member.getId();
     }
-    public String getProfileImg() {return member.getProfileImg();}
-    public String getNickname(){return member.getNickname();}
-    public String getCarName(){return member.getCarName();}
+
+    public String getProfileImg() {
+        return member.getProfileImg();
+    }
+
+    public String getNickname() {
+        return member.getNickname();
+    }
+
+    public String getCarName() {
+        return member.getCarName();
+    }
+
+
     public void increaseLikeCnt() {
         this.likeCnt++;
     }
@@ -76,6 +87,14 @@ public class Article extends Auditable {
         this.commentCnt--;
     }
 
+    public void setMember(Member member) {
+        if (this.member != null) {
+            this.member.getArticles().remove(this);
+        }
+        this.member = member;
+        member.getArticles().add(this);
+    }
+
     public void update(ArticleDto.Patch patchDto) {
         if (patchDto.getTitle() != null) {
             this.setTitle(patchDto.getTitle());
@@ -88,18 +107,16 @@ public class Article extends Auditable {
         }
     }
 
+
     public static Article createArticle(ArticleDto.Post postDto, Member member) {
         Article article = new Article();
-        article.setTitle(postDto.getTitle());
-        article.setContent(postDto.getContent());
+        article.title = postDto.getTitle();
+        article.content = postDto.getContent();
         article.setMember(member);
-        article.setProfileImg(member.getProfileImg());
-        article.setNickname(member.getNickname());
-        article.setCarName(member.getCarName());
-        article.setViewCnt(0);
-        article.setCommentCnt(0);
-        article.setLikeCnt(0);
-        article.setArticleImg(postDto.getArticleImg());
+        article.viewCnt = 0;
+        article.commentCnt = 0;
+        article.likeCnt = 0;
+        article.articleImg = postDto.getArticleImg();
         return article;
     }
 

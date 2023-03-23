@@ -4,14 +4,20 @@ import com.project.chamong.article.dto.ArticleDto;
 import com.project.chamong.article.entity.ArticleLike;
 import com.project.chamong.article.service.ArticleLikeService;
 import com.project.chamong.article.service.ArticleService;
+import com.project.chamong.auth.dto.AuthorizedMemberDto;
+import com.project.chamong.member.entity.Member;
+import com.project.chamong.member.repository.MemberRepository;
+import com.project.chamong.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
@@ -19,7 +25,7 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
     private final ArticleLikeService articleLikeService;
-
+    private final MemberRepository memberRepository;
     // 인기글 보여주기 - web
     @GetMapping("/articles/popular-web")
     public ResponseEntity<List<ArticleDto.Response>> getPopularArticlesForWeb(){
@@ -33,11 +39,11 @@ public class ArticleController {
         List<ArticleDto.Response> popularArticles = articleService.getPopularArticlesForApp();
         return ResponseEntity.ok(popularArticles);
     }
-    // 15개씩 보여주기
+
+    // 전체 글 조회 - 15개씩 보여주기
     @GetMapping("/articles")
     public ResponseEntity<Page<ArticleDto.Response>> getAllArticles(@RequestParam(value = "keyword", required = false) String keyword,
-                                                                    @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                    @RequestParam(value = "size", defaultValue = "15") int size) {
+                                                                    @RequestParam(value = "page", defaultValue = "0") int page,@RequestParam(value = "size", defaultValue = "15") int size) {
         // 신규 등록 순으로 정렬
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<ArticleDto.Response> articles = articleService.getArticles(keyword, pageRequest);
@@ -79,9 +85,21 @@ public class ArticleController {
         return ResponseEntity.noContent().build();
     }
 
+
     @PostMapping("/articles/{id}/unlike")
-    public ResponseEntity<Void> unlikeArticle(@PathVariable Long id, @RequestParam Long memberId) {
-        articleLikeService.unlikeArticle(id, memberId);
+    public ResponseEntity<Void> unlikeArticle( @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto, @PathVariable Long id) {
+        articleLikeService.unlikeArticle(id, authorizedMemberDto.getId());
         return ResponseEntity.ok().build();
     }
+
+    // 특정 회원이 좋아요 누른 게시글 목록 조회
+    @GetMapping("/members/{memberId}/liked-articles")
+    public ResponseEntity<List<ArticleDto.Response>> getLikedArticlesByMemberId(@PathVariable Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + memberId));
+        List<ArticleDto.Response> articles = articleLikeService.getLikedArticlesByMember(member);
+        return ResponseEntity.ok(articles);
+    }
+
+
 }

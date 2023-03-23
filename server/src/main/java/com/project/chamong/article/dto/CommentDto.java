@@ -1,6 +1,7 @@
 package com.project.chamong.article.dto;
 
 import com.project.chamong.article.entity.Comment;
+import jdk.jshell.Snippet;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,6 @@ public class CommentDto {
         private String content;
         private String nickname;
         private String profileImg;
-        private String carName;
         private Long articleId;
         private Long memberId;
         private String createdAt;
@@ -25,21 +25,19 @@ public class CommentDto {
     public static class Response {
         private Long id;
         private String content;
-        private String carName;
         private Long articleId;
         private Long memberId;
         private String nickname;
         private String profileImg;
         private String createdAt;
-        private String modifiedAt;
-
+        private String updatedAt;
     }
 
     @Getter
     @Setter
     public static class Patch{
         private String content;
-        private String modifiedAt;
+        private String updatedAt;
 
     }
 

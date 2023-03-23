@@ -1,11 +1,11 @@
 package com.project.chamong.article.service;
 
 import com.project.chamong.article.dto.ArticleDto;
+import com.project.chamong.article.dto.CommentDto;
 import com.project.chamong.article.entity.Article;
-import com.project.chamong.article.entity.ArticleLike;
 import com.project.chamong.article.entity.Comment;
 import com.project.chamong.article.mapper.ArticleMapper;
-import com.project.chamong.article.repository.ArticleLikeRepository;
+import com.project.chamong.article.mapper.CommentMapper;
 import com.project.chamong.article.repository.ArticleRepository;
 import com.project.chamong.article.repository.CommentRepository;
 import com.project.chamong.member.entity.Member;
@@ -13,12 +13,12 @@ import com.project.chamong.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,11 +26,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
-    private final ArticleLikeRepository articleLikeRepository;
     private final CommentRepository commentRepository;
     private final ArticleMapper articleMapper;
+    private final CommentMapper commentMapper;
     private final MemberRepository memberRepository;
-
+    private final CommentService commentService;
+    @Transactional
     public Page<ArticleDto.Response> getArticles(String keyword, Pageable pageable) {
         Page<Article> articlePage = StringUtils.isEmpty(keyword)
                 ? articleRepository.findAll(pageable)
@@ -50,20 +51,23 @@ public class ArticleService {
         return articleResponsePage;
     }
 
-
-
+    // 상세페이지 - 게시글과 댓글 조회
+    @Transactional
     public ArticleDto.Response getArticle(Long id) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + id));
-
         Member member = article.getMember();
         increaseViewCnt(id);
-        ArticleDto.Response response = articleMapper.articleResponse(article);
+        // 조회한 Article 객체의 Member 정보를 가져와서, articleMapper를 사용하여 ArticleDto.Response 객체로 변환
+        ArticleDto.Response response = articleMapper.articleResponse(article, member);
         response.setNickname(member.getNickname());
         response.setProfileImg(member.getProfileImg());
         response.setCarName(member.getCarName());
+        // commentService를 사용하여 해당 게시글에 대한 댓글 목록을 조회하여 객체에 설정
+        response.setComments(commentService.getCommentsByArticleId(id));
         return response;
     }
+
     // 인기글 조회 (5개씩, 1순위: 좋아요 수, 2순위: 조회수)
     public List<ArticleDto.Response> getPopularArticlesForWeb(){
         List<Article> popularArticles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "likeCnt", "viewCnt")).stream().limit(5).collect(Collectors.toList());
@@ -75,12 +79,12 @@ public class ArticleService {
         return popularArticles.stream().map(articleMapper::articleResponse).collect(Collectors.toList());
     }
 
+
     // Article 생성
     public ArticleDto.Response createArticle(ArticleDto.Post postDto) {
         Member member = memberRepository.findById(postDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + postDto.getMemberId()));
         Article article = Article.createArticle(postDto, member);
-        article.setMember(member);
 
         return articleMapper.articleResponse(articleRepository.save(article));
     }
@@ -98,13 +102,16 @@ public class ArticleService {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + id));
 
+        List<Comment> comments = article.getComments();
+        article.setComments(new ArrayList<>());
+        articleRepository.delete(article);
+
         // 댓글 삭제
-        for (Comment comment : article.getComments()) {
+        for (Comment comment : comments) {
             commentRepository.delete(comment);
         }
-
-        articleRepository.delete(article);
     }
+
 
     // 조회수
     public void increaseViewCnt(Long id) {
@@ -112,29 +119,6 @@ public class ArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("Article not found ID:" + id));
         article.setViewCnt(article.getViewCnt() + 1);
     }
-
-//    @Transactional
-//    public void likeArticle(Long memberId, Long articleId) {
-//        Article article = articleRepository.findById(articleId)
-//                .orElseThrow(() -> new IllegalArgumentException("Article not found ID:" + articleId));
-//        Member member = article.getMember();
-//        ArticleLike articleLike = new ArticleLike();
-//        articleLike.setArticle(article);
-//        articleLike.setMember(member);
-//        articleLikeRepository.save(articleLike);
-//        article.increaseLikeCnt();
-//    }
-//
-//    @Transactional
-//    public void unlikeArticle(Long memberId, Long articleId) {
-//        ArticleLike articleLike = articleLikeRepository.findByMemberIdAndArticleId(memberId, articleId)
-//                .orElseThrow(() -> new IllegalArgumentException("Article Like not found with articleId: " + articleId + " and memberId: " + memberId));
-//        articleLikeRepository.delete(articleLike);
-//
-//        Article article = articleRepository.findById(articleId)
-//                .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + articleId));
-//        article.decreaseLikeCnt();
-//    }
 
     // 조회수 반환
     public int getArticleViewCnt(Long articleId) {
@@ -156,4 +140,14 @@ public class ArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + articleId));
         return article.getComments().size();
     }
+
+    @Transactional
+    public List<CommentDto.Response> getCommentsByMember(Member member) {
+        List<Comment> comments = commentRepository.findByMember(member);
+        return comments.stream()
+                .map(commentMapper::commentResponse)
+                .collect(Collectors.toList());
+    }
+
+
 }

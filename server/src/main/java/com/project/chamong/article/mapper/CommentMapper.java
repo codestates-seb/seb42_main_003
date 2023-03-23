@@ -9,4 +9,6 @@ public interface CommentMapper {
     Comment commentPostDtoToComment(CommentDto.Post postDto);
     Comment commentPatchDtoToComment(CommentDto.Patch patchDto);
     CommentDto.Response commentResponse(Comment comment);
+
+
 }

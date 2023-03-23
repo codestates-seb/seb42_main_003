@@ -6,6 +6,7 @@ import com.project.chamong.article.entity.Comment;
 import com.project.chamong.article.mapper.CommentMapper;
 import com.project.chamong.article.repository.ArticleRepository;
 import com.project.chamong.article.repository.CommentRepository;
+import com.project.chamong.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,7 @@ public class CommentService {
     private final ArticleRepository articleRepository;
     private final CommentMapper commentMapper;
 
-    //    @Transactional
-//    public CommentDto.Response createComment(CommentDto.Post postDto) {
-//        Comment comment = commentMapper.commentPostDtoToComment(postDto);
-//        commentRepository.save(comment);
-//        article.increaseCommentCnt();
-//        return commentMapper.commentResponse(comment);
-//    }
+    // 댓글 생성
     @Transactional
     public CommentDto.Response createComment(CommentDto.Post postDto) {
         Comment comment = commentMapper.commentPostDtoToComment(postDto);
@@ -38,7 +33,7 @@ public class CommentService {
         return commentMapper.commentResponse(comment);
     }
 
-
+    // 댓글 수정
     @Transactional
     public CommentDto.Response updateComment(Long id, CommentDto.Patch patchDto) {
         Comment comment = commentRepository.findById(id)
@@ -48,12 +43,7 @@ public class CommentService {
 
         return commentMapper.commentResponse(comment);
     }
-
-    //    @Transactional
-//    public void deleteComment(Long id) {
-//        commentRepository.deleteById(id);
-//        article.decreaseCommentCnt();
-//    }
+    // 댓글 삭제
     @Transactional
     public void deleteComment(Long id) {
         Comment comment = commentRepository.findById(id)
@@ -75,10 +65,15 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    // 게시글에 대한 댓글 수 조회
-    public long getCommentCntByArticleId(Long articleId) {
+    // 사용자가 작성한 댓글 목록 조회
+    @Transactional(value = "transactionManager", readOnly = true)
+    public List<CommentDto.Response> getCommentsByMember(Member member) {
+        List<Comment> comments = commentRepository.findByMember(member);
+        return comments.stream()
+                .map(commentMapper::commentResponse)
+                .collect(Collectors.toList());
 
-        return commentRepository.countByArticleId(articleId);
     }
+
+
 }
