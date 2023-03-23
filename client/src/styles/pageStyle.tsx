@@ -13,13 +13,20 @@ export const PageMain = styled.main<PageMainProps>`
   @media screen and (min-width: 768px) {
     padding-top: none;
     padding-bottom: none;
+    padding-top:0px;
   }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const PageArticle = styled.article`
+  max-width: 1000px;
   width: 100%;
   padding: 12px;
   border-bottom: 1px solid #d9d9d9;
+  @media screen and (min-width: 768px) {
+  }
   h2 {
     font-size: var(--fs__h2);
     font-weight: 700;
@@ -135,8 +142,8 @@ export const CommentArticle = styled(MyPageMemberInfo)`
 export const PostCommentStyle = styled.form`
   position: fixed;
   display: flex;
-  width:100%;
-  height:128px;
+  width: 100%;
+  height: 128px;
   padding: 6px 12px 64px;
   border-radius: 25px 25px 0px 0px;
   background-color: var(--searchbar__color);
@@ -148,9 +155,12 @@ export const PostCommentStyle = styled.form`
     display: flex;
     > button {
       font-size: var(--fs__h1);
-      color:var(--chamong__color);
-      padding:12px;
+      color: var(--chamong__color);
+      padding: 12px;
       cursor: pointer;
     }
+  }
+  @media screen and (min-width: 768px) {
+    display: none;
   }
 `;

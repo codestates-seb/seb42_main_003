@@ -6,6 +6,9 @@ import { GrFormView } from 'react-icons/gr';
 import { FaThumbsUp } from 'react-icons/fa';
 import { BsPencilSquare } from 'react-icons/bs';
 import PostModal from '../components/PostModal';
+import { getData } from '../api/api';
+import Header from '../components/destop/Header';
+import Footer from '../components/destop/Footer';
 
 import {
   PageMain,
@@ -22,37 +25,47 @@ function PostDetail() {
   const [postData, setPostData] = useState<any>(null);
 
   //api화 필요한 코드---------------------------
-  useEffect(() => {
-    axios({
-      method: 'get',
-      url: `http://localhost:3001/post/${postId}`,
-    })
-      .then((res) => setPostData(res.data))
-      .catch((err) => console.log(err));
-  }, []);
+  // useEffect(() => {
+  //   axios({
+  //     method: 'get',
+  //     url: `http://localhost:3001/post/${postId}`,
+  //   })
+  //     .then((res) => setPostData(res.data))
+  //     .catch((err) => console.log(err));
+  // }, []);
   //api로 대체해야 함
+  useEffect(()=>{
+    getData(`articles/${postId}`).then(res=>setPostData(res))
+  },[])
+
+  useEffect(()=>{
+    if(postData) console.log(postData.comments)
+  },[postData])
 
   return (
     <>
+    <Header></Header>
       <MobileHeader>
         <h1>커뮤니티</h1>
         <button>
           <HiArrowSmLeft />
         </button>
+        <button>삭제</button>
       </MobileHeader>
       {postData && (
         <PageMain bottom={'128px'}>
-          <ViewContent post={postData.post} />
+          <ViewContent post={postData} />
           <PageArticle>
-            댓글 {postData.comment ? postData.comment.length : '0'}개
+            댓글 {postData.comments ? postData.comments.length : '0'}개
           </PageArticle>
-          {postData.comment.map((comment: CommentType) => (
+          {postData.comments.map((comment: CommentType) => (
             <ViewComment comment={comment} />
           ))}
         </PageMain>
       )}
-      <PostComment />
-      <PostModal></PostModal>
+      <PostCommentMobile />
+      {/* <PostModal></PostModal> */}
+      <Footer></Footer>
     </>
   );
 }
@@ -60,13 +73,15 @@ function PostDetail() {
 interface PostProps {
   post: {
     like: number;
-    view: number;
+    view_cnt: number;
     title: string;
     author: string;
-    authorProfileImg: string;
+    img: string;
     content: string;
-    createdAt: string;
+    created_at: string;
+    updated_at: string;
     isLike: boolean;
+    comment_cnt: number;
   };
 }
 
@@ -76,16 +91,16 @@ function ViewContent({ post }: PostProps) {
       <h2>{post.title}</h2>
       <div>
         <div>
-          <img src={post.authorProfileImg} alt='profile-img'></img>
+          <img src={post.img} alt='profile-img'></img>
           <div className='member-info-upper'>
             <span className='member-info-nickname'>{post.author}</span>
-            <span className='member-created-at'>{post.createdAt}</span>
+            <span className='member-created-at'>{post.created_at}</span>
           </div>
         </div>
         <div className='post-info'>
           <span>
             <GrFormView />
-            <span>{post.view}</span>
+            <span>{post.view_cnt}</span>
           </span>
           <span>
             <button>
@@ -96,16 +111,15 @@ function ViewContent({ post }: PostProps) {
         </div>
       </div>
       <p>{post.content}</p>
-      
     </PostArticle>
   );
 }
 
 interface CommentType {
   author: string;
-  createdAt: string;
-  authorProfileImg: string;
-  text: string;
+  created_at: string;
+  img: string;
+  content: string;
 }
 
 interface CommentProps {
@@ -117,20 +131,20 @@ function ViewComment({ comment }: CommentProps) {
     <CommentArticle>
       <div>
         <div>
-          <img src={comment.authorProfileImg} alt='profile-img'></img>
+          <img src={comment.img} alt='profile-img'></img>
           <div className='member-info-upper'>
             <span className='member-info-nickname'>{comment.author}</span>
-            <span className='member-created-at'>{comment.createdAt}</span>
+            <span className='member-created-at'>{comment.created_at}</span>
           </div>
         </div>
       </div>
-      <p>{comment.text}</p>
+      <p>{comment.content}</p>
     </CommentArticle>
   );
 }
 
-function PostComment() {
-  const postCommentHandler = (e:any) => {
+function PostCommentMobile() {
+  const postCommentHandler = (e: any) => {
     e.preventDefault();
   };
 
