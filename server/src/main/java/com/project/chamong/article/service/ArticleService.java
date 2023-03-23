@@ -113,28 +113,28 @@ public class ArticleService {
         article.setViewCnt(article.getViewCnt() + 1);
     }
 
-    @Transactional
-    public void likeArticle(Long memberId, Long articleId) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("Article not found ID:" + articleId));
-        Member member = article.getMember();
-        ArticleLike articleLike = new ArticleLike();
-        articleLike.setArticle(article);
-        articleLike.setMember(member);
-        articleLikeRepository.save(articleLike);
-        article.increaseLikeCnt();
-    }
-
-    @Transactional
-    public void unlikeArticle(Long memberId, Long articleId) {
-        ArticleLike articleLike = articleLikeRepository.findByMemberIdAndArticleId(memberId, articleId)
-                .orElseThrow(() -> new IllegalArgumentException("Article Like not found with articleId: " + articleId + " and memberId: " + memberId));
-        articleLikeRepository.delete(articleLike);
-
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + articleId));
-        article.decreaseLikeCnt();
-    }
+//    @Transactional
+//    public void likeArticle(Long memberId, Long articleId) {
+//        Article article = articleRepository.findById(articleId)
+//                .orElseThrow(() -> new IllegalArgumentException("Article not found ID:" + articleId));
+//        Member member = article.getMember();
+//        ArticleLike articleLike = new ArticleLike();
+//        articleLike.setArticle(article);
+//        articleLike.setMember(member);
+//        articleLikeRepository.save(articleLike);
+//        article.increaseLikeCnt();
+//    }
+//
+//    @Transactional
+//    public void unlikeArticle(Long memberId, Long articleId) {
+//        ArticleLike articleLike = articleLikeRepository.findByMemberIdAndArticleId(memberId, articleId)
+//                .orElseThrow(() -> new IllegalArgumentException("Article Like not found with articleId: " + articleId + " and memberId: " + memberId));
+//        articleLikeRepository.delete(articleLike);
+//
+//        Article article = articleRepository.findById(articleId)
+//                .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + articleId));
+//        article.decreaseLikeCnt();
+//    }
 
     // 조회수 반환
     public int getArticleViewCnt(Long articleId) {

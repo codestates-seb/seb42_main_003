@@ -1,6 +1,8 @@
 package com.project.chamong.article.controller;
 
 import com.project.chamong.article.dto.ArticleDto;
+import com.project.chamong.article.entity.ArticleLike;
+import com.project.chamong.article.service.ArticleLikeService;
 import com.project.chamong.article.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
+    private final ArticleLikeService articleLikeService;
 
     // 인기글 보여주기 - web
     @GetMapping("/articles/popular-web")
@@ -45,6 +48,7 @@ public class ArticleController {
     @GetMapping("/articles/{id}")
     public ResponseEntity<ArticleDto.Response> getArticle(@PathVariable Long id) {
         ArticleDto.Response article = articleService.getArticle(id);
+        article.setViewCnt(articleService.getArticleViewCnt(id));
         article.setCommentCnt(articleService.getCommentCnt(id));
         article.setLikeCnt(articleService.getArticleLikeCnt(id));
         return ResponseEntity.ok(article);
@@ -70,14 +74,14 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/{id}/like")
-    public ResponseEntity<Void> likeArticle(@PathVariable Long id, @RequestBody Long memberId) {
-        articleService.likeArticle(id, memberId);
+    public ResponseEntity<Void> likeArticle(@PathVariable Long id) {
+        articleLikeService.likeArticle(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/articles/{id}/unlike")
-    public ResponseEntity<Void> unlikeArticle(@PathVariable Long id, @RequestBody Long memberId) {
-        articleService.unlikeArticle(id, memberId);
+    public ResponseEntity<Void> unlikeArticle(@PathVariable Long id, @RequestParam Long memberId) {
+        articleLikeService.unlikeArticle(id, memberId);
         return ResponseEntity.ok().build();
     }
 }
