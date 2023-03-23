@@ -24,8 +24,11 @@ const reviewSlice = createSlice({
     edit: (state, action) => {
       return action.payload;
     },
+    reset: (state, action) => {
+      return (state = action.payload);
+    },
   },
 });
 
 export default reviewSlice;
-export const { edit } = reviewSlice.actions;
+export const { edit, reset } = reviewSlice.actions;

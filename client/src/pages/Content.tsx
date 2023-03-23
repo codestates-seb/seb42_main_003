@@ -47,7 +47,7 @@ function Content() {
       <div className="review_wrap">
         <div className="destop_wrap">
           {isReview.map((ele: any) => (
-            <Review isReview={ele}></Review>
+            <Review key={ele.id} isReview={ele}></Review>
           ))}
         </div>
       </div>

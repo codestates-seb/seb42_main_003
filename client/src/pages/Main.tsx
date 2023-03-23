@@ -21,7 +21,6 @@ function Main() {
       <MapViewButton></MapViewButton>
       <Header></Header>
       <HeaderSearch view={'none'} />
-      {/* <SearchModal /> */}
       <Banner></Banner>
       <Category></Category>
       <CommunityBestM></CommunityBestM>
