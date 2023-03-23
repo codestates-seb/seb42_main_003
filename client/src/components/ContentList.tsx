@@ -86,7 +86,7 @@ function ContentList({}: CardList) {
     setData(data.concat(content.slice(itemIndex, itemIndex + 6)));
     setIsLoaded(false);
   };
-  console.log(data);
+
   const onIntersect: IntersectionObserverCallback = async (
     [entry],
     observer

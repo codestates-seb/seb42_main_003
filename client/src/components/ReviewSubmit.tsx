@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { AiFillStar } from 'react-icons/ai';
 import { Button } from '../styles/Button';
+import { reset } from '../store/reviewSlice';
 
 export const Container = styled.div`
   @media (max-width: 768px) {
@@ -96,23 +97,28 @@ export const RatingBox = styled.div`
   }
 `;
 export function ReviewSubmit() {
+  const dispatch = useAppDispatch();
   const edit = useAppSelector(state => state.review);
   useEffect(() => {
     setIsEdit(edit);
     handleStarClick(edit.grade - 1);
-    // setClicked(handleStarClick(edit.grade));
+  }, [edit]);
+
+  useEffect(() => {
     return () => {
-      setIsEdit({
-        id: 0,
-        image: '',
-        user: '',
-        createdAt: '',
-        grade: 0,
-        body: '',
-      });
+      dispatch(
+        reset({
+          id: 0,
+          image: '',
+          user: '',
+          createdAt: '',
+          grade: 0,
+          body: '',
+        })
+      );
       handleStarClick(0);
     };
-  }, [edit]);
+  }, []);
   const [clicked, setClicked] = useState<boolean[] | any>([
     false,
     false,

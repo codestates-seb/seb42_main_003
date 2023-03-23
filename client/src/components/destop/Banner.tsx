@@ -110,7 +110,6 @@ function Banner() {
     if (currentIndex > lastIndex) {
       return onSelectImage({ currentIndex: firstIndex, behavior: 'auto' });
     }
-
     onSelectImage({ currentIndex });
   }
 

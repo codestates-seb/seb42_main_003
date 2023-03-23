@@ -78,12 +78,12 @@ function Header({ width_M }: SearchState) {
     {
       id: 1,
       title: '유저픽',
-      link: '/',
+      link: '/userpick',
     },
     {
       id: 2,
       title: '위시리스트',
-      link: '#',
+      link: '/wishlist',
     },
     {
       id: 3,
@@ -91,7 +91,7 @@ function Header({ width_M }: SearchState) {
       link: '/community',
     },
   ];
-  // const isClicked = useAppSelector(state => state.clicked);
+
   return (
     <Container width_M={width_M}>
       {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}
