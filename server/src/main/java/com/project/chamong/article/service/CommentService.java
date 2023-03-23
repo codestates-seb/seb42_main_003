@@ -6,14 +6,9 @@ import com.project.chamong.article.entity.Comment;
 import com.project.chamong.article.mapper.CommentMapper;
 import com.project.chamong.article.repository.ArticleRepository;
 import com.project.chamong.article.repository.CommentRepository;
-import com.project.chamong.member.entity.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +24,6 @@ public class CommentService {
         commentRepository.save(comment);
         Article article = articleRepository.findById(postDto.getArticleId())
                 .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + postDto.getArticleId()));
-        article.increaseCommentCnt();
         return commentMapper.commentResponse(comment);
     }
 
@@ -51,29 +45,7 @@ public class CommentService {
 
         Article article = articleRepository.findById(comment.getArticle().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + comment.getArticle().getId()));
-        article.decreaseCommentCnt();
 
         commentRepository.deleteById(id);
     }
-
-    @Transactional
-    // 게시글에 대한 댓글 목록 조회
-    public List<CommentDto.Response> getCommentsByArticleId(Long articleId) {
-        List<Comment> comments = commentRepository.findByArticleId(articleId);
-        return comments.stream()
-                .map(commentMapper::commentResponse)
-                .collect(Collectors.toList());
-    }
-
-    // 사용자가 작성한 댓글 목록 조회
-    @Transactional(value = "transactionManager", readOnly = true)
-    public List<CommentDto.Response> getCommentsByMember(Member member) {
-        List<Comment> comments = commentRepository.findByMember(member);
-        return comments.stream()
-                .map(commentMapper::commentResponse)
-                .collect(Collectors.toList());
-
-    }
-
-
 }

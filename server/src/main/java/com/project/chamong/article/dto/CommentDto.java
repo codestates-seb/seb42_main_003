@@ -1,11 +1,8 @@
 package com.project.chamong.article.dto;
 
-import com.project.chamong.article.entity.Comment;
-import jdk.jshell.Snippet;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,11 +14,10 @@ public class CommentDto {
         private String nickname;
         private String profileImg;
         private Long articleId;
-        private Long memberId;
-        private String createdAt;
     }
     @Getter
     @Setter
+    @Builder
     public static class Response {
         private Long id;
         private String content;
@@ -37,7 +33,6 @@ public class CommentDto {
     @Setter
     public static class Patch{
         private String content;
-        private String updatedAt;
 
     }
 

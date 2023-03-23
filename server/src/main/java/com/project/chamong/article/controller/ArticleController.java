@@ -1,23 +1,17 @@
 package com.project.chamong.article.controller;
 
 import com.project.chamong.article.dto.ArticleDto;
-import com.project.chamong.article.entity.ArticleLike;
 import com.project.chamong.article.service.ArticleLikeService;
 import com.project.chamong.article.service.ArticleService;
 import com.project.chamong.auth.dto.AuthorizedMemberDto;
-import com.project.chamong.member.entity.Member;
-import com.project.chamong.member.repository.MemberRepository;
-import com.project.chamong.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
@@ -25,7 +19,6 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
     private final ArticleLikeService articleLikeService;
-    private final MemberRepository memberRepository;
     // 인기글 보여주기 - web
     @GetMapping("/articles/popular-web")
     public ResponseEntity<List<ArticleDto.Response>> getPopularArticlesForWeb(){
@@ -52,18 +45,16 @@ public class ArticleController {
 
     // 특정 게시글 보이기
     @GetMapping("/articles/{id}")
-    public ResponseEntity<ArticleDto.Response> getArticle(@PathVariable Long id) {
-        ArticleDto.Response article = articleService.getArticle(id);
-        article.setViewCnt(articleService.getArticleViewCnt(id));
-        article.setCommentCnt(articleService.getCommentCnt(id));
-        article.setLikeCnt(articleService.getArticleLikeCnt(id));
-        return ResponseEntity.ok(article);
+    public ResponseEntity<ArticleDto.Response> getArticle(@PathVariable Long id, @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto) {
+        ArticleDto.Response response = articleService.getArticle(id, authorizedMemberDto);
+
+        return ResponseEntity.ok(response);
     }
 
 
     @PostMapping("/articles")
-    public ResponseEntity<ArticleDto.Response> createArticle(@RequestBody ArticleDto.Post postDto) {
-        ArticleDto.Response response = articleService.createArticle(postDto);
+    public ResponseEntity<ArticleDto.Response> createArticle(@RequestBody ArticleDto.Post postDto, @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto) {
+        ArticleDto.Response response = articleService.createArticle(authorizedMemberDto,postDto);
         return ResponseEntity.ok(response);
     }
 
@@ -80,26 +71,14 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/{id}/like")
-    public ResponseEntity<Void> likeArticle(@PathVariable Long id) {
-        articleLikeService.likeArticle(id);
+    public ResponseEntity<Void> likeArticle(@PathVariable Long id, @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto) {
+        articleLikeService.likeArticle(authorizedMemberDto, id);
         return ResponseEntity.noContent().build();
     }
 
-
     @PostMapping("/articles/{id}/unlike")
-    public ResponseEntity<Void> unlikeArticle( @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto, @PathVariable Long id) {
-        articleLikeService.unlikeArticle(id, authorizedMemberDto.getId());
+    public ResponseEntity<Void> unlikeArticle(@PathVariable Long id, @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto) {
+        articleLikeService.unlikeArticle(authorizedMemberDto, id);
         return ResponseEntity.ok().build();
     }
-
-    // 특정 회원이 좋아요 누른 게시글 목록 조회
-    @GetMapping("/members/{memberId}/liked-articles")
-    public ResponseEntity<List<ArticleDto.Response>> getLikedArticlesByMemberId(@PathVariable Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + memberId));
-        List<ArticleDto.Response> articles = articleLikeService.getLikedArticlesByMember(member);
-        return ResponseEntity.ok(articles);
-    }
-
-
 }
