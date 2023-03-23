@@ -1,9 +1,16 @@
 import { Modal } from "../styles/Modal";
 import { HiOutlineX } from "react-icons/hi";
-import { Input,TextArea } from "../styles/Input";
+import { Input,TextArea,ImageInput } from "../styles/Input";
 import { Button } from "../styles/Button";
+import useUploadImage from "../hooks/useUploadImage";
 
 function PostModal () {
+
+const {imageSrc,imageChange,imageFormData,imageDelete}=useUploadImage();
+
+
+
+
 return (
   <Modal>
     <div className='wrapper'>
@@ -13,6 +20,21 @@ return (
             <HiOutlineX />
           </button>
         </div>
+        <ImageInput
+          border={'var(--chamong__color)'}
+          color={'var(--chamong__color)'}
+          hcolor={'white'}
+          hover={'var(--chamong__color)'}
+          hborder={'var(--chamong__color)'}
+          padding='8px 14px'
+          radius='12px'>
+          {imageSrc.length>=1?<div className='preview'>
+            <img alt='preview' src={imageSrc}></img>
+            <button onClick={imageDelete}><HiOutlineX/></button>
+          </div>:
+          <label htmlFor='file'>이미지 첨부</label>}
+          <input type='file' id='file' onChange={imageChange}></input>
+        </ImageInput>
         <Input placeholder='제목' />
         <TextArea placeholder='내용'/>
         <Button
