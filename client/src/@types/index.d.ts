@@ -18,7 +18,7 @@ interface ArticleType {
 interface MemberInfo {
   id:number,
   email:string,
-  nickName:string,
+  nickname:string,
   profileImg:string,
   about:string,
   carName:string,
