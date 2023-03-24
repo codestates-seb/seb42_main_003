@@ -1,6 +1,6 @@
 interface ArticleType {
   id:number;
-  member_id:number;
+  memberId:number;
   title:string;
   content:string;
   nickName:string;
