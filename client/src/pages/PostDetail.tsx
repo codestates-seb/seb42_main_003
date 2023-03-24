@@ -90,7 +90,7 @@ function ViewContent({ post }: PostProps) {
         <div className='post-info'>
           <span>
             <GrFormView />
-            <span>{post.member_id}</span>
+            <span>{post.memberId}</span>
           </span>
           <span>
             <button>
