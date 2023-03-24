@@ -70,7 +70,7 @@ function useUploadImage () {
     if(image) console.log('imageFormSuccess!!');
   },[imageFormData])
 
-  return {imageName,imageSrc, imageChange, imageFormData, imageDelete}
+  return {image, imageName,imageSrc, imageChange, imageFormData, imageDelete}
 }
 
 
