@@ -192,7 +192,7 @@ export function ReviewSubmit() {
             hborder="var(--chamong__color)"
             font="12px"
           >
-            {isEdit.body ? '수정' : '등록'}
+            {isEdit.id ? '수정' : '등록'}
           </Button>
         </div>
       </div>
