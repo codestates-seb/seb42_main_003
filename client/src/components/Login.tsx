@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import { useState } from 'react';
-import { type } from '@testing-library/user-event/dist/type';
+import { useEffect, useState } from 'react';
+// import { type } from '@testing-library/user-event/dist/type';
 import { Input } from '../styles/Input';
+import { MouseEvent } from 'react';
 export const Background = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
   width: 100%;
@@ -50,7 +51,7 @@ export const Container = styled.div`
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    /* margin: 20px 0; */
+    margin-bottom: 30px;
   }
   span {
     font-size: 18px;
@@ -63,10 +64,12 @@ export const Container = styled.div`
   }
   .input_field {
     /* border: 2px solid var(--darkGreen__color); */
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    height: 3.5em;
+    /* height: 3.5em; */
     border-radius: 12px;
-    margin-bottom: 15px;
+    /* margin-bottom: 15px; */
   }
   /* input {
     height: 100%;
@@ -117,13 +120,133 @@ export const Container = styled.div`
     padding: 10px 0px 10px 5px;
     margin-left: 5px;
   }
+  .error {
+    color: var(--chamong__color);
+    padding: 5px 0 0px 5px;
+    font-weight: 500;
+    font-size: var(--fs__mid);
+  }
+  .input_mg {
+    margin-top: 20px;
+  }
+  .input_mg_bottom {
+    margin-bottom: 20px;
+  }
 `;
 type LoginInfo = {
   setIsLogin: (foo: any) => void;
 };
-
+type CustomMouseEvent = MouseEvent<HTMLElement>;
 function Login({ setIsLogin }: LoginInfo) {
   const [isUserState, setIsUserState] = useState<boolean>(true);
+
+  const [loginInfo, setLoginInfo] = useState({ email: '', password: '' });
+  const [signUp, setSignUp] = useState({
+    nickName: '',
+    email: '',
+    password: '',
+  });
+  const [errorMessage, setErrorMessage] = useState({
+    email: '',
+    password: '',
+  });
+  useEffect(() => {
+    return () => {
+      setErrorMessage({
+        email: '',
+        password: '',
+      });
+    };
+  }, [isUserState]);
+
+  //todo 인풋 : onChange 핸들러
+  const loginInputValue = (key: string) => (e: any) => {
+    if (key === 'email' && e.target.value)
+      setErrorMessage({ ...errorMessage, email: '' });
+    if (key === 'password' && e.target.value)
+      setErrorMessage({ ...errorMessage, password: '' });
+    setLoginInfo({ ...loginInfo, [key]: e.target.value });
+  };
+
+  //todo 버튼 : onClick 핸들러
+  const loginRequestHandler = () => {
+    setErrorMessage({ email: '', password: '' });
+    if (!loginInfo.email && !loginInfo.password) {
+      setErrorMessage({
+        email: '이메일을 입력해주세요',
+        password: '비밀번호를 입력해주세요',
+      });
+    } else if (!loginInfo.email && loginInfo.password) {
+      setErrorMessage({ email: '이메일을 입력해주세요', password: '' });
+    } else if (loginInfo.email && !loginInfo.password) {
+      setErrorMessage({ email: '', password: '비밀번호를 입력해주세요' });
+    }
+  };
+  const singUpInputHandler = (key: string) => (e: any) => {
+    let emailCheck = true;
+    let pwCheck = true;
+
+    //* 빈칸이면? 에러메시지 초기화
+    if (!e.target.value) setErrorMessage({ email: '', password: '' });
+
+    //* Email: a@a 형태 아니면? `{loginInfo.email} is not a valid email address.`
+    if (
+      key === 'email' &&
+      e.target.value &&
+      !e.target.value.match(
+        /^[0-9a-zA-Z]([-_]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/
+      )
+    ) {
+      emailCheck = false;
+      setErrorMessage({
+        ...errorMessage,
+        email: `${e.target.value} 이메일 형식에 맞게 입력해주세요`,
+      });
+    }
+
+    //* Email: a@a 형태 맞다면 에러메시지 초기화
+    if (key === 'email' && e.target.value && emailCheck) {
+      setErrorMessage({ ...errorMessage, email: '' });
+    }
+
+    //* Password: num + letter + symbol
+    if (
+      key === 'password' &&
+      e.target.value &&
+      !e.target.value.match(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]/
+      )
+    ) {
+      pwCheck = false;
+      setErrorMessage({
+        ...errorMessage,
+        password: '영문, 숫자, 특수문자를 1개 이상 포함시켜주세요',
+      });
+    }
+    console.log(pwCheck);
+
+    //* Password: 8글자 미만이면?
+    if (pwCheck && key === 'password' && e.target.value) {
+      if (e.target.value.length < 8) {
+        setErrorMessage({
+          ...errorMessage,
+          password: `8글자 이상 입력해주세요`,
+        });
+        // const num = 8 - e.target.value.length;
+        // num === 1
+        //   ? setErrorMessage({
+        //       ...errorMessage,
+        //       password: `Must contain at least 1 more character.`,
+        //     })
+        //   : setErrorMessage({
+        //       ...errorMessage,
+        //       password: `Must contain at least ${num} more characters.`,
+        //     });
+      } else setErrorMessage({ ...errorMessage, password: '' });
+    }
+    setLoginInfo({ ...loginInfo, [key]: e.target.value });
+  };
+
   return (
     <Background onClick={() => setIsLogin(false)}>
       <Container onClick={e => e.stopPropagation()}>
@@ -158,26 +281,58 @@ function Login({ setIsLogin }: LoginInfo) {
             </div>
             {!isUserState ? (
               <div className="input_field">
-                <Input color={'green'} placeholder="닉네임"></Input>
-                {/* <input ></input> */}
+                <div className="input_mg_bottom">
+                  <Input
+                    color={'green'}
+                    placeholder="닉네임"
+                    onChange={singUpInputHandler('nickName')}
+                  ></Input>
+                </div>
               </div>
             ) : null}
+
             <div className="input_field">
-              <Input color={'green'} placeholder="이메일"></Input>
-              {/* <input ></input> */}
+              {/* <div className="input_mg"> */}
+              <Input
+                color={errorMessage.email ? 'red' : 'green'}
+                placeholder="이메일"
+                onChange={
+                  isUserState
+                    ? loginInputValue('email')
+                    : singUpInputHandler('email')
+                }
+              ></Input>
+              {/* </div> */}
+              {errorMessage.email ? (
+                <div className="error">{errorMessage.email}</div>
+              ) : (
+                ''
+              )}
             </div>
             <div className="input_field">
-              <Input
-                color={'green'}
-                placeholder="비밀번호"
-                type={'password'}
-              ></Input>
-              {/* <input ></input> */}
+              <div className="input_mg">
+                <Input
+                  color={errorMessage.password ? 'red' : 'green'}
+                  placeholder="비밀번호"
+                  type={'password'}
+                  onChange={
+                    isUserState
+                      ? loginInputValue('password')
+                      : singUpInputHandler('password')
+                  }
+                ></Input>
+              </div>
+              {errorMessage.password ? (
+                <div className="error">{errorMessage.password}</div>
+              ) : (
+                ''
+              )}
             </div>
           </div>
+
           <div className="bottom">
             <div className="login_button">
-              <button className="login_submit">
+              <button className="login_submit" onClick={loginRequestHandler}>
                 {isUserState ? '로그인' : '회원가입'}
               </button>
             </div>
