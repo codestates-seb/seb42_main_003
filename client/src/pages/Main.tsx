@@ -18,20 +18,26 @@ const Container = styled.div`
   position: relative;
   .map_header {
     /* height: 50px; */
+    @media (min-width: 768px) {
+      display: none;
+    }
     display: flex;
     flex-direction: row;
     justify-content: center;
     font-size: var(--fs__h2);
     background-color: white;
-    border: 1px solid var(--fontBlack__400);
+    border: 1px solid var(--fontBlack__300);
     border-radius: 16px 16px 0 0;
     text-align: center;
-    padding: 15px;
+    padding: 12px;
     position: relative;
-    color: var(--fontBlack__700);
+    color: var(--fontBlack__600);
   }
   .map {
-    z-index: 997;
+    @media (min-width: 768px) {
+      top: 76px;
+    }
+    z-index: 900;
     position: absolute;
     top: 130px;
     width: 100%;
@@ -43,7 +49,7 @@ const Container = styled.div`
     bottom: 29%;
     font-size: 20px;
     font-weight: 500;
-    color: var(--fontBlack__600);
+    color: var(--fontBlack__500);
     cursor: pointer;
   }
   .community {
@@ -67,7 +73,7 @@ function Main() {
 
   return (
     <Container onClick={() => dispatch(click(false))}>
-      <MapViewButton setIsMap={setIsMap}></MapViewButton>
+      <MapViewButton isMap={isMap} setIsMap={setIsMap}></MapViewButton>
       <Header></Header>
       <HeaderSearch view={'none'} />
       {isMap ? (
@@ -78,7 +84,14 @@ function Main() {
               &times;
             </p>
           </div>
-          <MapContainer campList={data}></MapContainer>
+          <div style={{ height: '100vh' }}>
+            <MapContainer
+              level={13}
+              padding={'270px'}
+              campList={data}
+              border_rd={'0'}
+            ></MapContainer>
+          </div>
         </div>
       ) : null}
       <Banner></Banner>

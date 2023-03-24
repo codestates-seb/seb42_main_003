@@ -206,6 +206,7 @@ const ContainerRow = styled('div')<CardView>`
   background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg');
   background-size: cover;
 
+  z-index: 10000;
   .content {
     width: 50%;
     flex: 0.5;
@@ -216,9 +217,7 @@ const ContainerRow = styled('div')<CardView>`
     align-items: flex-start;
     padding: 15px;
     position: relative;
-    :hover {
-      background-color: red;
-    }
+
     .delete {
       position: absolute;
       top: 6%;

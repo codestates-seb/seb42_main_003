@@ -16,12 +16,14 @@ interface MapProps {
   isMyPage?: boolean;
   level?: number;
   padding?: string;
+  border_rd?: string;
 }
 export function MapContainer({
   campList,
   isMyPage,
   level = 13,
   padding,
+  border_rd,
 }: MapProps) {
   let lastestMarker: any = null;
   const container = useRef<HTMLDivElement | null>(null);
@@ -138,7 +140,8 @@ export function MapContainer({
         style={{
           width: '100%',
           height: '100%',
-          borderRadius: '12px',
+          // borderRadius: '12px',
+          borderRadius: `${border_rd || '12px'}`,
         }}
       ></div>
       {currentCamp && <MapInfoContainer camp={currentCamp} padding={padding} />}
