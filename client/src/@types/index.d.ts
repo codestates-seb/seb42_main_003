@@ -15,5 +15,12 @@ interface ArticleType {
   updatedAt:string;
 }
 
-
-
+interface MemberInfo {
+  id:number,
+  email:string,
+  nickName:string,
+  profileImg:string,
+  about:string,
+  carName:string,
+  oilInfo:string
+}

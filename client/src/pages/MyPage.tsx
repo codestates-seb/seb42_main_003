@@ -31,7 +31,7 @@ import { HistoryContainer } from '../components/HistoryContainer';
 interface MemberInfo {
   id: number;
   email: string;
-  nickname: string;
+  nickName: string;
   profileImg: string;
   about: string;
   carName: string;
@@ -173,7 +173,7 @@ function MyPage() {
                 <img src={memberInfo.profileImg} alt='profile-img'></img>
                 <div className='member-info-upper'>
                   <span className='member-info-nickname'>
-                    {memberInfo.nickname}
+                    {memberInfo.nickName}
                   </span>
                   <span className='member-info-car'>
                     {memberInfo.carName} / {memberInfo.oilInfo}
