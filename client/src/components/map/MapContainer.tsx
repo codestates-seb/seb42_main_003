@@ -147,23 +147,17 @@ export function MapContainer({
 }
 
 function MapInfoContainer({ camp, padding = '16px' }: any) {
-  const navigate = useNavigate();
-  const contentHandler = () => {
-    navigate(`/content/${camp.contentId}`);
-  };
-
   return (
     <MapInfoWrapper>
       <div
         style={{
-          zIndex: '800',
+          zIndex: '500',
           width: '100%',
           padding: `16px 16px ${padding}`,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
         }}
-        onClick={contentHandler}
       >
         <ContentCardRow data={camp} remove="inline" />
       </div>

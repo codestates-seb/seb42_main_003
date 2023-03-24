@@ -9,28 +9,61 @@ import { Tab } from '../styles/Tab';
 import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
 import { HiPlus, HiOutlineX } from 'react-icons/hi';
-import { Input, TextArea, KeywordInput, ImageInput } from '../styles/Input';
+import {
+  Input,
+  TextArea,
+  KeywordInput,
+  ImageInput,
+} from '../styles/Input';
 import { MapGetPosition } from '../components/map/MapGetPosition';
-import { PageMain, PageArticle, MyPageMemberInfo } from '../styles/pageStyle';
+import {
+  PageMain,
+  PageArticle,
+  MyPageMemberInfo,
+} from '../styles/pageStyle';
 import ViewHistoryModal from '../components/mobile/ViewHistoryModal';
 import useUploadImage from '../hooks/useUploadImage';
-import { uploadImageType } from '../hooks/useUploadImage';
+import { getDataTs, postDataTs, postFormDataTs } from '../api/tsapi';
+import { Post } from '../components/Review';
+import { HistoryContainer } from '../components/HistoryContainer';
 
 //멤버 정보 타입
-interface MemberData {
-  member_id: number;
+interface MemberInfo {
+  id: number;
   email: string;
   nickname: string;
-  profile_img: string;
+  profileImg: string;
   about: string;
-  is_social: boolean;
-  car_name: string;
-  oil_info: string;
-  created_at: string;
+  carName: string;
+  oilInfo: string;
+  isWithDrawn: boolean;
 }
 
-interface MyPageProps {
-  memberData?: MemberData;
+//myPlaceInfos 내부 객체
+interface MyPlaceInfo {
+  id: number;
+  memo: string;
+  keyword: string[];
+  mapX: string;
+  mapY: string;
+  createdAt: string;
+  updatedAt: string;
+  placeImg: string;
+  memberId: number;
+  isShared: boolean;
+}
+
+interface VisitedPlaceInfo {
+  id: number;
+  memberId: number;
+  facltNm: string;
+  lineIntro: string;
+  addr1: string;
+  firstImageUrl: string;
+  mapX: string;
+  mapY: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /* 객체: (키, 값) imageName: string. imageChange: 함수 , imageForSend: 함수 */
@@ -43,7 +76,35 @@ function MyPage() {
   const [viewHistoryModal, setViewHistoryModal] = useState<boolean>(false);
   //내부width를 기록하기 위한 state와 이벤트리스너
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+  const [memberInfo, setMemberInfo] = useState<MemberInfo | null>(null);
+  const [myPlaceInfos, setMyPlaceInfos] = useState<MyPlaceInfo[] | null>(
+    null
+  );
+  const [visitedPlaceInfos, setVisitedPlaceInfos] = useState<
+    VisitedPlaceInfo[] | null
+  >(null);
+  const [writtenArticleInfos, setWrittenArticleInfos] = useState<
+    ArticleType[] | null
+  >(null);
+  const [commentedArticleInfos, setCommentedArticleInfos] = useState<
+    ArticleType[] | null
+  >(null);
+  const [likedArticleInfos, setLikedArticleInfos] = useState<
+    ArticleType[] | null
+  >(null);
+
   useEffect(() => {
+    //실제 서버 테스트때는 members/mypage로 바꿔야 합니다.
+    getDataTs('members').then((data) => {
+      setMemberInfo(data.memberInfo[0]);
+      setMyPlaceInfos(data.myPlaceInfos);
+      setVisitedPlaceInfos(data.visitedPlaceInfos);
+      setWrittenArticleInfos(data.writtenArticleInfos);
+      setCommentedArticleInfos(data.commentedArticleInfos);
+      setLikedArticleInfos(data.likedArticleInfos);
+    });
+
+    //브라우저 width 변경을 감지하는 이벤트 리스너
     const resizeListener = () => {
       setInnerWidth(window.innerWidth);
     };
@@ -76,22 +137,23 @@ function MyPage() {
     setViewHistoryModal(!viewHistoryModal);
   };
 
-  //테스트가 끝나면 아래의 props를 사용해주세요.
-  // { memberData }: MyPageProps
-  //테스트가 끝나면 아래의 코드를 지워주세요.
-  const [memberData, setMemberData] = useState<MemberData | null>(null);
   useEffect(() => {
-    if (!memberData) {
-      axios({
-        method: 'get',
-        url: 'http://localhost:3001/member',
-      })
-        .then(res => {
-          setMemberData(res.data);
-        })
-        .catch(err => console.log(err));
-    }
-  }, []);
+    if (memberInfo) console.log(memberInfo.about);
+  }, [memberInfo]);
+
+  //테스트가 끝나면 아래의 코드를 지워주세요.
+  // useEffect(() => {
+  //   if (!memberInfo) {
+  //     axios({
+  //       method: 'get',
+  //       url: 'http://localhost:3001/member',
+  //     })
+  //       .then(res => {
+  //         setmemberInfo(res.data);
+  //       })
+  //       .catch(err => console.log(err));
+  //   }
+  // }, []);
   //테스트가 끝나면 위의 코드를 지워주세요.
 
   return (
@@ -103,17 +165,20 @@ function MyPage() {
         </MobileHeader>
       )}
       <PageMain>
-        {memberData && (
+        {memberInfo && (
           <MyPageMemberInfo>
             <h2>나의 프로필</h2>
-            <div>
+            <div className='flex-div'>
               <div>
-                <img src={memberData.profile_img} alt="profile-img"></img>
-                <div className="member-info-upper">
-                  <span className="member-info-nickname">
-                    {memberData.nickname}
+                <img src={memberInfo.profileImg} alt='profile-img'></img>
+                <div className='member-info-upper'>
+                  <span className='member-info-nickname'>
+                    {memberInfo.nickname}
                   </span>
-                  <span className="member-info-car">{memberData.car_name}</span>
+                  <span className='member-info-car'>
+                    {memberInfo.carName} / {memberInfo.oilInfo}
+                  </span>
+                  <span className='member-info-about-desktop'>{memberInfo.about}</span>
                 </div>
               </div>
               <Button
@@ -122,37 +187,52 @@ function MyPage() {
                 hcolor={'white'}
                 hover={'var(--chamong__color)'}
                 hborder={'var(--chamong__color)'}
-                padding="13px 15px"
-                radius="12px"
-                onClick={editProfileHandler}
-              >
+                padding='13px 15px'
+                radius='12px'
+                onClick={editProfileHandler}>
                 프로필 수정
               </Button>
             </div>
-            <p>{memberData.about}</p>
+            <p className='member-info-about-mobile'>{memberInfo.about}</p>
           </MyPageMemberInfo>
         )}
         {
           <PageArticle>
             <h2>나의 차박지</h2>
-            <MyPageMapContainer floatButtonHandler={floatButtonHandler} />
+            <MyPageMapContainer
+              floatButtonHandler={floatButtonHandler}
+              myPlaceInfos={myPlaceInfos}
+              visitedPlaceInfos={visitedPlaceInfos}
+            />
           </PageArticle>
         }
         <PageArticle>
           <h2>커뮤니티</h2>
-          <Button
-            onClick={viewHistoryHandler}
-            border={'var(--chamong__color)'}
-            color={'var(--chamong__color)'}
-            hcolor={'white'}
-            hover={'var(--chamong__color)'}
-            hborder={'var(--chamong__color)'}
-            padding="13px 15px"
-            radius="12px"
-            width="100%"
-          >
-            커뮤니티 활동기록
-          </Button>
+          <div className='mobile-only'>
+            <Button
+              onClick={viewHistoryHandler}
+              border={'var(--chamong__color)'}
+              color={'var(--chamong__color)'}
+              hcolor={'white'}
+              hover={'var(--chamong__color)'}
+              hborder={'var(--chamong__color)'}
+              padding='13px 15px'
+              radius='12px'
+              width='100%'>
+              커뮤니티 활동기록
+            </Button>
+          </div>
+          <div className='history-wrapper'>
+            <div className='history'>
+              <HistoryContainer history={writtenArticleInfos} />
+            </div>
+            <div className='history'>
+              <HistoryContainer history={commentedArticleInfos} />
+            </div>
+            <div className='history'>
+              <HistoryContainer history={likedArticleInfos} />
+            </div>
+          </div>
         </PageArticle>
         <PageArticle>
           <h2>메뉴</h2>
@@ -162,22 +242,36 @@ function MyPage() {
             hcolor={'white'}
             hover={'var(--chamong__color)'}
             hborder={'var(--chamong__color)'}
-            padding="13px 15px"
-            radius="12px"
-            width="100%"
-          >
+            padding='13px 15px'
+            radius='12px'
+            width='100%'>
             로그아웃
+          </Button>
+          <Button
+            border={'var(--chamong__color)'}
+            color={'var(--chamong__color)'}
+            hcolor={'white'}
+            hover={'var(--chamong__color)'}
+            hborder={'var(--chamong__color)'}
+            padding='13px 15px'
+            radius='12px'
+            width='100%'>
+            회원탈퇴
           </Button>
         </PageArticle>
       </PageMain>
-      {addCampModal && <AddCampModal floatButtonHandler={floatButtonHandler} />}
+      {addCampModal && (
+        <AddCampModal floatButtonHandler={floatButtonHandler} />
+      )}
       {editProfileModal && (
         <EditProfileModal editProfileHandler={editProfileHandler} />
       )}
       {viewHistoryModal && (
         <ViewHistoryModal
           viewHistoryHandler={viewHistoryHandler}
-        ></ViewHistoryModal>
+          writtenArticleInfos={writtenArticleInfos}
+          commentedArticleInfos={commentedArticleInfos}
+          likedArticleInfos={likedArticleInfos}></ViewHistoryModal>
       )}
       {/* <Nav></Nav> */}
       <Footer></Footer>
@@ -187,44 +281,49 @@ function MyPage() {
 
 interface MyPageMapProps {
   floatButtonHandler: () => void;
+  myPlaceInfos: MyPlaceInfo[] | null;
+  visitedPlaceInfos: VisitedPlaceInfo[] | null;
 }
 
-function MyPageMapContainer({ floatButtonHandler }: MyPageMapProps) {
-  const [campData, setCampData] = useState<any>(null);
+function MyPageMapContainer({
+  floatButtonHandler,
+  myPlaceInfos,
+  visitedPlaceInfos,
+}: MyPageMapProps) {
   const [tabState, setTabState] = useState<number>(1);
   //campList를 이 컴포넌트에서 부를것
-  console.log(campData);
   const setTabHandler = (e: any) => {
     const value = Number(e.target.value);
     if (tabState !== value) setTabState(value);
   };
-  useEffect(() => {
-    let endpoint;
-    if (tabState === 1) endpoint = 'userpick';
-    else if (tabState === 2) endpoint = 'history';
-    axios({
-      method: 'get',
-      url: `http://localhost:3001/${endpoint}`,
-    })
-      .then(res => {
-        console.log(res.data);
-        setCampData(res.data);
-      })
-      .catch(err => console.log(err));
-  }, [tabState]);
+  // useEffect(() => {
+  //   let endpoint;
+  //   if (tabState === 1) endpoint = 'userpick';
+  //   else if (tabState === 2) endpoint = 'history';
+  //   axios({
+  //     method: 'get',
+  //     url: `http://localhost:3001/${endpoint}`,
+  //   })
+  //     .then(res => {
+  //       console.log(res.data);
+  //       setCampData(res.data);
+  //     })
+  //     .catch(err => console.log(err));
+  // }, [tabState]);
   //위의 코드는 api화 해주세요
 
+  useEffect(() => {}, [tabState]);
+
   return (
-    <div className="map-container">
+    <div className='map-container'>
       <div
         style={{
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
           position: 'absolute',
-        }}
-      >
-        <Tab height="37px" state={tabState}>
+        }}>
+        <Tab height='37px' state={tabState}>
           <button value={1} onClick={setTabHandler}>
             내가 찾은 차박지
           </button>
@@ -233,7 +332,12 @@ function MyPageMapContainer({ floatButtonHandler }: MyPageMapProps) {
           </button>
         </Tab>
       </div>
-      {campData && <MapContainer campList={campData} padding="16px" />}
+      {myPlaceInfos && visitedPlaceInfos && (
+        <MapContainer
+          campList={tabState === 1 ? myPlaceInfos : visitedPlaceInfos}
+          padding='16px'
+        />
+      )}
       {tabState === 1 && (
         <FloatButton onClick={floatButtonHandler}>
           <HiPlus />
@@ -271,17 +375,7 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
     useUploadImage();
 
   //아래 useEffect는 api화 해야함------------------------------------
-  useEffect(() => {
-    axios({
-      method: 'get',
-      url: 'http://localhost:3001/themes',
-    })
-      .then(res => {
-        console.log(res.data);
-        setThemes(res.data);
-      })
-      .catch(err => console.log(err));
-  }, []);
+
   //-------------------------------------------------------------------
 
   const postCampHandler = () => {
@@ -304,24 +398,18 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
   };
 
   const addKeywordHandler = (theme: Themes) => {
-    const isRepeat = keywords.find(prevTheme => theme.id === prevTheme.id);
+    const isRepeat = keywords.find(
+      (prevTheme) => theme.id === prevTheme.id
+    );
     if (keywords.length <= 2 && !isRepeat)
       setKeywords((prevState: Themes[]) => [...prevState, theme]);
   };
 
   const removeKeywordHandler = (theme: Themes) => {
     setKeywords((prevState: Themes[]) => {
-      return [...prevState.filter(prevTheme => theme.id !== prevTheme.id)];
-    });
-  };
-  const sendImage = () => {
-    axios({
-      method: 'post',
-      url: 'http://localhost:3002/img',
-      data: imageFormData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      return [
+        ...prevState.filter((prevTheme) => theme.id !== prevTheme.id),
+      ];
     });
   };
 
@@ -330,10 +418,9 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       onClick={() => {
         setIsKeywordFocus(false);
         console.log('wat');
-      }}
-    >
-      <div className="wrapper">
-        <div className="header">
+      }}>
+      <div className='wrapper'>
+        <div className='header'>
           <h2>내가 찾은 차박지</h2>
           <button onClick={floatButtonHandler}>
             <HiOutlineX />
@@ -346,48 +433,42 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding="8px 14px"
-          radius="12px"
-        >
+          padding='8px 14px'
+          radius='12px'>
           {imageSrc.length >= 1 ? (
-            <div className="preview">
-              <img alt="preview" src={imageSrc}></img>
+            <div className='preview'>
+              <img alt='preview' src={imageSrc}></img>
               <button onClick={imageDelete}>
                 <HiOutlineX />
               </button>
             </div>
           ) : (
-            <label htmlFor="file">이미지 첨부</label>
+            <label htmlFor='file'>이미지 첨부</label>
           )}
-          <input type="file" id="file" onChange={imageChange}></input>
+          <input type='file' id='file' onChange={imageChange}></input>
         </ImageInput>
-        {/* <button
-          style={{ cursor: 'pointer', display: 'block' }}
-          onClick={sendImage}>
-          임시 사진보내기!
-        </button> */}
         <Input
           value={text}
           onChange={(e: any) => setText(e.target.value)}
-          placeholder="내용"
+          placeholder='내용'
         />
         <KeywordInput
           isFocus={isKeywordFocus}
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation();
             setIsKeywordFocus(true);
-          }}
-        >
+          }}>
           {keywords.length >= 1 ? (
-            <ul className="tags">
-              {keywords.map(keyword => {
+            <ul className='tags'>
+              {keywords.map((keyword) => {
                 return (
-                  <li key={keyword.id} className="keyword-box">
-                    <span className="keyword-title">{keyword.keyword}</span>
+                  <li key={keyword.id} className='keyword-box'>
+                    <span className='keyword-title'>
+                      {keyword.keyword}
+                    </span>
                     <span
-                      className="box_close"
-                      onClick={() => removeKeywordHandler(keyword)}
-                    >
+                      className='box_close'
+                      onClick={() => removeKeywordHandler(keyword)}>
                       &times;
                     </span>
                   </li>
@@ -395,18 +476,17 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
               })}
             </ul>
           ) : (
-            <span className="place-holder">키워드</span>
+            <span className='place-holder'>키워드</span>
           )}
-          <div className="button-box">
+          <div className='button-box'>
             <h3>키워드</h3>
             {themes &&
-              themes.map(theme => {
+              themes.map((theme) => {
                 return (
                   <Button
                     key={theme.id}
                     id={String(theme.id)}
-                    onClick={() => addKeywordHandler(theme)}
-                  >
+                    onClick={() => addKeywordHandler(theme)}>
                     {theme.keyword}
                   </Button>
                 );
@@ -414,8 +494,11 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           </div>
         </KeywordInput>
         <h3>위치</h3>
-        <div className="map">
-          <MapGetPosition setAddress={setAddress} setPosition={setPosition} />
+        <div className='map'>
+          <MapGetPosition
+            setAddress={setAddress}
+            setPosition={setPosition}
+          />
         </div>
         <Button
           onClick={postCampHandler}
@@ -424,10 +507,9 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding="13px 15px"
-          radius="12px"
-          width="100%"
-        >
+          padding='13px 15px'
+          radius='12px'
+          width='100%'>
           작성 완료
         </Button>
       </div>
@@ -445,8 +527,8 @@ function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
 
   return (
     <Modal>
-      <div className="wrapper">
-        <div className="header">
+      <div className='wrapper'>
+        <div className='header'>
           <h2>프로필 수정</h2>
           <button onClick={editProfileHandler}>
             <HiOutlineX />
@@ -458,34 +540,37 @@ function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding="8px 14px"
-          radius="12px"
-        >
+          padding='8px 14px'
+          radius='12px'>
           {imageSrc.length >= 1 ? (
-            <div className="preview">
-              <img alt="preview" src={imageSrc}></img>
+            <div className='preview'>
+              <img alt='preview' src={imageSrc}></img>
               <button onClick={imageDelete}>
                 <HiOutlineX />
               </button>
             </div>
           ) : (
-            <label htmlFor="file">프로필 이미지 등록</label>
+            <label htmlFor='file'>프로필 이미지 등록</label>
           )}
-          <input type="file" id="file" onChange={imageChange}></input>
+          <input type='file' id='file' onChange={imageChange}></input>
         </ImageInput>
-        <Input placeholder="이름" />
-        <TextArea placeholder="자기소개" />
-        <Input placeholder="내 차량" />
+        <Input placeholder='이름' />
+        <TextArea placeholder='자기소개' />
+        <Input placeholder='내 차량' />
+        <select>
+          <option value="휘발유">휘발유</option>
+          <option value="경유">경유</option>
+          <option value="전기">전기</option>
+        </select>
         <Button
           border={'var(--chamong__color)'}
           color={'var(--chamong__color)'}
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding="13px 15px"
-          radius="12px"
-          width="100%"
-        >
+          padding='13px 15px'
+          radius='12px'
+          width='100%'>
           수정 완료
         </Button>
       </div>

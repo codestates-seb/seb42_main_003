@@ -9,6 +9,7 @@ import PostModal from '../components/PostModal';
 import { getData } from '../api/api';
 import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
+import { timeParser } from '../utils/timeParser';
 
 import {
   PageMain,
@@ -71,18 +72,7 @@ function PostDetail() {
 }
 
 interface PostProps {
-  post: {
-    like: number;
-    view_cnt: number;
-    title: string;
-    author: string;
-    img: string;
-    content: string;
-    created_at: string;
-    updated_at: string;
-    isLike: boolean;
-    comment_cnt: number;
-  };
+  post:ArticleType;
 }
 
 function ViewContent({ post }: PostProps) {
@@ -91,22 +81,22 @@ function ViewContent({ post }: PostProps) {
       <h2>{post.title}</h2>
       <div>
         <div>
-          <img src={post.img} alt='profile-img'></img>
+          <img src={post.profileImg} alt='profile-img'></img>
           <div className='member-info-upper'>
-            <span className='member-info-nickname'>{post.author}</span>
-            <span className='member-created-at'>{post.created_at}</span>
+            <span className='member-info-nickname'>{post.nickName}</span>
+            <span className='member-created-at'>{timeParser(post.createdAt)}</span>
           </div>
         </div>
         <div className='post-info'>
           <span>
             <GrFormView />
-            <span>{post.view_cnt}</span>
+            <span>{post.member_id}</span>
           </span>
           <span>
             <button>
               <FaThumbsUp />
             </button>
-            <span>{post.like}</span>
+            <span>{post.likeCnt}</span>
           </span>
         </div>
       </div>
@@ -134,7 +124,7 @@ function ViewComment({ comment }: CommentProps) {
           <img src={comment.img} alt='profile-img'></img>
           <div className='member-info-upper'>
             <span className='member-info-nickname'>{comment.author}</span>
-            <span className='member-created-at'>{comment.created_at}</span>
+            <span className='member-created-at'>{timeParser(comment.created_at)}</span>
           </div>
         </div>
       </div>
