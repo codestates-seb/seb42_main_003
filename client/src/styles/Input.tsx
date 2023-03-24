@@ -21,9 +21,10 @@ const inputFocusColor = (color: string) => {
   else return 'rgba(249, 87, 56, 0.25)';
 };
 
-interface inputProps {
+interface InputProps {
   color?: string;
   height?: string;
+  width?: string;
 }
 
 interface ButtonStyled {
@@ -47,8 +48,9 @@ interface ButtonStyled {
   width?: string;
 }
 
-export const Input = styled.input<inputProps>`
-  width: 100%;
+export const Input = styled.input<InputProps>`
+  width: ${props=>props.width||'100%'};
+  flex-grow: 1;
   height: 44px;
   font-size: 15px;
   font-weight: 500;
@@ -72,7 +74,7 @@ export const Input = styled.input<inputProps>`
   }
 `;
 
-export const TextArea = styled.textarea<inputProps>`
+export const TextArea = styled.textarea<InputProps>`
   width: 100%;
   height: ${props => props.height || '100px'};
   font-size: 15px;
@@ -210,3 +212,29 @@ export const ImageInput = styled.div<ButtonStyled>`
     display: none;
   }
 `;
+
+export const Select=styled.select<InputProps>`
+  margin-left:12px !important;
+  width: ${props=>props.width||'100%'};
+  height: 44px;
+  font-size: 15px;
+  font-weight: 500;
+  /* color: ${props =>
+    props.color ? inputColor(props.color) : 'var(--chamong__color)'}; */
+  color: var(--fontBlack__900);
+  background-color: ${props =>
+    props.color ? inputBackgroundColor(props.color) : 'white'};
+  border: 1px solid
+    ${props =>
+      props.color ? inputBorderColor(props.color) : 'var(--chamong__color)'};
+  border-radius: 12px;
+  padding: 0px 12px;
+  &:focus {
+    box-shadow: 0px 0px 0px 3px
+      ${props =>
+        props.color ? inputFocusColor(props.color) : 'rgba(249, 87, 56, 0.25)'};
+  }
+  &::placeholder {
+    color: var(--fontBlack__300);
+  }
+`
