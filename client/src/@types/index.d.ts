@@ -3,7 +3,7 @@ interface ArticleType {
   memberId:number;
   title:string;
   content:string;
-  nickName:string;
+  nickname:string;
   articleImg:string;
   profileImg:string;
   carName:string;
