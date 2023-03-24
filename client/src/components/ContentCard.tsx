@@ -205,8 +205,6 @@ const ContainerRow = styled('div')<CardView>`
   border-radius: 25px;
   background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg');
   background-size: cover;
-
-  z-index: 10000;
   .content {
     width: 50%;
     flex: 0.5;
