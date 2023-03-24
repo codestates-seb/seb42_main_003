@@ -69744,7 +69744,7 @@
       "writtenArticleInfos" : [
         {
           "id": 1,
-          "member_id" : 3,
+          "memberId" : 3,
           "title" : "내가 적은 글입니다",
           "content" : "노지 캠핑장 나쁘지 않네요.",
           "nickName" : "노지 캠핑장 나쁘지 않네요.",
@@ -69763,7 +69763,7 @@
       "commentedArticleInfos" : [
         {
           "id": 1,
-          "member_id" : 3,
+          "memberId" : 3,
           "title" : "내가 댓글 단 글입니다.",
           "content" : "노지 캠핑장 나쁘지 않네요.",
           "nickName" : "노지 캠핑장 나쁘지 않네요.",
@@ -69782,7 +69782,7 @@
       "likedArticleInfos" : [
         {
           "id": 1,
-          "member_id" : 3,
+          "memberId" : 3,
           "title" : "내가 좋아요 한 글입니다.",
           "content" : "노지 캠핑장 나쁘지 않네요.",
           "nickName" : "노지 캠핑장 나쁘지 않네요.",
