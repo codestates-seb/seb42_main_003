@@ -1,23 +1,23 @@
 import styled from 'styled-components';
-// import { content } from '../../data/content';
 import { ContentCard } from './ContentCard';
 import { useState, useEffect } from 'react';
 import useIntersectionObserver from '../hooks/useIO';
-import axios from 'axios';
 import CommunityBestD from './destop/CommunityBestD';
 import MyPick from './destop/MyPick';
-import { getData } from '../api/api';
 
 interface CardList {
-  flex_dir?: string;
-  bottom_justify?: string;
-  fs_h1?: string;
-  body?: string;
-  heart?: string;
-  radius?: string;
-  img_width?: string;
-  content_align?: string;
-  line?: string;
+  // flex_dir?: string;
+  // bottom_justify?: string;
+  // fs_h1?: string;
+  // body?: string;
+  // heart?: string;
+  // radius?: string;
+  // img_width?: string;
+  // content_align?: string;
+  // line?: string;
+  content?: any;
+  data?: any;
+  setData?: any;
 }
 
 const Container = styled('div')<CardList>`
@@ -36,7 +36,6 @@ const Container = styled('div')<CardList>`
     display: grid !important;
     margin: 10px;
     gap: 12px 12px;
-    /* width: 830px; */
     width: 100%;
     @media (max-width: 768px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -60,21 +59,21 @@ const Container = styled('div')<CardList>`
   }
 `;
 
-function ContentList({}: CardList) {
-  type Info = any | null;
+function ContentList({ content, data, setData }: CardList) {
+  // type Info = any | null;
 
-  const [content, setContent] = useState<Info>([]);
+  // const [content, setContent] = useState<Info>([]);
+  // const [data, setData] = useState<Info>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [itemIndex, setItemIndex] = useState(6);
-  const [data, setData] = useState<Info>([]);
 
-  useEffect(() => {
-    // getData('main?page=1').then(res => {
-    getData('content').then(res => {
-      setContent(res);
-      setData([...res.slice(0, 6)]);
-    });
-  }, []);
+  // useEffect(() => {
+  // getData('main?page=1').then(res => {
+  //   getData('content').then(res => {
+  //     setContent(res);
+  //     setData([...res.slice(0, 6)]);
+  //   });
+  // }, []);
 
   const testFetch = (delay = 1000) =>
     new Promise(res => setTimeout(res, delay));
@@ -83,7 +82,7 @@ function ContentList({}: CardList) {
     setIsLoaded(true);
     await testFetch();
     setItemIndex(i => i + 6);
-    setData(data.concat(content.slice(itemIndex, itemIndex + 6)));
+    setData(data.concat(content && content.slice(itemIndex, itemIndex + 6)));
     setIsLoaded(false);
   };
 
@@ -92,7 +91,7 @@ function ContentList({}: CardList) {
     observer
   ) => {
     if (entry.isIntersecting && !isLoaded) {
-      if (data.length === itemIndex) {
+      if (data && data.length === itemIndex) {
         observer.unobserve(entry.target);
         await getMoreItem();
         observer.observe(entry.target);

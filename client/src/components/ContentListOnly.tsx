@@ -22,17 +22,17 @@ const Container = styled('div')<CardList>`
   justify-content: center;
   .wrapper {
     @media (max-width: 768px) {
-      grid-template-columns: repeat(1, minmax(0, 1fr));
+      /* grid-template-columns: repeat(1, minmax(0, 1fr));
       width: 100%;
-      max-width: 500px;
-      margin-top: 50px;
+      max-width: 500px; */
+      margin: 0 0 100px 0;
     }
-    @media (min-width: 768px) {
+    /* @media (min-width: 768px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 30px 30px;
       width: 100%;
       max-width: 900px;
-    }
+    } */
     overflow: visible;
     display: flex;
     flex-direction: row;
@@ -41,6 +41,7 @@ const Container = styled('div')<CardList>`
 
   .main {
     display: grid !important;
+    justify-self: center;
     margin: 10px;
     gap: 12px 12px;
     width: 100%;
@@ -70,8 +71,14 @@ function ContentListOnly({}: CardList) {
         <div className="main">
           {data &&
             data.map((e: any, idx: number) => {
-              return <ContentCardRow key={idx} data={e} />;
+              return <ContentCardRow key={idx} data={e} like={'none'} />;
             })}
+
+          {/* return data.facltNm ? (
+                <ContentCardRow key={idx} data={e} like={'none'} />
+              ) : (
+                <ContentCard></ContentCard>
+              ); */}
         </div>
       </div>
     </Container>

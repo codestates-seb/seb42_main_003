@@ -9,7 +9,7 @@ export const Container = styled.div`
   transform: transition(-50%);
 
   .button_box {
-    z-index: 996;
+    z-index: 930;
     position: fixed;
     top: 85%;
     left: 50%;
@@ -28,10 +28,11 @@ export const Container = styled.div`
     margin-left: 5px;
   }
 `;
-export function MapViewButton() {
+type MapViewType = { setIsMap: (foo: any) => void };
+export function MapViewButton({ setIsMap }: MapViewType) {
   return (
     <Container>
-      <button className="button_box">
+      <button className="button_box" onClick={() => setIsMap(true)}>
         <BiMapAlt />
         <p>지도에서 보기</p>
       </button>

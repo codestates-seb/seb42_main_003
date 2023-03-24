@@ -22,7 +22,7 @@ export const Container = styled.div`
   background-color: var(--chamong__color);
   border-radius: 25px 25px 0 0;
   padding: 0 15px;
-  z-index: 997;
+  z-index: 950;
   //TODO모바일 반응형
   @media (min-width: 768px) {
     display: none;

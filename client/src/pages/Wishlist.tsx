@@ -7,13 +7,15 @@ import { MapViewButton } from '../components/MapViewButton';
 import ContentListOnly from '../components/ContentListOnly';
 import { PageHeader } from '../components/destop/PageHeader';
 import { MobileHeader } from '../styles/mobileStyle';
+import { useState } from 'react';
 const Container = styled.div``;
 
 function Wishlist() {
   const dispatch = useAppDispatch();
+  const [isMap, setIsMap] = useState<boolean>(false);
   return (
     <Container onClick={() => dispatch(click(false))}>
-      <MapViewButton></MapViewButton>
+      <MapViewButton setIsMap={setIsMap}></MapViewButton>
       <Header width_M={'1000px'}></Header>
       <MobileHeader>
         <h1>위시리스트</h1>
