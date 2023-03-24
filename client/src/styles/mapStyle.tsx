@@ -4,7 +4,6 @@ export const MapInfoWrapper = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  pointer-events: none;
   display: flex;
   justify-content: end;
   flex-direction: column;
