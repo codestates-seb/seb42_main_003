@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Tab } from './Tab';
 import { FloatButton } from './mapStyle';
+import { Button } from './Button';
 
 interface PageMainProps {
   top?: string;
@@ -11,9 +12,7 @@ export const PageMain = styled.main<PageMainProps>`
   padding-top: ${(props) => props.top || '50px'};
   padding-bottom: ${(props) => props.bottom || '64px'};
   @media screen and (min-width: 768px) {
-    padding-top: none;
-    padding-bottom: none;
-    padding-top:0px;
+    padding: 0px 12px 100px;
   }
   display: flex;
   flex-direction: column;
@@ -25,7 +24,35 @@ export const PageArticle = styled.article`
   width: 100%;
   padding: 12px;
   border-bottom: 1px solid #d9d9d9;
+  .history-wrapper {
+    display: none;
+  }
   @media screen and (min-width: 768px) {
+    border: 1px solid #d9d9d9;
+    border-radius: 12px;
+    margin-top: 24px;
+    .mobile-only {
+      display: none;
+    }
+    .history-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      padding: 12px;
+      .history {
+        width: 100%;
+        margin: 12px 0px;
+        border: 1px solid #d9d9d9;
+        border-radius: 12px;
+        padding: 12px 12px;
+      }
+    }
+  }
+  @media screen and (min-width: 1000px) {
+  }
+  ${Button} {
+    width: fit-content;
   }
   h2 {
     font-size: var(--fs__h2);
@@ -35,6 +62,7 @@ export const PageArticle = styled.article`
   > div {
     display: flex;
   }
+
   .map-container {
     display: flex;
     width: 100%;
@@ -65,7 +93,6 @@ export const PageArticle = styled.article`
 
 export const MyPageMemberInfo = styled(PageArticle)`
   width: 100%;
-
   img {
     width: 60px;
     height: 60px;
@@ -88,12 +115,36 @@ export const MyPageMemberInfo = styled(PageArticle)`
       font-size: var(--fs__h1);
       padding-bottom: 5px;
     }
+    .member-info-car {
+      color:var(--fontBlack__300)
+    }
+    .member-info-about-desktop {
+      display: none;
+    }
   }
   button {
   }
-  p {
+  .member-info-about-mobile  {
     padding-top: 16px;
     font-size: var(--fs__mid);
+  }
+  @media screen and (min-width: 768px) {
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 60px;
+    }
+    .member-info-upper {
+      .member-info-about-desktop {
+        padding:6px 0px;
+        font-size: var(--fs__big);
+      display: block;
+    }
+    }
+    
+    .member-info-about-mobile {
+      display: none;
+    }
   }
 `;
 

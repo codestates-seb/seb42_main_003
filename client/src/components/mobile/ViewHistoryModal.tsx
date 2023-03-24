@@ -4,6 +4,7 @@ import { MobileHeader } from '../../styles/mobileStyle';
 import { Tab } from '../../styles/Tab';
 import { Post } from '../Review';
 import { FiArrowLeft } from 'react-icons/fi';
+import { HistoryContainer } from '../HistoryContainer';
 
 const ViewHistoryModalContainer = styled.section`
   position: absolute;
@@ -17,16 +18,24 @@ const ViewHistoryModalContainer = styled.section`
   }
 `;
 
+interface ViewHistoryModalProps {
+  viewHistoryHandler:()=>void;
+  writtenArticleInfos:ArticleType[]|null;
+  commentedArticleInfos:ArticleType[]|null;
+  likedArticleInfos:ArticleType[]|null;
+}
+
 function ViewHistoryModal({
   viewHistoryHandler,
-  myPost,
-  commentedPost,
-  likePost,
-}: any) {
-  const [tabState, setTabState] = useState(1);
+  writtenArticleInfos,
+  commentedArticleInfos,
+  likedArticleInfos,
+}: ViewHistoryModalProps) {
+  const [tabState, setTabState] = useState<number>(1);
 
   const tabHandler = (e: any) => {
-    setTabState(e.target.value);
+    console.log('tab state change!')
+    setTabState(Number(e.target.value));
   };
 
   return (
@@ -49,7 +58,7 @@ function ViewHistoryModal({
             좋아요 누른 글
           </button>
         </Tab>
-        {/* <Post></Post> */}
+        <HistoryContainer history={tabState===1?writtenArticleInfos:tabState===2?commentedArticleInfos:tabState===3?likedArticleInfos:writtenArticleInfos}/>
       </div>
     </ViewHistoryModalContainer>
   );
