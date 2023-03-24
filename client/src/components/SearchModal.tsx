@@ -10,19 +10,20 @@ const Container = styled.div`
   @media (max-width: 768px) {
     padding: 10px;
     margin-top: -15px;
+    z-index: 940;
   }
 `;
 const Main = styled.div`
+  z-index: 940;
   @media (min-width: 768px) {
     padding: 100px 10px;
     width: 390px;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 900;
     opacity: 90%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   }
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   &.active {
     transition: all 700ms linear;
   }

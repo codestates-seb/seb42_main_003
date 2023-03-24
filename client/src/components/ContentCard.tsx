@@ -5,20 +5,23 @@ import { MdOutlineRateReview } from 'react-icons/md';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { useEffect, useState } from 'react';
 import { AiFillDelete } from 'react-icons/ai';
+import { RiShareBoxLine } from 'react-icons/ri';
 import { getData } from '../api/api';
 import { Button } from '../styles/Button';
 import { CiHashtag } from 'react-icons/ci';
+import { Modal } from '../styles/Modal';
 
 interface CardView {
   //
   fs_h1?: string;
   body?: string;
-  heart?: string;
+  like?: string;
   data?: any;
   key?: any;
   bg?: URL;
   maxWidth?: string;
   remove?: string;
+  edit?: string;
 }
 
 const Container = styled('div')<CardView>`
@@ -229,6 +232,7 @@ const ContainerRow = styled('div')<CardView>`
         /* display: inline; */
       }
       &.edited {
+        display: ${props => props.edit || 'none'};
         right: 16%;
         font-size: 15px;
       }
@@ -244,6 +248,7 @@ const ContainerRow = styled('div')<CardView>`
     background-size: cover;
     border-radius: 25px 0px 0px 25px;
     .heart {
+      display: ${props => props.like || 'block'};
       position: absolute;
       right: 8%;
       top: 8%;
@@ -255,6 +260,7 @@ const ContainerRow = styled('div')<CardView>`
       fill-opacity: 0;
     }
     .active {
+      display: ${props => props.like || 'block'};
       position: absolute;
       right: 8%;
       top: 8%;
@@ -328,30 +334,25 @@ const ContainerRow = styled('div')<CardView>`
     width: 100%;
     display: flex;
     flex-direction: row;
-    /* justify-content: space-evenly; */
     align-items: center;
+    position: relative;
   }
-  .tag_box {
-    /* display: flex; */
+  /* .tag_box {
     flex-direction: row;
-    /* width: 100%; */
     max-width: 90px;
     white-space: nowrap;
     overflow: auto;
     text-overflow: ellipsis;
-    display: none;
-    /* display: -webkit-box; */
-    /* -webkit-line-clamp: 1; */
-    /* -webkit-box-orient: vertical; */
-  }
+  } */
   .tag {
-    /* flex-wrap: nowrap; */
-    /* overflow: hidden;
-    text-overflow: ellipsis; */
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     margin-right: 2px;
     font-size: 13px;
   }
-  .tag_icon {
+  /* .tag_icon {
     font-size: 30px;
     padding: 5px;
     margin-top: 8px;
@@ -363,6 +364,17 @@ const ContainerRow = styled('div')<CardView>`
       .tag_box &.modal {
         display: inline;
       }
+    }
+  } */
+  .share_icon {
+    /* position: absolute;
+    right: 3%; */
+    font-size: 30px;
+    padding: 5px;
+    cursor: pointer;
+    :hover {
+      background-color: #ece0d9;
+      border-radius: 5px;
     }
   }
 `;
@@ -379,20 +391,26 @@ type MycampType = {
   adress: string;
   memberId: number;
 };
-export function ContentCardRow({ data, remove }: CardView) {
+export function ContentCardRow({ data, remove, edit, like }: CardView) {
   const [isLike, setIsLike] = useState(false);
+  const [isShare, setIsShare] = useState(false);
 
-  //* 상위 컨테이너에서 data로 받을 예정
-  const [mycamp, setMycamp] = useState<MycampType>();
+  // const [mycamp, setMycamp] = useState<MycampType>();
   // useEffect(() => {
   //   getData('userpick').then(res => setMycamp(res));
   // });
+  //TODO 공유확인 모달창
   return (
     <Link
       to={`/content/${data.contentId}`}
       style={{ width: '100%', maxWidth: '420px' }}
     >
-      <ContainerRow remove={remove} bg={data.firstImageUrl}>
+      <ContainerRow
+        remove={remove}
+        like={like}
+        edit={edit}
+        bg={data.firstImageUrl}
+      >
         <div key={data.contentId} className="img_box">
           <svg
             viewBox="0 0 24 24"
@@ -448,15 +466,20 @@ export function ContentCardRow({ data, remove }: CardView) {
             </div>
           ) : (
             <div className="userpick_bottom">
-              <CiHashtag className="tag_icon" />
-              <ul className="tag_box active">
+              {/* <CiHashtag className="tag_icon" /> */}
+              {/* <ul className="tag_box active">
                 {data.keyword.map((ele: any) => {
-                  return <li className="tag">#{ele}</li>;
+                  return <li className="tag">{ele}</li>;
                 })}
-              </ul>
-              <Button padding="8px 10px" font="12px" margin="10px 0px 0px 0px">
-                공유하기
-              </Button>
+              </ul> */}
+              <div className="tag">{data.keyword.join(' ')}</div>
+              <RiShareBoxLine
+                className="share_icon"
+                onClick={() => setIsShare(true)}
+              />
+              {/* <Modal>
+                <h2>내가 찾은 차박지를 공유하시겠습니까?</h2>
+              </Modal> */}
             </div>
           )}
         </div>
