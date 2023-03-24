@@ -69653,9 +69653,10 @@
       "like_cnt": 5,
       "view": 39,
       "title": "낚시하기 좋은 장소 추천해주세요.",
-      "author": "김차몽",
-      "img": "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
-      "created_at": "2023-03-01T16:42:05.678045",
+      "nickname": "김차몽",
+      "profileImg": "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+      "articleImg": "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+      "created_at": "2023-03-24T04:42:05.678045",
       "updated_at": "2023-03-01T17:10:52.420184",
       "content": "로렘 입숨 돌로르 싯 아멧, 콘세두르 아딥리싱 엘리트, 세드도 이모드 템퍼 쏘르티드 융 라보레 엣 도로레 마그나 알리콰. 닐 틴쿤트이트 에것 눈난. 퀴스 헨드러릿 돌로르 막나 에것 엣 로렘 입숨 돌로르 싯. 볼룻팟 오디오 팔리시시스 마우리스 싯 아멧 막사. 콤모도 오디오 아에넨 세드 아딥리싱 디암 도넥 아딥리싱 트리스뚜이크. 미 에것 마우리스 파레트라 엣. 논 텔루스 오르치 악 아우커토르 아우게. 엘리트 엣 임퍼디에트 뒤 악쿰산 싯. 오르나레 아르쿠 도위 비바무스 아르쿠 펠리스. 에게스타스 인테저 에것 알리콰트 닙 프레젠트. 인 학 하빗타쎄 플라테아 딕툼스트 퀴스쿠에 사지티스 푸루스. 풀비나르 엘레멘툼 인테저 엔임 네쿠에 볼룻팟 악.",
       "comments": [
@@ -69697,5 +69698,105 @@
         }
       ]
     }
-  ]
+  ],
+  "members":{
+      "memberInfo" : [
+        {
+          "id" : 1,
+          "email" : "test2@gmail.com",
+          "nickname" : "챠몽",
+          "profileImg" : "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+          "about" : "반갑습니다",
+          "carName" : "아반떼",
+          "oilInfo" : "휘발유",
+          "isWithDrawn" : false
+        }
+      ],
+      "myPlaceInfos" : [
+        {
+          "id" : 1,
+          "memo" : "차박 하기 좋은 곳",
+          "keyword" : ["#차박"],
+          "mapX" : 126.860136,
+          "mapY" : 38.2559493,
+          "createdAt" : "2023.03.22 08:30",
+          "updatedAt" : "2023.03.23 08:30",
+          "placeImg" : "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+          "memberId" : 1,
+          "isShared" : true
+        }
+      ],
+    
+      "visitedPlaceInfos" : [
+        {
+          "id" : 1,
+          "memberId" : 1,
+          "facltNm" : "랩도그빌애견캠핑장",
+          "lineIntro" : "애견과 함께 어울릴 수 있는 공간",
+          "addr1" : "충북 영동군 황간면 구룡로 321",
+          "firstImageUrl" : "https://gocamping.or.kr/upload/camp/991/thumb/thumb_720_8792u35og7LpYG56TTmlnZep.jpg",
+          "mapX" : 127.860136,
+          "mapY" : 36.2559493,
+          "createdAt" : "2023.03.23 08:30",
+          "updatedAt" : "2023.03.22 08:30"
+        }
+      ],
+      "writtenArticleInfos" : [
+        {
+          "id": 1,
+          "member_id" : 3,
+          "title" : "내가 적은 글입니다",
+          "content" : "노지 캠핑장 나쁘지 않네요.",
+          "nickName" : "노지 캠핑장 나쁘지 않네요.",
+          "articleImg" : "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+          "profileImg" : "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+          "carName" : "아반떼",
+          "isLiked" : false,
+          "viewCnt" : 15,
+          "commentCnt" : 2,
+          "likeCnt" : 3, 
+          "createdAt" : "2023.03.01 7:30",
+          "updatedAt" : "2023.03.01 17:10"
+        }
+      ],
+    
+      "commentedArticleInfos" : [
+        {
+          "id": 1,
+          "member_id" : 3,
+          "title" : "내가 댓글 단 글입니다.",
+          "content" : "노지 캠핑장 나쁘지 않네요.",
+          "nickName" : "노지 캠핑장 나쁘지 않네요.",
+          "articleImg" : "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+          "profileImg" : "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+          "carName" : "아반떼",
+          "isLiked" : false,
+          "viewCnt" : 15,
+          "commentCnt" : 2,
+          "likeCnt" : 3, 
+          "createdAt" : "2023.03.01 7:30",
+          "updatedAt" : "2023.03.01 17:10"
+        }
+      ],
+    
+      "likedArticleInfos" : [
+        {
+          "id": 1,
+          "member_id" : 3,
+          "title" : "내가 좋아요 한 글입니다.",
+          "content" : "노지 캠핑장 나쁘지 않네요.",
+          "nickName" : "노지 캠핑장 나쁘지 않네요.",
+          "articleImg" : "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+          "profileImg" : "http://www.adigitaldreamer.com/gallery/albums/userpics/10001/normal_churchd1.jpg",
+          "carName" : "아반떼",
+          "isLiked" : true,
+          "viewCnt" : 15,
+          "commentCnt" : 2,
+          "likeCnt" : 3, 
+          "createdAt" : "2023.03.01 7:30",
+          "updatedAt" : "2023.03.01 17:10"
+        }
+      ]
+    
+  }
 }
