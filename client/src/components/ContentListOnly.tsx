@@ -1,10 +1,6 @@
 import styled from 'styled-components';
-
 import { ContentCard, ContentCardRow } from './ContentCard';
-import { useState, useEffect } from 'react';
-
-import { getData } from '../api/api';
-
+import { useLocation } from 'react-router-dom';
 interface CardList {
   flex_dir?: string;
   bottom_justify?: string;
@@ -15,11 +11,17 @@ interface CardList {
   img_width?: string;
   content_align?: string;
   line?: string;
+  data?: any;
 }
 
 const Container = styled('div')<CardList>`
   display: flex;
   justify-content: center;
+  @media (min-width: 768px) {
+    width: 100%;
+    max-width: 1000px;
+    min-height: 560px;
+  }
   .wrapper {
     @media (max-width: 768px) {
       /* grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -27,27 +29,36 @@ const Container = styled('div')<CardList>`
       max-width: 500px; */
       margin: 0 0 100px 0;
     }
-    /* @media (min-width: 768px) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 30px 30px;
-      width: 100%;
-      max-width: 900px;
-    } */
     overflow: visible;
     display: flex;
     flex-direction: row;
     margin-bottom: 50px;
+    width: 100%;
   }
 
-  .main {
+  .coloum {
     display: grid !important;
     justify-self: center;
     margin: 10px;
     gap: 12px 12px;
     width: 100%;
     @media (max-width: 768px) {
-      grid-template-columns: repeat(1, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 30px 30px;
+    }
+  }
+  .row {
+    display: grid !important;
+    justify-self: center;
+    margin: 10px;
+    gap: 12px 12px;
+    width: 100%;
+    /* /@media (max-width: 768px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    } */
     @media (min-width: 768px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 30px 30px;
@@ -55,30 +66,27 @@ const Container = styled('div')<CardList>`
   }
 `;
 
-function ContentListOnly({}: CardList) {
-  type Info = any | null;
-  const [data, setData] = useState<Info>([]);
-
-  useEffect(() => {
-    getData('content').then(res => {
-      setData(res.slice(0, 10));
-    });
-  }, []);
-
+function ContentListOnly({ data }: CardList) {
+  console.log(data);
+  let { pathname } = useLocation();
+  console.log(pathname);
   return (
     <Container>
       <div className="wrapper">
-        <div className="main">
+        <div className={pathname === '/wishlist' ? 'row' : 'coloum'}>
           {data &&
             data.map((e: any, idx: number) => {
-              return <ContentCardRow key={idx} data={e} like={'none'} />;
-            })}
-
-          {/* return data.facltNm ? (
-                <ContentCardRow key={idx} data={e} like={'none'} />
+              return pathname === '/wishlist' ? (
+                <ContentCardRow
+                  key={idx}
+                  data={e}
+                  like={'none'}
+                  remove={'inline'}
+                />
               ) : (
-                <ContentCard></ContentCard>
-              ); */}
+                <ContentCard data={e} />
+              );
+            })}
         </div>
       </div>
     </Container>

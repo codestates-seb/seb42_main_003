@@ -23,6 +23,9 @@ interface ContentInfo {
   bg?: URL;
   height?: string;
   contentId?: string;
+  isModal?: boolean;
+  setIsModal: (foo: any) => void;
+  isContent?: any;
 }
 
 const Container = styled('div')<ContentInfo>`
@@ -143,24 +146,32 @@ const Container = styled('div')<ContentInfo>`
   } */
 `;
 
-export function ContentM({ contentId }: ContentInfo) {
+export function ContentM({
+  isContent,
+  contentId,
+  isModal,
+  setIsModal,
+}: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
-  const [isContent, setIsContent] = useState<any>({});
+  // const [isContent, setIsContent] = useState<any>({});
   const [isLike, setIsLike] = useState(false);
-  const [isModal, setIsModal] = useState(false);
 
-  useEffect(() => {
-    getData('content').then(res => {
-      const content = res.filter((ele: any) => {
-        return ele.contentId === contentId;
-      });
-      setIsContent(content[0]);
-    });
-    window.scrollTo(0, 0);
-  }, [contentId]);
-
+  // useEffect(() => {
+  //   getData('content').then(res => {
+  //     const content = res.filter((ele: any) => {
+  //       return ele.contentId === contentId;
+  //     });
+  //     setIsContent(content[0]);
+  //   });
+  //   window.scrollTo(0, 0);
+  // }, [contentId]);
+  // window.scrollTo(0, 0);
   return (
-    <Container bg={isContent.firstImageUrl}>
+    <Container
+      isContent={isContent}
+      bg={isContent.firstImageUrl}
+      setIsModal={setIsModal}
+    >
       <MobileHeader>
         <Link to="/">
           <FiArrowLeft className="back" />
@@ -267,7 +278,7 @@ export function ContentM({ contentId }: ContentInfo) {
         </div>
       </div>
 
-      <div className="info">
+      {/* <div className="info">
         <div className="review_box">
           <div className="review_top">
             <div className="review_left">
@@ -308,7 +319,7 @@ export function ContentM({ contentId }: ContentInfo) {
             ) : null}
           </div>
         </div>
-      </div>
+      </div> */}
     </Container>
   );
 }
