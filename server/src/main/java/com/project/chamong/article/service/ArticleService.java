@@ -93,6 +93,7 @@ public class ArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + id));
 
         article.update(patchDto);
+        articleRepository.save(article);
         return articleMapper.articleResponse(article);
     }
 
