@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class CommentDto {
@@ -11,9 +13,7 @@ public class CommentDto {
     @Setter
     public static class Post {
         private String content;
-        private String nickname;
-        private String profileImg;
-        private Long articleId;
+
     }
     @Getter
     @Setter
@@ -25,8 +25,8 @@ public class CommentDto {
         private Long memberId;
         private String nickname;
         private String profileImg;
-        private String createdAt;
-        private String updatedAt;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
     }
 
     @Getter

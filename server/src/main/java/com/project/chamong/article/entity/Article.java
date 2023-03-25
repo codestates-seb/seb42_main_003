@@ -18,6 +18,7 @@ import java.util.List;
 public class Article extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id; // PK
     // 제목
     @NotEmpty

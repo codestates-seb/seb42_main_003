@@ -12,21 +12,23 @@ public class CommentController {
     private final CommentService commentService;
 
     // 댓글 생성
-    @PostMapping("/comments")
-    public ResponseEntity<CommentDto.Response> createComment(@RequestBody CommentDto.Post postDto){
-        return ResponseEntity.ok(commentService.createComment(postDto));
+    @PostMapping("/articles/{articleId}/comments")
+    public ResponseEntity<CommentDto.Response> createComment(@PathVariable Long articleId,  @RequestBody CommentDto.Post postDto){
+
+        return ResponseEntity.ok(commentService.createComment(articleId,postDto));
     }
 
     // 댓글 수정
-    @PatchMapping("/comments/{id}")
-    public ResponseEntity<CommentDto.Response> updateComment(@PathVariable Long id, @RequestBody CommentDto.Patch patchDto){
-        return ResponseEntity.ok(commentService.updateComment(id, patchDto));
+    @PatchMapping("/articles/{articleId}/comments/{id}")
+    public ResponseEntity<CommentDto.Response> updateComment(@PathVariable Long articleId, @PathVariable Long id, @RequestBody CommentDto.Patch patchDto){
+
+        return ResponseEntity.ok(commentService.updateComment(articleId, id, patchDto));
     }
 
-    // 댁글 삭제
-    @DeleteMapping("/comments/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id){
-        commentService.deleteComment(id);
+    // 댓글 삭제
+    @DeleteMapping("/articles/{articleId}/comments/{id}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long articleId, @PathVariable Long id){
+        commentService.deleteComment(articleId,id);
         return ResponseEntity.noContent().build();
     }
 }

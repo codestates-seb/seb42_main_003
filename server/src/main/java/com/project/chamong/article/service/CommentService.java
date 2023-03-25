@@ -19,18 +19,22 @@ public class CommentService {
 
     // 댓글 생성
     @Transactional
-    public CommentDto.Response createComment(CommentDto.Post postDto) {
+    public CommentDto.Response createComment(Long articleId,CommentDto.Post postDto) {
         Comment comment = commentMapper.commentPostDtoToComment(postDto);
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + articleId));
+
+        comment.setArticle(article);
         commentRepository.save(comment);
-        Article article = articleRepository.findById(postDto.getArticleId())
-                .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + postDto.getArticleId()));
+        articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + articleId));
         return commentMapper.commentResponse(comment);
     }
 
     // 댓글 수정
     @Transactional
-    public CommentDto.Response updateComment(Long id, CommentDto.Patch patchDto) {
-        Comment comment = commentRepository.findById(id)
+    public CommentDto.Response updateComment(Long articleId, Long id, CommentDto.Patch patchDto) {
+        Comment comment = commentRepository.findByIdAndArticleId(id, articleId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + id));
         Comment updatedComment = commentMapper.commentPatchDtoToComment(patchDto);
         comment.setContent(updatedComment.getContent());
@@ -39,12 +43,9 @@ public class CommentService {
     }
     // 댓글 삭제
     @Transactional
-    public void deleteComment(Long id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + id));
-
-        Article article = articleRepository.findById(comment.getArticle().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + comment.getArticle().getId()));
+    public void deleteComment(Long articleId, Long id) {
+        commentRepository.findByIdAndArticleId(id, articleId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + id+"for Article ID: "+ articleId));
 
         commentRepository.deleteById(id);
     }

@@ -28,20 +28,4 @@ public class Comment extends Auditable {
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
-    public Long getMemberId(){
-        return member.getId();
-    }
-    public String getNickname(){
-        return member.getNickname();
-    }
-    public String getProfileImg(){
-        return member.getProfileImg();
-    }
-    public void setMember(Member member) {
-        if (this.member != null) {
-            this.member.getComments().remove(this);
-        }
-        this.member = member;
-        member.getComments().add(this);
-    }
 }

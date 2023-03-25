@@ -7,6 +7,7 @@ import com.project.chamong.article.entity.Comment;
 import com.project.chamong.member.entity.Member;
 import org.mapstruct.Mapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,9 +31,9 @@ public interface ArticleMapper {
                 .memberId(article.getMember().getId())
                 .viewCnt(article.getViewCnt())
                 .likeCnt(article.getLikeCnt())
-                .createdAt(article.getCreatedAt())
-                .updatedAt(article.getUpdatedAt())
-                .isLiked(isLiked)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                //.isLiked(isLiked)
                 .comments(commentsToCommentResponseDto(article.getComments()))
                 .build();
     }
@@ -51,8 +52,8 @@ public interface ArticleMapper {
                 .viewCnt(article.getViewCnt())
                 .likeCnt(article.getLikeCnt())
                 .commentCnt(article.getComments().size())
-                .createdAt(article.getCreatedAt())
-                .updatedAt(article.getUpdatedAt())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
     }
 
@@ -66,8 +67,8 @@ public interface ArticleMapper {
                                 .memberId(comment.getMember().getId())
                                 .nickname(comment.getMember().getNickname())
                                 .profileImg(comment.getMember().getProfileImg())
-                                .createdAt(comment.getCreatedAt())
-                                .updatedAt(comment.getUpdatedAt())
+                                .createdAt(LocalDateTime.now())
+                                .updatedAt(LocalDateTime.now())
                                 .build()).collect(Collectors.toList());
 
     }
