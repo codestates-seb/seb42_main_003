@@ -65,7 +65,7 @@ public class ArticleService {
 
         //댓글 createdAt 기준으로 내림차순 정렬
         List<Comment> comments = article.getComments();
-        Collections.sort(comments, Comparator.comparing(Comment::getCreatedAt).reversed());
+        Collections.sort(comments, Comparator.comparing(Comment::getCreatedAt));
         ArticleDto.Response response = articleMapper.articleResponse(article, findMember);
         response.setComments(articleMapper.commentsToCommentResponseDto(comments));
 
