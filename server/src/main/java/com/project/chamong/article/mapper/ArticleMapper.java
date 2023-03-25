@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
@@ -63,12 +64,17 @@ public interface ArticleMapper {
                                 .id(comment.getId())
                                 .content(comment.getContent())
                                 .articleId(comment.getArticle().getId())
-                                .memberId(comment.getMember().getId())
-                                .nickname(comment.getMember().getNickname())
-                                .profileImg(comment.getMember().getProfileImg())
+                                .memberId(Optional.ofNullable(comment.getMember()).map(Member::getId).orElse(null))
+                                .nickname(Optional.ofNullable(comment.getMember()).map(Member::getNickname).orElse(null))
+                                .profileImg(Optional.ofNullable(comment.getMember()).map(Member::getProfileImg).orElse(null))
+                                //.memberId(comment.getMember().getId())
+//                                .nickname(comment.getMember().getNickname())
+//                                .profileImg(comment.getMember().getProfileImg())
                                 .createdAt(comment.getCreatedAt())
                                 .updatedAt(comment.getUpdatedAt())
-                                .build()).collect(Collectors.toList());
+                                .build())
+                .peek(System.out::println) // log 확인
+                .collect(Collectors.toList());
 
     }
 
