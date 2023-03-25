@@ -31,9 +31,8 @@ public interface ArticleMapper {
                 .memberId(article.getMember().getId())
                 .viewCnt(article.getViewCnt())
                 .likeCnt(article.getLikeCnt())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                //.isLiked(isLiked)
+                .createdAt(article.getCreatedAt())
+                .updatedAt(article.getUpdatedAt())
                 .comments(commentsToCommentResponseDto(article.getComments()))
                 .build();
     }
@@ -52,8 +51,8 @@ public interface ArticleMapper {
                 .viewCnt(article.getViewCnt())
                 .likeCnt(article.getLikeCnt())
                 .commentCnt(article.getComments().size())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(article.getCreatedAt())
+                .updatedAt(article.getUpdatedAt())
                 .build();
     }
 
@@ -67,8 +66,8 @@ public interface ArticleMapper {
                                 .memberId(comment.getMember().getId())
                                 .nickname(comment.getMember().getNickname())
                                 .profileImg(comment.getMember().getProfileImg())
-                                .createdAt(LocalDateTime.now())
-                                .updatedAt(LocalDateTime.now())
+                                .createdAt(comment.getCreatedAt())
+                                .updatedAt(comment.getUpdatedAt())
                                 .build()).collect(Collectors.toList());
 
     }

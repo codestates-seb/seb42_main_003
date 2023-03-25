@@ -46,8 +46,8 @@ public class SecurityConfiguration {
   @Bean
   SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-      .and()
+//      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//      .and()
       .httpBasic().disable()
       .formLogin().disable()
       .csrf().disable()
@@ -58,7 +58,7 @@ public class SecurityConfiguration {
       .and()
       .exceptionHandling()
       .accessDeniedHandler(new MemberAccessDeniedHandler())
-      .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
+//      .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
       .and()
       .authorizeHttpRequests(authorize -> { authorize
         .antMatchers(HttpMethod.PATCH,"/members").hasRole("USER")
@@ -78,8 +78,8 @@ public class SecurityConfiguration {
         .antMatchers(HttpMethod.POST,"/members").permitAll()
         .antMatchers(HttpMethod.POST,"/members/login").permitAll()
         .anyRequest().authenticated();
-      });
-//      .oauth2Login();
+      })
+      .oauth2Login();
 //      .successHandler(new Oauth2MemberSuccessHandler(jwtProvider));
     
     return http.build();

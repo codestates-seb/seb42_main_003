@@ -1,5 +1,6 @@
 package com.project.chamong.bookmark.dto;
 
+import com.project.chamong.audit.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

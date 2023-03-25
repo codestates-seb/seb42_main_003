@@ -1,71 +1,57 @@
 package com.project.chamong.place.entity;
 
+import com.project.chamong.audit.Auditable;
 import com.project.chamong.member.entity.Member;
-import com.project.chamong.place.dto.MyPlaceDto;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 // 내가 찾은 차박지
 @Entity
 @Getter
 @Setter
-public class MyPlace {
+public class MyPlace extends Auditable {
     // 장소 ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // 설명(필수)
-    @NotEmpty
+    
+    // 설명
     private String memo;
+    
+    // 내가 찾은 차박지 이미지
+    String placeImg;
+    
     // 키워드
-    private String keyword;
-    // 내가 찾은 차박지에 관련 이미지
-    private String image;
-    // 위도(필수)
-    @NotNull
-    private Double latitude;
-    // 경도(필수)
-    @NotNull
-    private Double longitude;
-    // 생성 날짜
-    @CreatedDate
-    private LocalDateTime createdAt;
+    @ElementCollection
+    @CollectionTable(name = "my_place_keyword")
+    @Column(name = "keyword")
+    private List<String> keywords = new ArrayList<>();
+    
+    // 위도
+    private Double mapX;
+    
+    // 경도
+    private Double mapY;
+    
     // 공유 상태
-    private boolean shared;
+    private Boolean isShared;
 
     // 멤버 고유 키
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
-
-    public static MyPlace createMyPlace(MyPlaceDto.Post postDto) {
-        MyPlace myPlace = new MyPlace();
-        myPlace.setMemo(myPlace.getMemo());
-        myPlace.setKeyword(myPlace.getKeyword());
-        myPlace.setImage(myPlace.getImage());
-        myPlace.setLatitude(myPlace.getLatitude());
-        myPlace.setLongitude(myPlace.getLongitude());
-        return myPlace;
-    }
-
-    public void update(MyPlaceDto.Patch patchDto) {
-        if (patchDto.getMemo() != null) {
-            this.setMemo(patchDto.getMemo());
+    
+    public void setMember(Member member){
+        if(this.member != null){
+            this.member.getMyPlaces().remove(this);
         }
-        if (patchDto.getKeyword() != null) {
-            this.setKeyword(patchDto.getKeyword());
-        }
-        if (patchDto.getLatitude() != null) {
-            this.setLatitude(patchDto.getLatitude());
-        }
-        if (patchDto.getLongitude() != null) {
-            this.setLongitude(patchDto.getLongitude());
-        }
+        this.member = member;
+        member.getMyPlaces().add(this);
     }
 
 }

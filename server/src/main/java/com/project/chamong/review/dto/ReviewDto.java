@@ -32,7 +32,7 @@ public class ReviewDto {
         private int rating;
         private String content;
         private LocalDateTime createdAt;
-        private LocalDateTime updatedat;
+        private LocalDateTime updatedAt;
 
     }
 }

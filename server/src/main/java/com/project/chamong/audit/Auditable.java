@@ -18,20 +18,20 @@ public abstract class Auditable {
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
-    private String createDate;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")
-    private String modifiedDate;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void onPrePersist(){
-        this.createDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
-        this.modifiedDate = this.createDate;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = this.createdAt;
     }
 
     @PreUpdate
     public void onPreUpdate(){
-        this.modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+        this.updatedAt = LocalDateTime.now();
     }
 }

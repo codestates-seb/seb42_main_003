@@ -1,9 +1,11 @@
 package com.project.chamong.place.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,30 +14,25 @@ public class MyPlaceDto {
     @Setter
     public static class Post {
         private String memo;
-        private String keyword;
-        private Long memberId;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-        private String img;
-        private Double latitude;
-        private Double longitude;
-        private boolean shared;
-
+        private List<String> keywords;
+        private Double mapX;
+        private Double mapY;
     }
 
     @Getter
     @Setter
+    @Builder
     public static class Response {
-        private String memo;
-        private String keyword;
         private Long id;
-        private Double latitude;
-        private Double longitude;
+        private String memo;
+        private List<String> keywords;
+        private Double mapX;
+        private Double mapY;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-        private String img;
+        private String placeImg;
         private Long memberId;
-        private boolean shared;
+        private Boolean isShared;
 
     }
 
@@ -43,12 +40,7 @@ public class MyPlaceDto {
     @Setter
     public static class Patch {
         private String memo;
-        private String keyword;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-        private String img;
-        private Double longitude;
-        private Double latitude;
-        private boolean shared;
+        private List<String> keywords;
+        private Boolean isShared;
     }
 }

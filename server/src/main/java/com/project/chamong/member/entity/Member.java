@@ -3,6 +3,7 @@ package com.project.chamong.member.entity;
 import com.project.chamong.article.entity.Article;
 import com.project.chamong.article.entity.ArticleLike;
 import com.project.chamong.article.entity.Comment;
+import com.project.chamong.audit.Auditable;
 import com.project.chamong.place.entity.MyPlace;
 import com.project.chamong.place.entity.VisitedPlace;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Member {
+public class Member extends Auditable {
 
 
   @Id
@@ -39,26 +40,25 @@ public class Member {
   @Column(name = "oil_info")
   private String oilInfo;
 
-  private String validation;
+  private Boolean isWithDrawn = false;
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "role_member", joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id"))
   private List<String> roles = new ArrayList<>();
-
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
-  private Member member;
+  
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
   private List<Article> articles;
-  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-  private List<Comment> comments;
-  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-  private List<ArticleLike> articleLikes;
+
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
   private List<VisitedPlace> visitedPlaces;
 
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
   private List<MyPlace> myPlaces;
+  
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  private List<Comment> comments;
+  
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  private List<ArticleLike> articleLikes;
 
 }

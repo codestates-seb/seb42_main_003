@@ -1,5 +1,6 @@
 package com.project.chamong.member.service;
 
+import com.project.chamong.auth.dto.AuthorizedMemberDto;
 import com.project.chamong.auth.repository.TokenRedisRepository;
 import com.project.chamong.auth.utils.CustomAuthorityUtils;
 import com.project.chamong.exception.BusinessLogicException;
@@ -9,7 +10,6 @@ import com.project.chamong.member.mapper.MemberMapper;
 import com.project.chamong.member.repository.MemberRepository;
 import com.project.chamong.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +32,8 @@ public class MemberService {
     return memberRepository.save(member);
   }
   
-  public Member getMyPage(){
-    return null;
+  public Member findMyPage(AuthorizedMemberDto authorizedMemberDto){
+    return findByEmail(authorizedMemberDto.getEmail());
   }
   @Transactional
   public Member updateMember(Member member, String email) {
