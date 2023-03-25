@@ -3,7 +3,7 @@ interface ArticleType {
   memberId:number;
   title:string;
   content:string;
-  nickName:string;
+  nickname:string;
   articleImg:string;
   profileImg:string;
   carName:string;
@@ -18,7 +18,7 @@ interface ArticleType {
 interface MemberInfo {
   id:number,
   email:string,
-  nickName:string,
+  nickname:string,
   profileImg:string,
   about:string,
   carName:string,

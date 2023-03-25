@@ -83,7 +83,7 @@ function ViewContent({ post }: PostProps) {
         <div>
           <img src={post.profileImg} alt='profile-img'></img>
           <div className='member-info-upper'>
-            <span className='member-info-nickname'>{post.nickName}</span>
+            <span className='member-info-nickname'>{post.nickname}</span>
             <span className='member-created-at'>{timeParser(post.createdAt)}</span>
           </div>
         </div>

@@ -14,6 +14,7 @@ import {
   TextArea,
   KeywordInput,
   ImageInput,
+  Select,
 } from '../styles/Input';
 import { MapGetPosition } from '../components/map/MapGetPosition';
 import {
@@ -26,18 +27,6 @@ import useUploadImage from '../hooks/useUploadImage';
 import { getDataTs, postDataTs, postFormDataTs } from '../api/tsapi';
 import { Post } from '../components/Review';
 import { HistoryContainer } from '../components/HistoryContainer';
-
-//멤버 정보 타입
-interface MemberInfo {
-  id: number;
-  email: string;
-  nickName: string;
-  profileImg: string;
-  about: string;
-  carName: string;
-  oilInfo: string;
-  isWithDrawn: boolean;
-}
 
 //myPlaceInfos 내부 객체
 interface MyPlaceInfo {
@@ -173,7 +162,7 @@ function MyPage() {
                 <img src={memberInfo.profileImg} alt='profile-img'></img>
                 <div className='member-info-upper'>
                   <span className='member-info-nickname'>
-                    {memberInfo.nickName}
+                    {memberInfo.nickname}
                   </span>
                   <span className='member-info-car'>
                     {memberInfo.carName} / {memberInfo.oilInfo}
@@ -556,12 +545,16 @@ function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
         </ImageInput>
         <Input placeholder='이름' />
         <TextArea placeholder='자기소개' />
-        <Input placeholder='내 차량' />
-        <select>
+        <div style={{display:'flex',}}>
+        <Input placeholder='내 차량'/>
+        <Select>
           <option value="휘발유">휘발유</option>
           <option value="경유">경유</option>
+          <option value="LPG">LPG</option>
           <option value="전기">전기</option>
-        </select>
+          <option value="수소">수소</option>
+        </Select>
+        </div>
         <Button
           border={'var(--chamong__color)'}
           color={'var(--chamong__color)'}
