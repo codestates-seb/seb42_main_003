@@ -7,7 +7,6 @@ import com.project.chamong.article.entity.Comment;
 import com.project.chamong.member.entity.Member;
 import org.mapstruct.Mapper;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +31,7 @@ public interface ArticleMapper {
                 .memberId(article.getMember().getId())
                 .viewCnt(article.getViewCnt())
                 .likeCnt(article.getLikeCnt())
+                .isLiked(isLiked)
                 .createdAt(article.getCreatedAt())
                 .updatedAt(article.getUpdatedAt())
                 .comments(commentsToCommentResponseDto(article.getComments()))
@@ -57,7 +57,7 @@ public interface ArticleMapper {
                 .build();
     }
 
-    default List<CommentDto.Response> commentsToCommentResponseDto(List<Comment> comments){
+    default List<CommentDto.Response> commentsToCommentResponseDto(List<Comment> comments) {
         return comments.stream()
                 .map(comment ->
                         CommentDto.Response.builder()

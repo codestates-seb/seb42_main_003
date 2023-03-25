@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,7 +63,11 @@ public class ArticleService {
         Member findMember = memberService.findByEmail(authorizedMemberDto.getEmail());
         increaseViewCnt(id);
 
+        //댓글 createdAt 기준으로 내림차순 정렬
+        List<Comment> comments = article.getComments();
+        Collections.sort(comments, Comparator.comparing(Comment::getCreatedAt).reversed());
         ArticleDto.Response response = articleMapper.articleResponse(article, findMember);
+        response.setComments(articleMapper.commentsToCommentResponseDto(comments));
 
         return response;
     }

@@ -30,6 +30,7 @@ public class ArticleDto {
         private Integer viewCnt;
         private Integer likeCnt;
         private Integer commentCnt;
+        private Boolean isLiked;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private List<CommentDto.Response> comments;
