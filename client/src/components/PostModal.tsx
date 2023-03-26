@@ -1,31 +1,32 @@
-import {useState,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal } from "../styles/Modal";
-import { HiOutlineX } from "react-icons/hi";
-import { Input,TextArea,ImageInput } from "../styles/Input";
-import { Button } from "../styles/Button";
-import useUploadImage from "../hooks/useUploadImage";
+import { Modal } from '../styles/Modal';
+import { HiOutlineX } from 'react-icons/hi';
+import { Input, TextArea, ImageInput } from '../styles/Input';
+import { Button } from '../styles/Button';
+import useUploadImage from '../hooks/useUploadImage';
 import { sendFormDataTs } from '../api/tsapi';
 
-function PostModal () {
+type PostType = { setIsSubmit: (foo: any) => void };
+function PostModal({ setIsSubmit }: PostType) {
+  const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
+  const navigate = useNavigate();
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
-const {image,imageSrc,imageChange,imageDelete}=useUploadImage();
-const navigate=useNavigate();
-const [title,setTitle]=useState('');
-const [content,setContent]=useState('');
+  const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+  const contentHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  };
 
-const titleHandler=(e:React.ChangeEvent<HTMLInputElement>)=>{
-  setTitle(e.target.value);
-}
-const contentHandler=(e:React.ChangeEvent<HTMLTextAreaElement>)=>{
-  setContent(e.target.value);
-}
-
-const articleSubmitHandler=()=>{
-  const data={title,content};
-  sendFormDataTs('articles','post',data,image).then(()=>navigate('/articles'))
-}
-
+  const articleSubmitHandler = () => {
+    const data = { title, content };
+    sendFormDataTs('articles', 'post', data, image).then(() =>
+      navigate('/articles')
+    );
+  };
 
   return (
     <Modal>
@@ -57,8 +58,12 @@ const articleSubmitHandler=()=>{
           )}
           <input type="file" id="file" onChange={imageChange}></input>
         </ImageInput>
-        <Input placeholder="제목" onChange={titleHandler}/>
-        <TextArea height={'200px'} placeholder="내용"  onChange={contentHandler}/>
+        <Input placeholder="제목" onChange={titleHandler} />
+        <TextArea
+          height={'200px'}
+          placeholder="내용"
+          onChange={contentHandler}
+        />
         <Button
           border={'var(--chamong__color)'}
           color={'white'}

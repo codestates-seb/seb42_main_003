@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { Input } from '../styles/Input';
-import { loginTs, postDataTs } from '../api/tsapi';
+import { loginTs, sendDataTs } from '../api/tsapi';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { login } from '../store/isLoginSlice';
@@ -212,7 +212,7 @@ function Login({ setIsLogin }: LoginInfo) {
     if (requestFieldCheck() && !emailErrorMessage && !passwordErrorMessage) {
       console.log('signup error 없음');
       const data = { nickName, email, password };
-      postDataTs('members', data);
+      sendDataTs('members', 'post', data);
     }
   };
 
