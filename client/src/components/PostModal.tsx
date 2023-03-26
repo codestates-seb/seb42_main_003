@@ -1,13 +1,31 @@
-import { Modal } from '../styles/Modal';
-import { HiOutlineX } from 'react-icons/hi';
-import { Input, TextArea, ImageInput } from '../styles/Input';
-import { Button } from '../styles/Button';
-import useUploadImage from '../hooks/useUploadImage';
+import {useState,useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Modal } from "../styles/Modal";
+import { HiOutlineX } from "react-icons/hi";
+import { Input,TextArea,ImageInput } from "../styles/Input";
+import { Button } from "../styles/Button";
+import useUploadImage from "../hooks/useUploadImage";
+import { sendFormDataTs } from '../api/tsapi';
 
-type PostType = { setIsSubmit: (foo: any) => void };
-function PostModal({ setIsSubmit }: PostType) {
-  const { imageSrc, imageChange, imageFormData, imageDelete } =
-    useUploadImage();
+function PostModal () {
+
+const {image,imageSrc,imageChange,imageDelete}=useUploadImage();
+const navigate=useNavigate();
+const [title,setTitle]=useState('');
+const [content,setContent]=useState('');
+
+const titleHandler=(e:React.ChangeEvent<HTMLInputElement>)=>{
+  setTitle(e.target.value);
+}
+const contentHandler=(e:React.ChangeEvent<HTMLTextAreaElement>)=>{
+  setContent(e.target.value);
+}
+
+const articleSubmitHandler=()=>{
+  const data={title,content};
+  sendFormDataTs('articles','post',data,image).then(()=>navigate('/articles'))
+}
+
 
   return (
     <Modal>
@@ -39,13 +57,14 @@ function PostModal({ setIsSubmit }: PostType) {
           )}
           <input type="file" id="file" onChange={imageChange}></input>
         </ImageInput>
-        <Input placeholder="제목" />
-        <TextArea height={'200px'} placeholder="내용" />
+        <Input placeholder="제목" onChange={titleHandler}/>
+        <TextArea height={'200px'} placeholder="내용"  onChange={contentHandler}/>
         <Button
           border={'var(--chamong__color)'}
-          color={'var(--chamong__color)'}
-          hcolor={'white'}
-          hover={'var(--chamong__color)'}
+          color={'white'}
+          bg={'var(--chamong__color)'}
+          hcolor={'var(--chamong__color)'}
+          hover={'white'}
           hborder={'var(--chamong__color)'}
           padding="13px 15px"
           radius="12px"

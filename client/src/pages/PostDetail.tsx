@@ -6,7 +6,6 @@ import { GrFormView } from 'react-icons/gr';
 import { FaThumbsUp } from 'react-icons/fa';
 import { BsPencilSquare } from 'react-icons/bs';
 import PostModal from '../components/PostModal';
-import { getData } from '../api/api';
 import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
 import { timeParser } from '../utils/timeParser';
@@ -20,23 +19,14 @@ import {
 } from '../styles/pageStyle';
 import axios from 'axios';
 import { Input } from '../styles/Input';
+import { getDataTs } from '../api/tsapi';
 
 function PostDetail() {
   const { postId } = useParams();
   const [postData, setPostData] = useState<any>(null);
 
-  //api화 필요한 코드---------------------------
-  // useEffect(() => {
-  //   axios({
-  //     method: 'get',
-  //     url: `http://localhost:3001/post/${postId}`,
-  //   })
-  //     .then((res) => setPostData(res.data))
-  //     .catch((err) => console.log(err));
-  // }, []);
-  //api로 대체해야 함
   useEffect(()=>{
-    getData(`articles/${postId}`).then(res=>setPostData(res))
+    getDataTs(`articles/${postId}`).then(res=>setPostData(res))
   },[])
 
   useEffect(()=>{
