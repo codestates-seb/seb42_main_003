@@ -18,6 +18,7 @@ export const MobileHeader = styled.header`
   border-bottom: 1px solid #d9d9d9;
   padding: 10px 15px 10px 15px;
   h1 {
+    left: 0;
     position: absolute;
     width: 100%;
     text-align: center;

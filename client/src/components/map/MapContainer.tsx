@@ -162,7 +162,7 @@ function MapInfoContainer({ camp, padding = '16px' }: any) {
           alignItems: 'center',
         }}
       >
-        <ContentCardRow data={camp} remove="inline" />
+        <ContentCardRow like={'none'} data={camp} remove="inline" />
       </div>
     </MapInfoWrapper>
   );

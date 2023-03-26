@@ -19,6 +19,7 @@ interface ContentInfo {
   bg?: URL;
   height?: string;
   contentId?: string;
+  isContent?: any;
 }
 
 const Container = styled('div')<ContentInfo>`
@@ -220,23 +221,23 @@ const Container = styled('div')<ContentInfo>`
   }
 `;
 
-export function ContentD({ contentId }: ContentInfo) {
+export function ContentD({ isContent, contentId }: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
-  const [isContent, setIsContent] = useState<any>({});
+  // const [isContent, setIsContent] = useState<any>({});
   const [isLike, setIsLike] = useState(false);
 
-  useEffect(() => {
-    getData('content').then(res => {
-      const content = res.filter((ele: any) => {
-        return ele.contentId === contentId;
-      });
-      setIsContent(content[0]);
-    });
-    window.scrollTo(0, 0);
-  }, [contentId]);
+  // useEffect(() => {
+  //   getData('content').then(res => {
+  //     const content = res.filter((ele: any) => {
+  //       return ele.contentId === contentId;
+  //     });
+  //     setIsContent(content[0]);
+  //   });
+  // }, [contentId]);
+  // window.scrollTo(0, 0);
 
   return (
-    <Container bg={isContent.firstImageUrl}>
+    <Container isContent={isContent} bg={isContent.firstImageUrl}>
       <main>
         <div className="header">
           <div className="title">{isContent.facltNm}</div>

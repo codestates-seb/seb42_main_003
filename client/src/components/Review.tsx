@@ -9,6 +9,10 @@ import { FcLike } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { edit } from '../store/reviewSlice';
+import { Button } from '../styles/Button';
+import { Modal } from '../styles/Modal';
+import { ReviewSubmit } from './ReviewSubmit';
+import { useState } from 'react';
 
 const Container = styled.div`
   .post {
@@ -163,9 +167,12 @@ type ReviewType =
       createdAt: string;
       grade: number;
       body: string;
+      setIsModal: (foo: any) => void;
+      isContent?: any;
     }
   | any;
-export function Review({ isReview }: ReviewType) {
+export function Review({ isContent, isReview, setIsModal }: ReviewType) {
+  // const [isModal, setIsModal] = useState(false);
   const dispatch = useAppDispatch();
   return (
     <Container className="post">
@@ -182,7 +189,12 @@ export function Review({ isReview }: ReviewType) {
           </div>
         </div>
         <div className="right">
-          <BsFillPencilFill onClick={() => dispatch(edit(isReview))} />
+          <BsFillPencilFill
+            onClick={() => {
+              dispatch(edit(isReview));
+              setIsModal(true);
+            }}
+          />
           <AiFillDelete className="delete" />
         </div>
       </div>
