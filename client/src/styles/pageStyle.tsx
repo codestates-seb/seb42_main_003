@@ -40,12 +40,20 @@ export const PageArticle = styled.article`
       width: 100%;
       height: 100%;
       padding: 12px;
+
       .history {
-        width: 100%;
-        margin: 12px 0px;
-        border: 1px solid #d9d9d9;
-        border-radius: 12px;
-        padding: 12px 12px;
+        h4 {
+          font-size: var(--fs__h2);
+        }
+        > div {
+          height: 400px;
+          overflow: auto;
+          width: 100%;
+          margin: 12px 0px;
+          border: 1px solid #d9d9d9;
+          border-radius: 12px;
+          padding: 12px 12px;
+        }
       }
     }
   }
@@ -116,7 +124,7 @@ export const MyPageMemberInfo = styled(PageArticle)`
       padding-bottom: 5px;
     }
     .member-info-car {
-      color:var(--fontBlack__300)
+      color: var(--fontBlack__300);
     }
     .member-info-about-desktop {
       display: none;
@@ -124,7 +132,7 @@ export const MyPageMemberInfo = styled(PageArticle)`
   }
   button {
   }
-  .member-info-about-mobile  {
+  .member-info-about-mobile {
     padding-top: 16px;
     font-size: var(--fs__mid);
   }
@@ -136,12 +144,12 @@ export const MyPageMemberInfo = styled(PageArticle)`
     }
     .member-info-upper {
       .member-info-about-desktop {
-        padding:6px 0px;
+        padding: 6px 0px;
         font-size: var(--fs__big);
-      display: block;
+        display: block;
+      }
     }
-    }
-    
+
     .member-info-about-mobile {
       display: none;
     }

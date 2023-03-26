@@ -52,10 +52,10 @@ function ViewHistoryModal({
             내가 쓴 글
           </button>
           <button value={2} onClick={tabHandler}>
-            댓글 단 글
+            내가 댓글 단 글
           </button>
           <button value={3} onClick={tabHandler}>
-            좋아요 누른 글
+            내가 좋아요 누른 글
           </button>
         </Tab>
         <HistoryContainer history={tabState===1?writtenArticleInfos:tabState===2?commentedArticleInfos:tabState===3?likedArticleInfos:writtenArticleInfos}/>

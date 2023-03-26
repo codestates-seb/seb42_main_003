@@ -1,12 +1,27 @@
 import styled from 'styled-components';
 
-export const MapInfoWrapper = styled.div`
+interface MapInfoWrapperProps {
+  padding?:string;
+}
+
+export const MapInfoWrapper = styled.div<MapInfoWrapperProps>`
   width: 100%;
   height: 100%;
   position: absolute;
   display: flex;
   justify-content: end;
   flex-direction: column;
+  > div {
+    z-index: 500;
+    width:100%;
+    padding:16px 16px ${props=>props.padding||'16px'};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media screen and (min-width: 768px){
+      justify-content: start;
+    }
+  }
 `;
 
 export const MapWrapper = styled.article`
