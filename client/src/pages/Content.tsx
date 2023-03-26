@@ -163,7 +163,7 @@ function Content() {
           <div className="wrapper" onClick={e => e.stopPropagation()}>
             <div
               className="header"
-              style={{ fontSize: '15px' }}
+              style={{ fontSize: '18px', fontWeight: '500' }}
               onClick={() => {
                 setIsModal(!isModal);
                 dispatch(

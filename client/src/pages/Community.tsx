@@ -93,7 +93,7 @@ export function Community() {
   useEffect(() => {
     getData('community').then(res => setIsCommunity(res));
   }, []);
-  console.log(isSubmit);
+
   return (
     <Container>
       <Header width_M={'1000px'}></Header>

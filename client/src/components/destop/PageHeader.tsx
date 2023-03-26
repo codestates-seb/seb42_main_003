@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import background from '../../assets/background.png';
 export const Container = styled.div`
   @media (max-width: 768px) {
     display: none;
@@ -7,8 +8,9 @@ export const Container = styled.div`
   background-color: var(--searchbar__color);
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
+  /* margin-bottom: 30px; */
   .wrap {
+    background-image: url(${background});
     display: flex;
     justify-content: center;
     padding: 30px 16px;
