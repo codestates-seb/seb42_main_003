@@ -79,8 +79,7 @@ export const TextArea = styled.textarea<InputProps>`
   height: ${props => props.height || '100px'};
   font-size: 15px;
   font-weight: 500;
-  color: ${props =>
-    props.color ? inputColor(props.color) : 'var(--chamong__color)'};
+  color: var(--fontBlack__900);
   background-color: ${props =>
     props.color ? inputBackgroundColor(props.color) : 'white'};
   border: 1px solid
@@ -237,4 +236,11 @@ export const Select=styled.select<InputProps>`
   &::placeholder {
     color: var(--fontBlack__300);
   }
+`
+
+export const ErrorMessage=styled.div`
+    color: var(--chamong__color);
+    padding: 5px 0 0px 5px;
+    font-weight: 500;
+    font-size: var(--fs__mid);
 `

@@ -15,6 +15,7 @@ import {
   KeywordInput,
   ImageInput,
   Select,
+  ErrorMessage,
 } from '../styles/Input';
 import { MapGetPosition } from '../components/map/MapGetPosition';
 import {
@@ -24,9 +25,10 @@ import {
 } from '../styles/pageStyle';
 import ViewHistoryModal from '../components/mobile/ViewHistoryModal';
 import useUploadImage from '../hooks/useUploadImage';
-import { getDataTs, postDataTs, postFormDataTs } from '../api/tsapi';
+import { getDataTs, sendDataTs, sendFormDataTs } from '../api/tsapi';
 import { Post } from '../components/Review';
 import { HistoryContainer } from '../components/HistoryContainer';
+import { useNavigate } from 'react-router-dom';
 
 //myPlaceInfos 내부 객체
 interface MyPlaceInfo {
@@ -65,7 +67,7 @@ function MyPage() {
   const [viewHistoryModal, setViewHistoryModal] = useState<boolean>(false);
   //내부width를 기록하기 위한 state와 이벤트리스너
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
-  const [memberInfo, setMemberInfo] = useState<MemberInfo | null>(null);
+  const [memberInfo, setMemberInfo] = useState<MemberInfo>();
   const [myPlaceInfos, setMyPlaceInfos] = useState<MyPlaceInfo[] | null>(
     null
   );
@@ -167,7 +169,9 @@ function MyPage() {
                   <span className='member-info-car'>
                     {memberInfo.carName} / {memberInfo.oilInfo}
                   </span>
-                  <span className='member-info-about-desktop'>{memberInfo.about}</span>
+                  <span className='member-info-about-desktop'>
+                    {memberInfo.about}
+                  </span>
                 </div>
               </div>
               <Button
@@ -213,12 +217,15 @@ function MyPage() {
           </div>
           <div className='history-wrapper'>
             <div className='history'>
+              <h4>내가 쓴 글</h4>
               <HistoryContainer history={writtenArticleInfos} />
             </div>
             <div className='history'>
+              <h4>내가 댓글 단 글</h4>
               <HistoryContainer history={commentedArticleInfos} />
             </div>
             <div className='history'>
+              <h4>내가 좋아요 누른 글</h4>
               <HistoryContainer history={likedArticleInfos} />
             </div>
           </div>
@@ -252,8 +259,11 @@ function MyPage() {
       {addCampModal && (
         <AddCampModal floatButtonHandler={floatButtonHandler} />
       )}
-      {editProfileModal && (
-        <EditProfileModal editProfileHandler={editProfileHandler} />
+      {editProfileModal && memberInfo && (
+        <EditProfileModal
+          editProfileHandler={editProfileHandler}
+          memberInfo={memberInfo}
+        />
       )}
       {viewHistoryModal && (
         <ViewHistoryModal
@@ -285,23 +295,6 @@ function MyPageMapContainer({
     const value = Number(e.target.value);
     if (tabState !== value) setTabState(value);
   };
-  // useEffect(() => {
-  //   let endpoint;
-  //   if (tabState === 1) endpoint = 'userpick';
-  //   else if (tabState === 2) endpoint = 'history';
-  //   axios({
-  //     method: 'get',
-  //     url: `http://localhost:3001/${endpoint}`,
-  //   })
-  //     .then(res => {
-  //       console.log(res.data);
-  //       setCampData(res.data);
-  //     })
-  //     .catch(err => console.log(err));
-  // }, [tabState]);
-  //위의 코드는 api화 해주세요
-
-  useEffect(() => {}, [tabState]);
 
   return (
     <div className='map-container'>
@@ -346,8 +339,9 @@ interface Themes {
 }
 
 function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
+  const navigate = useNavigate();
   //내용을 저장합니다.
-  const [text, setText] = useState<string>('');
+  const [memo, setMemo] = useState<string>('');
   //키워드 객체를 저장합니다.
   const [keywords, setKeywords] = useState<Themes[]>([]);
   //MapGetPosition 컴포넌트로부터 클릭한 좌표를 받습니다.
@@ -363,25 +357,17 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
   const { imageSrc, imageChange, imageFormData, imageDelete } =
     useUploadImage();
 
-  //아래 useEffect는 api화 해야함------------------------------------
-
-  //-------------------------------------------------------------------
-
   const postCampHandler = () => {
-    console.log({
-      text,
+    if (!position) return;
+    const data = {
+      memo,
       keywords,
-      position,
-    });
+      mapY: position[0],
+      mapX: position[1],
+      address,
+    };
+    sendDataTs('pick-places','post', data).then(() => navigate('/mypage'));
   };
-
-  useEffect(() => {
-    console.log(position);
-  }, [position]);
-  useEffect(() => {
-    console.log(address);
-  }, [address]);
-
   const keywordFocusHandler = () => {
     setIsKeywordFocus(true);
   };
@@ -437,8 +423,10 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           <input type='file' id='file' onChange={imageChange}></input>
         </ImageInput>
         <Input
-          value={text}
-          onChange={(e: any) => setText(e.target.value)}
+          value={memo}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setMemo(e.target.value)
+          }
           placeholder='내용'
         />
         <KeywordInput
@@ -508,11 +496,26 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
 
 interface editProfileModalProps {
   editProfileHandler: () => void;
+  memberInfo: MemberInfo;
 }
 
-function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
-  const { imageSrc, imageChange, imageFormData, imageDelete } =
-    useUploadImage();
+function EditProfileModal({
+  editProfileHandler,
+  memberInfo,
+}: editProfileModalProps) {
+  const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
+
+  const [nickname, setNickname] = useState(memberInfo.nickname);
+  const [about, setAbout] = useState(memberInfo.about);
+  const [carName, setCarName] = useState(memberInfo.carName);
+  const [oilInfo, setOilInfo] = useState(memberInfo.oilInfo);
+
+  const profileSubmitHandler = () => {
+    const data = { nickname, about, carName, oilInfo };
+    sendFormDataTs('members', 'patch', data, image).then(
+      editProfileHandler
+    );
+  };
 
   return (
     <Modal>
@@ -543,27 +546,51 @@ function EditProfileModal({ editProfileHandler }: editProfileModalProps) {
           )}
           <input type='file' id='file' onChange={imageChange}></input>
         </ImageInput>
-        <Input placeholder='이름' />
-        <TextArea placeholder='자기소개' />
-        <div style={{display:'flex',}}>
-        <Input placeholder='내 차량'/>
-        <Select>
-          <option value="휘발유">휘발유</option>
-          <option value="경유">경유</option>
-          <option value="LPG">LPG</option>
-          <option value="전기">전기</option>
-          <option value="수소">수소</option>
-        </Select>
+        <Input
+          placeholder='이름'
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNickname(e.target.value)
+          }
+          value={nickname}
+        />
+        <TextArea
+          placeholder='자기소개'
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            setAbout(e.target.value)
+          }
+          value={about}
+        />
+        <div style={{ display: 'flex' }}>
+          <Input
+            placeholder='내 차량'
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setCarName(e.target.value)
+            }
+            value={carName}
+          />
+          <Select
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              setOilInfo(e.target.value)
+            }
+            value={oilInfo}>
+            <option value='휘발유'>휘발유</option>
+            <option value='경유'>경유</option>
+            <option value='LPG'>LPG</option>
+            <option value='전기'>전기</option>
+            <option value='수소'>수소</option>
+          </Select>
         </div>
         <Button
           border={'var(--chamong__color)'}
-          color={'var(--chamong__color)'}
-          hcolor={'white'}
-          hover={'var(--chamong__color)'}
+          color={'white'}
+          bg={'var(--chamong__color)'}
+          hcolor={'var(--chamong__color)'}
+          hover={'white'}
           hborder={'var(--chamong__color)'}
           padding='13px 15px'
           radius='12px'
-          width='100%'>
+          width='100%'
+          onClick={profileSubmitHandler}>
           수정 완료
         </Button>
       </div>

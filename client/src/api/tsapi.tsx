@@ -14,9 +14,9 @@ export const getDataTs=(endpoint:string,params:{}={})=>{
 }
 
 //이미지가 없는 데이터를 보낼 때 사용하는 함수
-export const postDataTs=(endpoint:string,data:object)=>{
+export const sendDataTs=(endpoint:string,method:string,data:object)=>{
   return axios({
-    method:'post',
+    method:method,
     url:`${url}/${endpoint}`,
     data:data,
     headers:{
@@ -27,12 +27,12 @@ export const postDataTs=(endpoint:string,data:object)=>{
 }
 
 //이미지가 있는 데이터를 보낼 때 사용하는 함수
-export const postFormDataTs=(endpoint:string,data:object,image:FileList)=>{
+export const sendFormDataTs=(endpoint:string,method:string,data:object,image:FileList|undefined)=>{
   let formData=new FormData();
   formData.append('data',JSON.stringify(data));
-  formData.append('image',image[0]);
+  if(image) formData.append('image',image[0]);
   return axios({
-    method:'post',
+    method,
     url:`${url}/${endpoint}`,
     data:formData,
     headers:{

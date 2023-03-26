@@ -151,17 +151,8 @@ export function MapContainer({
 
 function MapInfoContainer({ camp, padding = '16px' }: any) {
   return (
-    <MapInfoWrapper>
-      <div
-        style={{
-          zIndex: '500',
-          width: '100%',
-          padding: `16px 16px ${padding}`,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+    <MapInfoWrapper padding={padding}>
+      <div>
         <ContentCardRow like={'none'} data={camp} remove="inline" />
       </div>
     </MapInfoWrapper>
