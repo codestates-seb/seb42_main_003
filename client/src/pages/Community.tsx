@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Post } from '../components/Review';
-import { HiOutlineSearch } from 'react-icons/hi';
+import { HiPlus, HiOutlineSearch } from 'react-icons/hi';
 import SearchBar from '../components/SearchBar';
 import { MobileHeader } from '../styles/mobileStyle';
 import Header from '../components/destop/Header';
@@ -9,6 +9,9 @@ import { useEffect, useState } from 'react';
 import { SearchbarPlain } from '../styles/searchbarPlain';
 import { getData } from '../api/api';
 import { PageHeader } from '../components/destop/PageHeader';
+import { Button } from '../styles/Button';
+import PostModal from '../components/PostModal';
+import { FloatButton } from '../styles/mapStyle';
 
 export const Container = styled.div`
   @media (max-width: 768px) {
@@ -34,6 +37,7 @@ export const Container = styled.div`
         width: 100%;
         max-width: 900px;
         margin-bottom: 50px;
+        position: relative;
       }
     }
   }
@@ -54,7 +58,7 @@ export const Container = styled.div`
   @media (min-width: 768px) {
     .desktop_header {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       /* align-items: center; */
       justify-content: space-between;
       padding: 20px;
@@ -68,12 +72,28 @@ export const Container = styled.div`
       }
     }
   }
+  .float_Button {
+    @media (min-width: 768px) {
+      display: none;
+    }
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+  }
+  .modal_submit {
+    .wrapper {
+      max-width: 600px;
+      height: 500px;
+    }
+  }
 `;
 export function Community() {
   const [isCommunity, setIsCommunity] = useState<any>([]);
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
   useEffect(() => {
     getData('community').then(res => setIsCommunity(res));
   }, []);
+  console.log(isSubmit);
   return (
     <Container>
       <Header width_M={'1000px'}></Header>
@@ -85,6 +105,29 @@ export function Community() {
               <HiOutlineSearch className="search_icon" />
               <input placeholder="검색"></input>
             </SearchbarPlain>
+            <Button
+              margin={'0'}
+              padding={'12px 18px'}
+              bg={'var(--chamong__color)'}
+              border={'var(--chamong__color)'}
+              color={'white'}
+              hborder={'var(--chamong__color)'}
+              hover={'white'}
+              hcolor={'var(--chamong__color)'}
+              onClick={() => setIsSubmit(true)}
+            >
+              글쓰기
+            </Button>
+          </div>
+          {isSubmit ? (
+            <div className="modal_submit">
+              <PostModal setIsSubmit={setIsSubmit}></PostModal>
+            </div>
+          ) : null}
+          <div className="float_Button">
+            <FloatButton onClick={() => setIsSubmit(true)}>
+              <HiPlus />
+            </FloatButton>
           </div>
           <MobileHeader className="mobile">
             <h1>커뮤니티</h1>

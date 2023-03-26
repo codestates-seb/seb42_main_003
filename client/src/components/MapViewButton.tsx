@@ -12,7 +12,7 @@ export const Container = styled.div`
   .button_box {
     z-index: 901;
     position: fixed;
-    top: 85%;
+    top: 87%;
     left: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;
@@ -36,7 +36,6 @@ export const Container = styled.div`
 `;
 type MapViewType = { setIsMap: (foo: any) => void; isMap?: boolean };
 export function MapViewButton({ setIsMap, isMap }: MapViewType) {
-  console.log(isMap);
   return (
     <Container>
       <button
