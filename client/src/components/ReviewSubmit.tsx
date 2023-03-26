@@ -104,21 +104,6 @@ export function ReviewSubmit() {
     handleStarClick(edit.grade - 1);
   }, [edit]);
 
-  useEffect(() => {
-    // return () => {
-    //   dispatch(
-    //     reset({
-    //       id: 0,
-    //       image: '',
-    //       user: '',
-    //       createdAt: '',
-    //       grade: 0,
-    //       body: '',
-    //     })
-    //   );
-    //   handleStarClick(0);
-    // };
-  }, []);
   const [clicked, setClicked] = useState<boolean[] | any>([
     false,
     false,

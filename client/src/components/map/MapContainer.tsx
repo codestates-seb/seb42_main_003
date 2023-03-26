@@ -30,7 +30,7 @@ export function MapContainer({
   const [map, setMap] = useState<any>(null);
   const [currentCamp, setCurrentCamp] = useState<any>(null);
   const [markerList, setMarkerList] = useState<any>([]);
-
+  console.log(campList);
   useEffect(() => {
     // container.current=null;
     // console.log(container)

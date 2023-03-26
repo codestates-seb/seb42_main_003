@@ -12,53 +12,29 @@ interface CardList {
   content_align?: string;
   line?: string;
   data?: any;
+  setIsMap?: (foo: any) => void;
 }
 
-const Container = styled('div')<CardList>`
+const ContainerRow = styled('div')<CardList>`
   display: flex;
-  justify-content: center;
-  @media (min-width: 768px) {
-    width: 100%;
-    max-width: 1000px;
-    min-height: 560px;
-  }
+  flex-direction: row;
   .wrapper {
     @media (max-width: 768px) {
-      /* grid-template-columns: repeat(1, minmax(0, 1fr));
       width: 100%;
-      max-width: 500px; */
-      margin: 0 0 100px 0;
-    }
-    overflow: visible;
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 50px;
-    width: 100%;
-  }
-
-  .coloum {
-    display: grid !important;
-    justify-self: center;
-    margin: 10px;
-    gap: 12px 12px;
-    width: 100%;
-    @media (max-width: 768px) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     @media (min-width: 768px) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 30px 30px;
+      width: 100%;
+      max-width: 1000px;
+      min-height: 560px;
     }
   }
-  .row {
+  .column {
     display: grid !important;
-    justify-self: center;
-    margin: 10px;
-    gap: 12px 12px;
-    width: 100%;
-    /* /@media (max-width: 768px) {
+    margin: 10px 0;
+    @media (max-width: 768px) {
+      gap: 12px 12px;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    } */
+    }
     @media (min-width: 768px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 30px 30px;
@@ -66,31 +42,70 @@ const Container = styled('div')<CardList>`
   }
 `;
 
-function ContentListOnly({ data }: CardList) {
-  console.log(data);
+export function ContentListOnlyColumn({ data, setIsMap }: CardList) {
   let { pathname } = useLocation();
-  console.log(pathname);
+
   return (
-    <Container>
+    <ContainerRow>
       <div className="wrapper">
-        <div className={pathname === '/wishlist' ? 'row' : 'coloum'}>
+        <div className={pathname === '/wishlist' ? 'row' : 'column'}>
           {data &&
             data.map((e: any, idx: number) => {
-              return pathname === '/wishlist' ? (
+              return <ContentCard setIsMap={setIsMap} key={idx} data={e} />;
+            })}
+        </div>
+      </div>
+    </ContainerRow>
+  );
+}
+
+const ContainerColumn = styled('div')<CardList>`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  .wrapper {
+    @media (max-width: 768px) {
+      width: 100%;
+      max-width: 500px;
+    }
+    @media (min-width: 768px) {
+      width: 100%;
+      max-width: 1000px;
+    }
+  }
+
+  .row {
+    @media (max-width: 768px) {
+      margin: 10px;
+      max-width: 500px;
+    }
+    @media (min-width: 768px) {
+      margin: 10px;
+    }
+  }
+`;
+
+export function ContentListOnlyRow({ data, setIsMap }: CardList) {
+  let { pathname } = useLocation();
+
+  return (
+    <ContainerColumn>
+      <div className="wrapper">
+        {data &&
+          data.map((e: any, idx: number) => {
+            return (
+              <div key={idx} className="row">
                 <ContentCardRow
-                  key={idx}
+                  setIsMap={setIsMap}
                   data={e}
                   like={'none'}
                   remove={'inline'}
                 />
-              ) : (
-                <ContentCard data={e} />
-              );
-            })}
-        </div>
+              </div>
+            );
+          })}
       </div>
-    </Container>
+    </ContainerColumn>
   );
 }
-
-export default ContentListOnly;

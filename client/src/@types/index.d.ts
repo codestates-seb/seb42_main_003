@@ -24,3 +24,18 @@ interface MemberInfo {
   carName:string,
   oilInfo:string
 }
+
+//* id -> contentId로 수정함
+interface MyPlaceInfo {
+  contentId: number;
+  memo: string;
+  keyword: string[];
+  placeImg: string;
+  shared: true;
+  mapX: string;
+  mapY: string;
+  createdAt: string;
+  updatedAt: string;
+  address: string;
+  memberId: number;
+};

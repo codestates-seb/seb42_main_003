@@ -22,6 +22,7 @@ interface CardView {
   maxWidth?: string;
   remove?: string;
   edit?: string;
+  setIsMap?: (foo: any) => void;
 }
 
 const Container = styled('div')<CardView>`
@@ -32,6 +33,8 @@ const Container = styled('div')<CardView>`
   border-radius: 25px;
   background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg');
   background-size: cover;
+  max-width: 330px;
+  cursor: pointer;
 
   .content {
     width: auto;
@@ -157,10 +160,20 @@ const Container = styled('div')<CardView>`
     font-size: 13px;
   }
 `;
-export function ContentCard({ data, remove }: CardView) {
+export function ContentCard({ data, remove, setIsMap }: CardView) {
+  const navigate = useNavigate();
   const [isLike, setIsLike] = useState(false);
   return (
-    <Link to={`/content/${data.contentId}`} style={{ width: '100%' }}>
+    // <Link to={`/content/${data.contentId}`} style={{ width: '100%' }}>
+    <div
+      style={{ width: '100%', maxWidth: '420px' }}
+      onClick={() => {
+        console.log('a');
+        data.facltNm
+          ? navigate(`/content/${data.contentId}`)
+          : setIsMap && setIsMap(true);
+      }}
+    >
       <Container
         remove={remove}
         bg={data.placeImg ? data.placeImg : data.firstImageUrl}
@@ -189,8 +202,10 @@ export function ContentCard({ data, remove }: CardView) {
             <div className="address">
               {data.doNm} {data.sigunguNm}
             </div>
-          ) : (
+          ) : data.isShared ? (
             <div className="address_pick">user's Pick!</div>
+          ) : (
+            <div className="address_pick">my Camp!</div>
           )}
           <div className="body">
             {data.memo
@@ -225,7 +240,8 @@ export function ContentCard({ data, remove }: CardView) {
           )}
         </div>
       </Container>
-    </Link>
+    </div>
+    // {/* </Link> */}
   );
 }
 
@@ -237,6 +253,7 @@ const ContainerRow = styled('div')<CardView>`
   border-radius: 25px;
   background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg');
   background-size: cover;
+  cursor: pointer;
   .content {
     width: 50%;
     flex: 0.5;
@@ -421,7 +438,13 @@ const ContainerRow = styled('div')<CardView>`
 //   address: string;
 //   memberId: number;
 // };
-export function ContentCardRow({ data, remove, edit, like }: CardView) {
+export function ContentCardRow({
+  data,
+  remove,
+  edit,
+  like,
+  setIsMap,
+}: CardView) {
   const navigate = useNavigate();
   const [isLike, setIsLike] = useState(false);
   const [isShare, setIsShare] = useState(false);
@@ -445,9 +468,21 @@ export function ContentCardRow({ data, remove, edit, like }: CardView) {
   //TODO index.d.ts_MyPlaceInfo타입(MyPage에서 API 호출)
   //TODO 유저인포에 담긴 내가찾은 차박지 contentID와 동일하면 하트표시 없애기
   return (
-    <Link
-      to={`/content/${data.contentId}`}
+    // <Link
+    //   to={data.facltNm ? `/content/${data.contentId}` : '#'}
+    //   style={{ width: '100%', maxWidth: '420px' }}
+    //   onClick={() =>
+    //     data.facltNm ? setIsMap && setIsMap(false) : setIsMap && setIsMap(true)
+    //   }
+    // >
+    <div
       style={{ width: '100%', maxWidth: '420px' }}
+      onClick={() => {
+        console.log('a');
+        data.facltNm
+          ? navigate(`/content/${data.contentId}`)
+          : setIsMap && setIsMap(true);
+      }}
     >
       <ContainerRow
         remove={remove}
@@ -486,8 +521,10 @@ export function ContentCardRow({ data, remove, edit, like }: CardView) {
             <div className="address">
               {data.doNm} {data.sigunguNm}
             </div>
-          ) : (
+          ) : data.isShared ? (
             <div className="address_pick">user's Pick!</div>
+          ) : (
+            <div className="address_pick">my Camp!</div>
           )}
           <div className="body">
             {data.memo
@@ -554,6 +591,7 @@ export function ContentCardRow({ data, remove, edit, like }: CardView) {
           )}
         </div>
       </ContainerRow>
-    </Link>
+    </div>
+    // </Link>
   );
 }

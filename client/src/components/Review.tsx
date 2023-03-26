@@ -174,6 +174,11 @@ type ReviewType =
 export function Review({ isContent, isReview, setIsModal }: ReviewType) {
   // const [isModal, setIsModal] = useState(false);
   const dispatch = useAppDispatch();
+  const reviewDeleteHandler = () => {
+    console.log(
+      '각각의 캠핑장 상세페이지에 달린 리뷰를 삭제할 수 있는 API를 호출'
+    );
+  };
   return (
     <Container className="post">
       <div key={isReview.id} className="top">
@@ -195,7 +200,7 @@ export function Review({ isContent, isReview, setIsModal }: ReviewType) {
               setIsModal(true);
             }}
           />
-          <AiFillDelete className="delete" />
+          <AiFillDelete className="delete" onClick={reviewDeleteHandler} />
         </div>
       </div>
       <p className="bottom">{isReview.body}</p>

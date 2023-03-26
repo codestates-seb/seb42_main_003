@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Login from '../Login';
+import logo1 from '../../assets/logo1.png';
+import logo2 from '../../assets/logo2.png';
 
 interface SearchState {
   width_M?: string;
