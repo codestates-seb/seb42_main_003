@@ -203,9 +203,9 @@ function Login({ setIsLogin }: LoginInfo) {
       loginTs(data).then(data => {
         console.log(data);
         dispatch(setMemberInfo(data));
-      });
-      dispatch(login());
-      navigate('/');
+        dispatch(login());
+        navigate('/');
+      }).catch(err=>console.log(err))
       setIsLogin(false);
     }
   };
