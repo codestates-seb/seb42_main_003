@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Post } from '../components/Review';
 import { HiPlus, HiOutlineSearch } from 'react-icons/hi';
-import {AiOutlineComment} from 'react-icons/ai'
+import { AiOutlineComment } from 'react-icons/ai';
 import SearchBar from '../components/SearchBar';
 import { MobileHeader } from '../styles/mobileStyle';
 import Header from '../components/destop/Header';
@@ -13,6 +13,8 @@ import { PageHeader } from '../components/destop/PageHeader';
 import { Button } from '../styles/Button';
 import PostModal from '../components/PostModal';
 import { FloatButton } from '../styles/mapStyle';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
+import { click } from '../store/clickedSlice';
 
 export const Container = styled.div`
   @media (max-width: 768px) {
@@ -89,18 +91,19 @@ export const Container = styled.div`
   }
 `;
 export function Community() {
+  const dispatch = useAppDispatch();
   const [isCommunity, setIsCommunity] = useState<any>([]);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
   useEffect(() => {
-    getData('community').then(res => setIsCommunity(res));
+    getData('articles').then(res => setIsCommunity(res));
   }, []);
 
   return (
-    <Container>
+    <Container onClick={() => dispatch(click(false))}>
       <Header width_M={'1000px'}></Header>
       <div className="desktop">
-        <PageHeader 
-          title="커뮤니티" 
+        <PageHeader
+          title="커뮤니티"
           icon={<AiOutlineComment />}
           width="900px"
         />
@@ -108,7 +111,7 @@ export function Community() {
           <div className="desktop_header">
             <SearchbarPlain>
               <HiOutlineSearch className="search_icon" />
-              <input placeholder="검색"></input>
+              <input style={{ width: '100%' }} placeholder="검색"></input>
             </SearchbarPlain>
             <Button
               margin={'0'}

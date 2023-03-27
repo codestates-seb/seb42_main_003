@@ -14,14 +14,17 @@ import {
   ContentListOnlyRow,
 } from '../components/ContentListOnly';
 import MapContainer from '../components/map/MapContainer';
-import {RiPencilFill} from 'react-icons/ri'
-// import { useWindowSize } from '../hooks/useWindowSize';
+import { RiPencilFill } from 'react-icons/ri';
+import { useWindowSize } from '../hooks/useWindowSize';
 
-const Container = styled.div<UserPickProps>`
+const Container = styled.div<MapHeightProps>`
   .container_flex {
     display: flex;
     flex-direction: column;
     align-items: center;
+    @media (max-width: 768px) {
+      margin-bottom: 50px;
+    }
   }
   .content_body {
     display: flex;
@@ -38,7 +41,7 @@ const Container = styled.div<UserPickProps>`
     }
     @media (min-width: 768px) {
       width: 100%;
-      padding: 20px;
+      padding: 0 20px 20px 20px;
       max-width: 750px;
     }
   }
@@ -47,8 +50,8 @@ const Container = styled.div<UserPickProps>`
       display: none;
     }
     width: 100%;
-    /* height: ${props => props.map_height}; */
-    height: 670px;
+    height: ${props => props.map_height};
+    /* height: 670px; */
   }
 
   .map_field_mobile {
@@ -101,58 +104,56 @@ const Container = styled.div<UserPickProps>`
     }
   }
 `;
-type UserPickProps = { map_height?: string  };
-function UserPick({ map_height }: UserPickProps) {
+type MapHeightProps = { map_height?: string };
+function UserPick({ map_height }: MapHeightProps) {
   const dispatch = useAppDispatch();
   type Info = any | null;
   const [data, setData] = useState<Info>([]);
   const [isTab, setIsTab] = useState(1);
-  // const size = useWindowSize();
+  const size = useWindowSize();
   const [isMap, setIsMap] = useState<boolean>(false);
 
   useEffect(() => {
     isTab === 1
-      ? getData('shared').then(res => {
+      ? getData('pick-places/shared').then(res => {
           setData(res);
         })
       : getData('members').then(res => {
           setData(res.myPlaceInfos);
         });
   }, [isTab]);
-  console.log(isMap);
+
   return (
     <Container
       onClick={() => dispatch(click(false))}
-      // map_height={String(size.height)}
+      map_height={String(size.height)}
     >
       <div className="mapview_mobile">
         {isMap ? null : <MapViewButton setIsMap={setIsMap}></MapViewButton>}
       </div>
-      <Header width_M={'1000px'}></Header>
+      <Header width_M={'100vw'}></Header>
       <MobileHeader>
         <h1>유저픽</h1>
       </MobileHeader>
-      <PageHeader title={'유저픽'} icon={<RiPencilFill />} width="800px"></PageHeader>
       <div className="container_flex">
         <div className="content_body">
-          <div className="card_field">
-            <Tab color={'green'} state={isTab}>
-              <button onClick={() => setIsTab(1)}>유저가 찾은 차박지</button>
-              <button onClick={() => setIsTab(2)}>내가 찾은 차박지</button>
-            </Tab>
-            {/* {isMap ? null : (
-              <div className=''>
+          <div style={{ width: '100%', maxWidth: '600px' }}>
+            <PageHeader
+              title={'유저픽'}
+              icon={<RiPencilFill />}
+              width="600px"
+            ></PageHeader>
+            <div className="card_field">
+              <Tab color={'green'} state={isTab}>
+                <button onClick={() => setIsTab(1)}>유저가 찾은 차박지</button>
+                <button onClick={() => setIsTab(2)}>내가 찾은 차박지</button>
+              </Tab>
+              <div className={isMap ? 'mobile_hide' : ''}>
                 <ContentListOnlyColumn
                   setIsMap={setIsMap}
                   data={data}
                 ></ContentListOnlyColumn>
               </div>
-            )} */}
-            <div className={isMap ? 'mobile_hide' : ''}>
-              <ContentListOnlyColumn
-                setIsMap={setIsMap}
-                data={data}
-              ></ContentListOnlyColumn>
             </div>
           </div>
           <div className="map_field">

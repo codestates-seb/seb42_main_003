@@ -14,6 +14,7 @@ import { Button } from '../styles/Button';
 import { Modal } from '../styles/Modal';
 import { ReviewSubmit } from '../components/ReviewSubmit';
 import { reset } from '../store/reviewSlice';
+import { getDataTs } from '../api/tsapi';
 const Container = styled.div`
   .review_wrap {
     @media (max-width: 768px) {
@@ -67,19 +68,63 @@ const Container = styled.div`
 `;
 
 function Content() {
-  const [isReview, setIsReview] = useState<any>([]);
+  // const [isReview, setIsReview] = useState<any>([]);
   const [isModal, setIsModal] = useState(false);
   const [isContent, setIsContent] = useState<any>({});
   const dispatch = useAppDispatch();
   const { contentId } = useParams();
-
+  const isReview = [
+    {
+      createdAt: '2023-03-22T17:48:03',
+      updatedat: '2023-03-22T17:48:03',
+      reviewId: 1,
+      content: '반갑습니다.1125',
+      rating: 4,
+    },
+    {
+      createdAt: '2023-03-22T23:12:05',
+      updatedat: '2023-03-22T23:12:05',
+      reviewId: 2,
+      content: '처음뵙겠습니다.',
+      rating: 5,
+    },
+    {
+      createdAt: '2023-03-22T23:15:54',
+      updatedat: '2023-03-22T23:15:54',
+      reviewId: 3,
+      content: '처음뵙겠습니다.',
+      rating: 5,
+    },
+    {
+      createdAt: '2023-03-22T23:16:10',
+      updatedat: '2023-03-22T23:16:10',
+      reviewId: 4,
+      content: '처음뵙겠습니다.',
+      rating: 5,
+    },
+    {
+      createdAt: '2023-03-22T23:16:26',
+      updatedat: '2023-03-22T23:16:26',
+      reviewId: 5,
+      content: '처음뵙겠습니다.',
+      rating: 5,
+    },
+    {
+      createdAt: '2023-03-22T23:26:35',
+      updatedat: '2023-03-22T23:26:35',
+      reviewId: 6,
+      content: '처음뵙겠습니다.',
+      rating: 5,
+    },
+  ];
   useEffect(() => {
-    getData('review').then(res => setIsReview(res));
-    getData('content').then(res => {
-      const content = res.filter((ele: any) => {
-        return ele.contentId === contentId;
-      });
-      setIsContent(content[0]);
+    // getData('main?page=1').then(res => {
+    //   const content = res.filter((ele: any) => {
+    //     return ele.contentId === contentId;
+    //   });
+    //   setIsContent(content[0]);
+    getDataTs(`/main/${contentId}`).then(res => {
+      setIsContent(res);
     });
     return () => {
       dispatch(
