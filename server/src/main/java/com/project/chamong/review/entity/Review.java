@@ -1,5 +1,7 @@
 package com.project.chamong.review.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project.chamong.audit.Auditable;
 import com.project.chamong.camping.entity.Content;
 import com.project.chamong.member.entity.Member;
@@ -24,10 +26,12 @@ public class Review extends Auditable {
 
     private int rating;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "content_id")
     private Content contents;

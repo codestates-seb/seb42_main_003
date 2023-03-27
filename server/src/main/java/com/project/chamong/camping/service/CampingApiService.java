@@ -1,17 +1,20 @@
 package com.project.chamong.camping.service;
 
+import com.project.chamong.camping.dto.ContentResponseDto;
 import com.project.chamong.camping.entity.Content;
 import com.project.chamong.camping.repository.CampingApiRepository;
 import com.project.chamong.exception.BusinessLogicException;
 import com.project.chamong.exception.ExceptionCode;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import com.project.chamong.review.entity.Review;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CampingApiService {
     private CampingApiRepository campingApiRepository;
     Page<Content> content;
@@ -23,24 +26,74 @@ public class CampingApiService {
 
     // 특정 캠핑장 찾기
     public Content findContent(long contentId){
-        return findVerifiedContent(contentId);
-    }
-
-    // 캠핑장 전체 리스트
-    public Page<Content> findContents(int page) {
-        PageRequest pageRequest = PageRequest.of(page, pageSize);
-        content = campingApiRepository.findContents(pageRequest);
-        return content;
-    }
-
-    public Content findVerifiedContent(long contentId){
         Optional<Content> optionalContent =
                 campingApiRepository.findById(contentId);
         Content findContent =
                 optionalContent.orElseThrow(() ->
-                         new BusinessLogicException(ExceptionCode.CONTENT_NOT_FOUND));
+                        new BusinessLogicException(ExceptionCode.CONTENT_NOT_FOUND));
         return findContent;
     }
+
+    // 특정 캠핑장 찾기(response)
+    public ContentResponseDto findContentResponse(long contentId){
+        Optional<Content> optionalContent =
+                campingApiRepository.findById(contentId);
+        Content findContent =
+                optionalContent.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.CONTENT_NOT_FOUND));
+        return convertToContentResponse(findContent);
+    }
+
+    // 캠핑장 전체 리스트
+    public Page<ContentResponseDto> findContents(int page) {
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        Page<Content> contents = campingApiRepository.findContents(pageRequest);
+        return contents.map(this::convertToContentResponse);
+    }
+
+    private ContentResponseDto convertToContentResponse(Content content) {
+        ContentResponseDto dto = new ContentResponseDto();
+        List<Review> review = campingApiRepository.findReview(content.getContentId());
+
+        // review rating sum
+        double totalRating = review.stream()
+                        .mapToDouble(Review::getRating)
+                .average()
+                .orElse(0.0);
+        totalRating = Math.round(totalRating * 10) / 10.0;
+
+        dto.setContentId(content.getContentId());
+        dto.setFacltNm(content.getFacltNm());
+        dto.setLineIntro(content.getLineIntro());
+        dto.setIntro(content.getIntro());
+        dto.setThemaEnvrnCl(content.getThemaEnvrnCl());
+        dto.setMapX(content.getMapX());
+        dto.setMapY(content.getMapY());
+        dto.setAddr1(content.getAddr1());
+        dto.setTel(content.getTel());
+        dto.setHomepage(content.getHomepage());
+        dto.setResveCl(content.getResveCl());
+        dto.setDoNm(content.getDoNm());
+        dto.setManageSttus(content.getManageSttus());
+        dto.setInduty(content.getInduty());
+        dto.setFirstImageUrl(content.getFirstImageUrl());
+        dto.setCreatedtime(content.getCreatedtime());
+        dto.setModifiedtime(content.getModifiedtime());
+        dto.setFeatureNm(content.getFeatureNm());
+        dto.setBrazierCl(content.getBrazierCl());
+        dto.setGlampInnerFclty(content.getGlampInnerFclty());
+        dto.setCaravInnerFclty(content.getCaravInnerFclty());
+        dto.setSbrsCl(content.getSbrsCl());
+        dto.setAnimalCmgCl(content.getAnimalCmgCl());
+        dto.setExprnProgrmAt(content.getExprnProgrmAt());
+        dto.setExprnProgrm(content.getExprnProgrm());
+        dto.setPosblFcltyCl(content.getPosblFcltyCl());
+        dto.setLctCl(content.getLctCl());
+        dto.setTotalRating(totalRating);
+        dto.setReviews(review);
+        return dto;
+    }
+
 
     // 고캠핑 API
     public Content postCampingApi(Content content) {
@@ -48,7 +101,7 @@ public class CampingApiService {
     }
 
     // 고캠핑 API 특정 키워드 검색
-    public Page<Content> findKeyword(int page,
+    public Page<ContentResponseDto> findKeyword(int page,
                                      int keywordId) {
         PageRequest pageRequest = PageRequest.of(page, pageSize);
         switch (keywordId) {
@@ -85,11 +138,10 @@ public class CampingApiService {
                 content = campingApiRepository.findByThemaEnvrnClContaining("일몰", pageRequest);
                 break;
         }
-
-        return content;
+        return content.map(this::convertToContentResponse);
     }
 
-    public Page<Content> findCamping(int page,
+    public Page<ContentResponseDto> findCamping(int page,
                                      String keyword,
                                      int themaId,
                                      int placeId) {
@@ -222,6 +274,6 @@ public class CampingApiService {
         if (keyword == null || keyword.isEmpty())
             keyword = "none";
         content = campingApiRepository.findCamping(keyword, place, placeSecond, thema, pageRequest);
-        return content;
+        return content.map(this::convertToContentResponse);
     }
 }

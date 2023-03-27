@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-03-17T00:24:59+0900",
+    date = "2023-03-23T23:30:46+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.18 (Azul Systems, Inc.)"
 )
 @Component
@@ -91,9 +91,7 @@ public class CampingApiMapperImpl implements CampingApiMapper {
         posblFcltyCl = content.getPosblFcltyCl();
         lctCl = content.getLctCl();
 
-        int rating = 0;
-
-        CampingApiDto.response response = new CampingApiDto.response( contentId, facltNm, lineIntro, intro, themaEnvrnCl, mapX, mapY, addr1, tel, homepage, resveCl, doNm, manageSttus, induty, firstImageUrl, createdtime, modifiedtime, featureNm, brazierCl, glampInnerFclty, caravInnerFclty, sbrsCl, animalCmgCl, exprnProgrmAt, exprnProgrm, posblFcltyCl, lctCl, rating );
+        CampingApiDto.response response = new CampingApiDto.response( contentId, facltNm, lineIntro, intro, themaEnvrnCl, mapX, mapY, addr1, tel, homepage, resveCl, doNm, manageSttus, induty, firstImageUrl, createdtime, modifiedtime, featureNm, brazierCl, glampInnerFclty, caravInnerFclty, sbrsCl, animalCmgCl, exprnProgrmAt, exprnProgrm, posblFcltyCl, lctCl );
 
         return response;
     }

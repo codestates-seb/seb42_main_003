@@ -17,7 +17,8 @@ public enum ExceptionCode {
   ANSWER_UPDATE_NO_PERMISSION(404, "답변 작성자만 답변을 수정할 수 있습니다."),
   ANSWER_DELETE_NO_PERMISSION(404, "답변 작성자만 답변을 삭제할 수 있습니다."),
   CONTENT_NOT_FOUND(404, "해당 캠핑장 게시물이 존재하지 않습니다."),
-  REVIEW_NOT_FOUND(404, "해당 리뷰가 존재하지 않습니다.");
+  REVIEW_NOT_FOUND(404, "해당 리뷰가 존재하지 않습니다."),
+  BOOKMARK_NOT_FOUND(404, "해당 북마크가 존재하지 않습니다.");
 
   @Getter
   private int status;
