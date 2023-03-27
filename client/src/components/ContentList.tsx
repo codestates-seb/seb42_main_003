@@ -60,12 +60,47 @@ const Container = styled('div')<CardList>`
 `;
 
 function ContentList({ content, data, setData }: CardList) {
-  // type Info = any | null;
-
   // const [content, setContent] = useState<Info>([]);
   // const [data, setData] = useState<Info>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [itemIndex, setItemIndex] = useState(6);
+
+  //* 무한스크롤 유튜브
+  // window.onscroll = function () {
+  //   if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+  //     console.log('a');
+  //     setData(content.slice(data.length, data.length + 6));
+  //   }
+  // };
+  // console.log(document.body.offsetHeight);
+  // console.log(window.innerHeight);
+
+  // console.log(window.scrollY);
+  // useEffect(() => {
+  //   console.log(window.scrollY);
+  // }, [window.scrollY]);
+  window.addEventListener('scroll', e => {
+    const isScrollEnd =
+      window.innerHeight + window.scrollY + 200 > document.body.offsetHeight;
+    // console.log(isScrollEnd);
+    // console.log(data.length);
+    if (isScrollEnd && data)
+      setData(
+        data.concat(content && content.slice(data.length + 1, data.length + 11))
+      );
+    // setData(data.concat(content && content.slice(itemIndex, itemIndex + 6)));
+    // if (isScrollEnd && count < 15) {
+    //   for (let i = 0; i < 5; i++) {
+    //     const $newBox = document.createElement("div");
+    //     $newBox.className = "box";
+    //     $newBox.textContent = ++count;
+    //     document.querySelector("#container").appendChild($newBox);
+    //   }
+    // }
+  });
+
+  // type Info = any | null;
+
+  // const [isLoaded, setIsLoaded] = useState(false);
+  // const [itemIndex, setItemIndex] = useState(6);
 
   // useEffect(() => {
   // getData('main?page=1').then(res => {
@@ -75,37 +110,37 @@ function ContentList({ content, data, setData }: CardList) {
   //   });
   // }, []);
 
-  const testFetch = (delay = 1000) =>
-    new Promise(res => setTimeout(res, delay));
+  // const testFetch = (delay = 1000) =>
+  //   new Promise(res => setTimeout(res, delay));
 
-  const getMoreItem = async () => {
-    setIsLoaded(true);
-    await testFetch();
-    setItemIndex(i => i + 6);
-    setData(data.concat(content && content.slice(itemIndex, itemIndex + 6)));
-    setIsLoaded(false);
-  };
+  // const getMoreItem = async () => {
+  //   setIsLoaded(true);
+  //   await testFetch();
+  //   setItemIndex(i => i + 6);
+  //   setData(data.concat(content && content.slice(itemIndex, itemIndex + 6)));
+  //   setIsLoaded(false);
+  // };
 
-  const onIntersect: IntersectionObserverCallback = async (
-    [entry],
-    observer
-  ) => {
-    if (entry.isIntersecting && !isLoaded) {
-      if (data && data.length === itemIndex) {
-        observer.unobserve(entry.target);
-        await getMoreItem();
-        observer.observe(entry.target);
-      }
-      // else alert('데이터가 없습니다');
-    }
-  };
+  // const onIntersect: IntersectionObserverCallback = async (
+  //   [entry],
+  //   observer
+  // ) => {
+  //   if (entry.isIntersecting && !isLoaded) {
+  //     if (data && data.length === itemIndex) {
+  //       observer.unobserve(entry.target);
+  //       await getMoreItem();
+  //       observer.observe(entry.target);
+  //     }
+  //     // else alert('데이터가 없습니다');
+  //   }
+  // };
 
-  const { setTarget } = useIntersectionObserver({
-    root: null,
-    rootMargin: '0px',
-    threshold: 1,
-    onIntersect,
-  });
+  // const { setTarget } = useIntersectionObserver({
+  //   root: null,
+  //   rootMargin: '0px',
+  //   threshold: 1,
+  //   onIntersect,
+  // });
 
   return (
     <Container>
@@ -115,9 +150,9 @@ function ContentList({ content, data, setData }: CardList) {
             data.map((e: any, idx: number) => {
               return <ContentCard key={idx} data={e} />;
             })}
-          <div ref={setTarget}>
+          {/* <div ref={setTarget}>
             {isLoaded && <div style={{ height: '100px' }}>Loading..</div>}
-          </div>
+          </div> */}
         </div>
         <div className="item">
           <div className="item_wrapper">

@@ -12,6 +12,7 @@ import { click } from '../store/clickedSlice';
 import { MapViewButton } from '../components/MapViewButton';
 import MapContainer from '../components/map/MapContainer';
 import { getData } from '../api/api';
+import { getCampList } from '../api/tsapi';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -66,8 +67,9 @@ function Main() {
   useEffect(() => {
     // getData('main?page=1').then(res => {
     getData('content').then(res => {
+      // getCampList(1).then(res => console.log(res));
       setContent(res);
-      if (res) setData([...res.slice(0, 6)]);
+      if (res) setData([...res.slice(0, 10)]);
     });
   }, []);
 

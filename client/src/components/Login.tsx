@@ -199,12 +199,12 @@ function Login({ setIsLogin }: LoginInfo) {
     if (requestFieldCheck() && !emailErrorMessage && !passwordErrorMessage) {
       console.log('login error 없음');
       const data = { email, password };
-      //! api 오류로 주석처리해둠.
-      // loginTs(data).then(data => {
-      // });
-      dispatch(setMemberInfo(data));
+      loginTs(data).then(data => {
+        dispatch(setMemberInfo(data));
+      });
       dispatch(login());
       navigate('/');
+      setIsLogin(false);
     }
   };
   //회원가입 함수입니다.
