@@ -14,7 +14,8 @@ import {
   ContentListOnlyRow,
 } from '../components/ContentListOnly';
 import MapContainer from '../components/map/MapContainer';
-import { useWindowSize } from '../hooks/useWindowSize';
+import {RiPencilFill} from 'react-icons/ri'
+// import { useWindowSize } from '../hooks/useWindowSize';
 
 const Container = styled.div<UserPickProps>`
   .container_flex {
@@ -100,13 +101,13 @@ const Container = styled.div<UserPickProps>`
     }
   }
 `;
-type UserPickProps = { map_height?: string };
+type UserPickProps = { map_height?: string  };
 function UserPick({ map_height }: UserPickProps) {
   const dispatch = useAppDispatch();
   type Info = any | null;
   const [data, setData] = useState<Info>([]);
   const [isTab, setIsTab] = useState(1);
-  const size = useWindowSize();
+  // const size = useWindowSize();
   const [isMap, setIsMap] = useState<boolean>(false);
 
   useEffect(() => {
@@ -122,7 +123,7 @@ function UserPick({ map_height }: UserPickProps) {
   return (
     <Container
       onClick={() => dispatch(click(false))}
-      map_height={String(size.height)}
+      // map_height={String(size.height)}
     >
       <div className="mapview_mobile">
         {isMap ? null : <MapViewButton setIsMap={setIsMap}></MapViewButton>}
@@ -131,7 +132,7 @@ function UserPick({ map_height }: UserPickProps) {
       <MobileHeader>
         <h1>유저픽</h1>
       </MobileHeader>
-      <PageHeader title={'유저픽'}></PageHeader>
+      <PageHeader title={'유저픽'} icon={<RiPencilFill />} width="800px"></PageHeader>
       <div className="container_flex">
         <div className="content_body">
           <div className="card_field">

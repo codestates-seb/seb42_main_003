@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Post } from '../components/Review';
 import { HiPlus, HiOutlineSearch } from 'react-icons/hi';
+import {AiOutlineComment} from 'react-icons/ai'
 import SearchBar from '../components/SearchBar';
 import { MobileHeader } from '../styles/mobileStyle';
 import Header from '../components/destop/Header';
@@ -98,7 +99,11 @@ export function Community() {
     <Container>
       <Header width_M={'1000px'}></Header>
       <div className="desktop">
-        <PageHeader title={'커뮤니티'}></PageHeader>
+        <PageHeader 
+          title="커뮤니티" 
+          icon={<AiOutlineComment />}
+          width="900px"
+        />
         <div className="max_width">
           <div className="desktop_header">
             <SearchbarPlain>

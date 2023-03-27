@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import background from '../assets/PageHeader/pageImage.png'
 
 export const MobileHeader = styled.header`
   @media (min-width: 768px) {
@@ -12,6 +13,10 @@ export const MobileHeader = styled.header`
   width: 100%;
   height: 50px;
   background-color: white;
+  background-image: url(${background});
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: right;
   display: flex;
   align-items: center;
   justify-content: space-between;
