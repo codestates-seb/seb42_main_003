@@ -13,6 +13,7 @@ import { PageHeader } from '../components/destop/PageHeader';
 import { Button } from '../styles/Button';
 import PostModal from '../components/PostModal';
 import { FloatButton } from '../styles/mapStyle';
+import Pagination from '../components/destop/Pagination';
 
 export const Container = styled.div`
   @media (max-width: 768px) {
@@ -91,6 +92,15 @@ export const Container = styled.div`
 export function Community() {
   const [isCommunity, setIsCommunity] = useState<any>([]);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
+
+  const currentPage = 1;
+  const totalPages = 10;
+
+  const handlePageChange = (page: number) => {
+    console.log("Page changed to", page);
+  };
+
+
   useEffect(() => {
     getData('community').then(res => setIsCommunity(res));
   }, []);
@@ -147,6 +157,11 @@ export function Community() {
           </div>
         </div>
       </div>
+      <Pagination
+             currentPage={currentPage}
+             totalPages={totalPages}
+             onPageChange={handlePageChange}
+             />
       <Footer width_page={'1000px'} fix={'none'}></Footer>
     </Container>
   );
