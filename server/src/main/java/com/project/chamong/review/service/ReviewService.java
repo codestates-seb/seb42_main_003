@@ -5,10 +5,11 @@ import com.project.chamong.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
-public class ReviewService{
+public class ReviewService {
 
     private final ReviewRepository reviewRepository;
 
@@ -18,6 +19,10 @@ public class ReviewService{
 
     // 리뷰 작성
     public Review createReview(Review review){
+
+        review.setCreatedAt(LocalDateTime.now());
+        review.setUpdatedAt(LocalDateTime.now());
+
         return reviewRepository.save(review);
     }
 
