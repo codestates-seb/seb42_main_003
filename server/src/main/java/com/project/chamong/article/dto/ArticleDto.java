@@ -60,5 +60,11 @@ public class ArticleDto {
         private String articleImg;
 
     }
+    public class AuthorizedMember {
+        private Long id;
+        private String email;
+        private String nickname;
+        private List<String> roles;
+    }
 
-}
+    }

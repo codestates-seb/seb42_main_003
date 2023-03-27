@@ -59,14 +59,14 @@ public class ArticleController {
     }
 
     @PatchMapping("/articles/{id}")
-    public ResponseEntity<ArticleDto.Response> updateArticle(@PathVariable Long id, @RequestBody ArticleDto.Patch patchDto) {
-        ArticleDto.Response response = articleService.updateArticle(id, patchDto);
+    public ResponseEntity<ArticleDto.Response> updateArticle(@AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto, @PathVariable Long id, @RequestBody ArticleDto.Patch patchDto) {
+        ArticleDto.Response response = articleService.updateArticle(authorizedMemberDto, id, patchDto);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/articles/{id}")
-    public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
-        articleService.deleteArticle(id);
+    public ResponseEntity<Void> deleteArticle(@AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto,@PathVariable Long id) {
+        articleService.deleteArticle(authorizedMemberDto, id);
         return ResponseEntity.ok().build();
     }
 

@@ -58,7 +58,6 @@ public class ArticleService {
     public ArticleDto.Response getArticle(Long id, AuthorizedMemberDto authorizedMemberDto) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + id));
-
         Member findMember = memberService.findByEmail(authorizedMemberDto.getEmail());
         increaseViewCnt(id);
 
@@ -72,12 +71,13 @@ public class ArticleService {
     }
 
     // 인기글 조회 (5개씩, 1순위: 좋아요 수, 2순위: 조회수)
-    public List<ArticleDto.Response> getPopularArticlesForWeb(){
+    public List<ArticleDto.Response> getPopularArticlesForWeb() {
         List<Article> popularArticles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "likeCnt", "viewCnt")).stream().limit(5).collect(Collectors.toList());
         return popularArticles.stream().map(articleMapper::articleResponse).collect(Collectors.toList());
     }
+
     // app 화면에서는 3개씩 조회
-    public List<ArticleDto.Response> getPopularArticlesForApp(){
+    public List<ArticleDto.Response> getPopularArticlesForApp() {
         List<Article> popularArticles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "likeCnt", "viewCnt")).stream().limit(3).collect(Collectors.toList());
         return popularArticles.stream().map(articleMapper::articleResponse).collect(Collectors.toList());
     }
@@ -93,9 +93,14 @@ public class ArticleService {
     }
 
     // Article 수정
-    public ArticleDto.Response updateArticle(Long id, ArticleDto.Patch patchDto) {
+    public ArticleDto.Response updateArticle(AuthorizedMemberDto authorizedMemberDto, Long id, ArticleDto.Patch patchDto) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + id));
+
+        if(!article.isWriter(memberService.findByEmail(authorizedMemberDto.getEmail()))){
+            throw new IllegalStateException("Only the author of the article can delete it.");
+
+        }
 
         article.update(patchDto);
         articleRepository.save(article);
@@ -104,13 +109,22 @@ public class ArticleService {
 
     @Transactional
     // Article 삭제
-    public void deleteArticle(Long id) {
+    public void deleteArticle(AuthorizedMemberDto authorizedMemberDto, Long id) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + id));
 
+        Member member = memberRepository.findById(authorizedMemberDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + authorizedMemberDto.getId()));
+
+        if(!article.isWriter(member)){
+            throw new IllegalStateException("Only the author of the article can delete it.");
+        }
+
+        if (article.getMember().getId().equals(member)) {
+            throw new IllegalStateException("Only the author of the article can delete it.");
+        }
         List<Comment> comments = article.getComments();
         article.setComments(new ArrayList<>());
-
         // article 삭제 전에 연관된 comments 컬렉션 비우기
         comments.forEach(comment -> comment.setArticle(null));
         commentRepository.deleteAll(comments);
@@ -119,11 +133,10 @@ public class ArticleService {
         articleRepository.delete(article);
     }
 
-
-    // 조회수 증가
-    public void increaseViewCnt(Long id) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Article not found ID:" + id));
-        article.setViewCnt(article.getViewCnt() + 1);
+        // 조회수 증가
+        public void increaseViewCnt (Long id){
+            Article article = articleRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Article not found ID:" + id));
+            article.setViewCnt(article.getViewCnt() + 1);
+        }
     }
-}

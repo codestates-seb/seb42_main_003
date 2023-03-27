@@ -57,9 +57,8 @@ public class Article extends BaseTime {
         this.likeCnt--;
     }
 
-    public void removeComment(Comment comment){
-        comments.remove(comment);
-        comment.setArticle(null);
+    public boolean isWriter(Member member){
+        return this.member.getId().equals(member.getId());
     }
 
     public void update(ArticleDto.Patch patchDto) {
