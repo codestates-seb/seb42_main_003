@@ -8,22 +8,11 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-03-23T23:30:46+0900",
+    date = "2023-03-27T17:04:10+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.18 (Azul Systems, Inc.)"
 )
 @Component
 public class BookmarkMapperImpl implements BookmarkMapper {
-
-    @Override
-    public Bookmark bookmarkPostDtoToBookmark(BookmarkDto.Post requestBody) {
-        if ( requestBody == null ) {
-            return null;
-        }
-
-        Bookmark bookmark = new Bookmark();
-
-        return bookmark;
-    }
 
     @Override
     public BookmarkDto.Response bookmarkResponse(Bookmark bookmark) {
@@ -33,16 +22,13 @@ public class BookmarkMapperImpl implements BookmarkMapper {
 
         long bookmarkId = 0L;
         LocalDateTime createdAt = null;
-        LocalDateTime updatedat = null;
+        LocalDateTime updatedAt = null;
 
         bookmarkId = bookmark.getBookmarkId();
         createdAt = bookmark.getCreatedAt();
-        updatedat = bookmark.getUpdatedat();
+        updatedAt = bookmark.getUpdatedAt();
 
-        long memberId = 0L;
-        long contentId = 0L;
-
-        BookmarkDto.Response response = new BookmarkDto.Response( bookmarkId, memberId, contentId, createdAt, updatedat );
+        BookmarkDto.Response response = new BookmarkDto.Response( bookmarkId, createdAt, updatedAt );
 
         return response;
     }

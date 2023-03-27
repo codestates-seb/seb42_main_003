@@ -1,5 +1,6 @@
 package com.project.chamong.member.service;
 
+import com.project.chamong.auth.dto.AuthorizedMemberDto;
 import com.project.chamong.auth.repository.TokenRedisRepository;
 import com.project.chamong.auth.utils.CustomAuthorityUtils;
 import com.project.chamong.exception.BusinessLogicException;
@@ -9,11 +10,11 @@ import com.project.chamong.member.mapper.MemberMapper;
 import com.project.chamong.member.repository.MemberRepository;
 import com.project.chamong.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Service
@@ -27,13 +28,17 @@ public class MemberService {
   
   public Member saveMember(Member member){
     verifyExistEmail(member.getEmail());
-    member.setPassword(passwordEncoder.encode(member.getPassword()));
+    
+    if(member.getPassword() != null){
+      member.setPassword(passwordEncoder.encode(member.getPassword()));
+    }
+
     member.setRoles(CustomAuthorityUtils.crateRoles(member.getEmail()));
     return memberRepository.save(member);
   }
   
-  public Member getMyPage(){
-    return null;
+  public Member findMyPage(AuthorizedMemberDto authorizedMemberDto){
+    return findByEmail(authorizedMemberDto.getEmail());
   }
   @Transactional
   public Member updateMember(Member member, String email) {
@@ -59,5 +64,14 @@ public class MemberService {
     if (optionalMember.isPresent()){
       throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
     }
+  }
+  
+  public void logout(HttpServletRequest request, AuthorizedMemberDto authorizedMemberDto){
+    String accessToken = request.getHeader("Authorization").substring(7);
+    // 저장된 Refresh 토큰 삭제
+    redisRepository.deleteBy(authorizedMemberDto.getEmail());
+    
+    // Access 토큰을 저장하여 블랙리스트로 등록하여 이후 해당 토큰으로 요청시 거절함
+    redisRepository.setBlackList(accessToken);
   }
 }

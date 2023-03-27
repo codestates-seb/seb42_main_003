@@ -98,5 +98,4 @@ public class ContentResponseDto {
 
     // 섬, 호수, 강 등등 종류
     private String lctCl;
-
 }

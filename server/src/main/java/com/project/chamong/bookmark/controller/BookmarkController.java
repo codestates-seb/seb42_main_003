@@ -1,15 +1,16 @@
 package com.project.chamong.bookmark.controller;
 
 
-import com.project.chamong.auth.dto.AuthorizedMember;
-import com.project.chamong.bookmark.dto.BookmarkDto;
+import com.project.chamong.auth.dto.AuthorizedMemberDto;
 import com.project.chamong.bookmark.entity.Bookmark;
 import com.project.chamong.bookmark.mapper.BookmarkMapper;
 import com.project.chamong.bookmark.service.BookmarkService;
+import com.project.chamong.camping.dto.ContentResponseDto;
 import com.project.chamong.camping.entity.Content;
 import com.project.chamong.camping.service.CampingApiService;
 import com.project.chamong.member.entity.Member;
 import com.project.chamong.member.service.MemberService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,9 +38,10 @@ public class BookmarkController {
         this.mapper = mapper;
     }
 
+    // 북마크 추가
     @PostMapping("/{content-id}")
     public ResponseEntity postBookmark(@PathVariable("content-id") long contentId,
-                                       @AuthenticationPrincipal AuthorizedMember authorizedMember){
+                                       @AuthenticationPrincipal AuthorizedMemberDto authorizedMember){
         Content content = campingApiService.findContent(contentId);
         Bookmark bookmark = new Bookmark();
         Member findMember = memberService.findByEmail(authorizedMember.getEmail());
@@ -50,9 +52,17 @@ public class BookmarkController {
         return new ResponseEntity<>(mapper.bookmarkResponse(createdBookmark), HttpStatus.CREATED);
     }
 
+    // 북마크 취소
     @DeleteMapping("/{bookmark-id}")
     public ResponseEntity<?> deleteBookmark(@PathVariable("bookmark-id") long bookmarkId){
         bookmarkService.deleteBookmark(bookmarkId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // 위시리스트 조회
+    @GetMapping
+    public ResponseEntity<Page<ContentResponseDto>> getBookmark(@RequestParam int page){
+        Page<ContentResponseDto> contents = campingApiService.findBookmark(page);
+        return new ResponseEntity<>(contents, HttpStatus.OK);
     }
 }

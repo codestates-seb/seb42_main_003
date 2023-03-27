@@ -6,6 +6,7 @@ import com.project.chamong.camping.repository.CampingApiRepository;
 import com.project.chamong.exception.BusinessLogicException;
 import com.project.chamong.exception.ExceptionCode;
 import com.project.chamong.review.entity.Review;
+import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -46,14 +47,22 @@ public class CampingApiService {
 
     // 캠핑장 전체 리스트
     public Page<ContentResponseDto> findContents(int page) {
-        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         Page<Content> contents = campingApiRepository.findContents(pageRequest);
+        return contents.map(this::convertToContentResponse);
+    }
+
+    // 위시리스트 조회
+    public Page<ContentResponseDto> findBookmark(int page){
+        PageRequest pageRequest = PageRequest.of(page - 1 , pageSize);
+        Page<Content> contents = campingApiRepository.findBookmark(pageRequest);
         return contents.map(this::convertToContentResponse);
     }
 
     private ContentResponseDto convertToContentResponse(Content content) {
         ContentResponseDto dto = new ContentResponseDto();
         List<Review> review = campingApiRepository.findReview(content.getContentId());
+
 
         // review rating sum
         double totalRating = review.stream()
@@ -103,7 +112,7 @@ public class CampingApiService {
     // 고캠핑 API 특정 키워드 검색
     public Page<ContentResponseDto> findKeyword(int page,
                                      int keywordId) {
-        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         switch (keywordId) {
             // 오션뷰
             case 1:
@@ -146,7 +155,7 @@ public class CampingApiService {
                                      int themaId,
                                      int placeId) {
 
-        PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by("createdtime").descending());
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by("createdtime").descending());
         String place = null;
         //대구/경북, 경기/인천, 대구/충청 등등 두 개의 지역이 합쳐서 들어올 때
         String placeSecond = null;

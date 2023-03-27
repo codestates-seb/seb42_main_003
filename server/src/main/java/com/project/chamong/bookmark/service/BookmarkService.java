@@ -2,12 +2,12 @@ package com.project.chamong.bookmark.service;
 
 import com.project.chamong.bookmark.entity.Bookmark;
 import com.project.chamong.bookmark.repository.BookmarkRepository;
+import com.project.chamong.camping.repository.CampingApiRepository;
 import com.project.chamong.exception.BusinessLogicException;
 import com.project.chamong.exception.ExceptionCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -22,9 +22,6 @@ public class BookmarkService {
 
     // 북마크 추가
     public Bookmark createBookmark(Bookmark bookmark) {
-        bookmark.setCreatedAt(LocalDateTime.now());
-        bookmark.setUpdatedat(LocalDateTime.now());
-
         return bookmarkRepository.save(bookmark);
     }
 

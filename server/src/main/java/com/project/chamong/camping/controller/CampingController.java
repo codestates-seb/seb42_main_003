@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.constraints.Positive;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -86,8 +87,10 @@ public class CampingController {
                 mapX = 0.0;
                 mapY = 0.0;
             } else {
-                mapX = (double) item.get("mapX");
-                mapY = (double) item.get("mapY");
+                BigDecimal bdMapX = (BigDecimal) item.get("mapX");
+                BigDecimal bdMapY = (BigDecimal) item.get("mapY");
+                mapX = bdMapX.doubleValue();
+                mapY = bdMapY.doubleValue();
             }
             String addr1 = String.valueOf(item.get("addr1"));
             String tel = String.valueOf(item.get("tel"));

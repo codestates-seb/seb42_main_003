@@ -30,6 +30,15 @@ public interface CampingApiRepository extends JpaRepository<Content, Long> {
             "ORDER BY ratings DESC, total DESC", nativeQuery = true)
     Page<Content> findContents(Pageable pageable);
 
+    // 위시리스트
+    @Query(value = "SELECT content.*, review.*, COUNT(review.content_id) AS total, SUM(review.rating) AS ratings " +
+            "FROM content " +
+            "LEFT JOIN bookmark ON content.content_id = bookmark.content_id " +
+            "RIGHT JOIN review ON content.content_id = review.content_id " +
+            "GROUP BY content.content_id " +
+            "ORDER BY ratings DESC, total DESC", nativeQuery = true)
+    Page<Content> findBookmark(Pageable pageable);
+
     @Query(value = "SELECT r FROM Review r JOIN r.contents c WHERE " +
             "c.contentId = :contentId")
     List<Review> findReview(@Param("contentId") long contentId);
