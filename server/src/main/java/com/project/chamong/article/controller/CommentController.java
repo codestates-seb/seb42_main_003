@@ -17,7 +17,7 @@ public class CommentController {
     @PostMapping("/articles/{articleId}/comments")
     public ResponseEntity<CommentDto.Response> createComment(@AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto, @PathVariable Long articleId, @RequestBody CommentDto.Post postDto){
         CommentDto.Response response = commentService.createComment(authorizedMemberDto,articleId, postDto);
-        return ResponseEntity.ok(commentService.createComment(authorizedMemberDto, articleId,postDto));
+        return ResponseEntity.ok(response);
     }
 
     // 댓글 수정

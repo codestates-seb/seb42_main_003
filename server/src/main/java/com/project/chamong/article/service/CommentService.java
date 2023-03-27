@@ -34,21 +34,15 @@ public class CommentService {
         comment.setMember(member);
         Comment savedComment = commentRepository.save(comment);
 
-       // 기존 게시글의 댓글 리스트에 새로운 댓글 추가
-        article.getComments().add(savedComment);
-        articleRepository.save(article);
-//        commentRepository.save(comment);
-//        articleRepository.findById(articleId)
-//                .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + articleId));
         return commentMapper.commentResponse(savedComment);
     }
 
     // 댓글 수정
     @Transactional
-    public CommentDto.Response updateComment(AuthorizedMemberDto authorizedMemberDto,Long articleId, Long id, CommentDto.Patch patchDto) {
+    public CommentDto.Response updateComment(AuthorizedMemberDto authorizedMemberDto, Long articleId, Long id, CommentDto.Patch patchDto) {
         Comment comment = commentRepository.findByIdAndArticleId(id, articleId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + id));
-        if(!comment.getMember().getId().equals(authorizedMemberDto.getId())){
+        if (!comment.getMember().getId().equals(authorizedMemberDto.getId())) {
             throw new IllegalArgumentException("Only the author of the comment can delete it.");
         }
         Comment updatedComment = commentMapper.commentPatchDtoToComment(patchDto);
@@ -56,14 +50,15 @@ public class CommentService {
 
         return commentMapper.commentResponse(comment);
     }
+
     // 댓글 삭제
     @Transactional
     public void deleteComment(AuthorizedMemberDto authorizedMemberDto, Long articleId, Long id) {
         Comment comment = commentRepository.findByIdAndArticleId(id, articleId)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + id+"for Article ID: "+ articleId));
-        if(!comment.getMember().getId().equals(authorizedMemberDto.getId())){
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + id + "for Article ID: " + articleId));
+        if (!comment.getMember().getId().equals(authorizedMemberDto.getId())) {
             throw new IllegalArgumentException("Only the author of the comment can delete it.");
         }
-            commentRepository.deleteById(id);
+        commentRepository.deleteById(id);
     }
 }
