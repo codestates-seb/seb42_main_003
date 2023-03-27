@@ -26,6 +26,8 @@ import { Post } from '../components/Review';
 import { HistoryContainer } from '../components/HistoryContainer';
 import { useNavigate } from 'react-router-dom';
 
+const themes=['화장실','산','강','섬','숲','호수','해변','와이파이','전기','운동시설','물놀이','마트','편의점','체험활동','낚시','반려동물']
+
 //myPlaceInfos 내부 객체
 interface MyPlaceInfo {
   id: number;
@@ -330,28 +332,23 @@ interface AddCampModalProps {
   floatButtonHandler: () => void;
 }
 
-interface Themes {
-  keyword: string;
-  id: number;
-}
-
 function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
   const navigate = useNavigate();
   //내용을 저장합니다.
   const [memo, setMemo] = useState<string>('');
   //키워드 객체를 저장합니다.
-  const [keywords, setKeywords] = useState<Themes[]>([]);
+  const [keywords, setKeywords] = useState<string[]>([]);
   //MapGetPosition 컴포넌트로부터 클릭한 좌표를 받습니다.
   const [position, setPosition] = useState<[number, number] | null>(null);
   //MapGetPosition 컴포넌트로부터 좌표의 주소를 받습니다.
   const [address, setAddress] = useState<any>(null);
   //서버로부터 키워드 목록을 받아 추천 키워드로 띄워주는 state
-  const [themes, setThemes] = useState<Themes[]>([]);
+  // const [themes, setThemes] = useState<Themes[]>([]);
   //키워드를 눌렀을 시 포커스 효과와 키워드 목록을 띄워주는 state
   const [isKeywordFocus, setIsKeywordFocus] = useState<boolean>(false);
   //이미지를 저장하는 state
   // const [fileList, setFileList] = useState<FileList | null>(null);
-  const { imageSrc, imageChange, imageFormData, imageDelete } =
+  const {image, imageSrc, imageChange, imageDelete } =
     useUploadImage();
 
   const postCampHandler = () => {
@@ -363,21 +360,21 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       mapX: position[1],
       address,
     };
-    sendDataTs('pick-places', 'post', data).then(() => navigate('/mypage'));
+    sendFormDataTs('pick-places', 'post', data, image).then(() => navigate('/mypage'));
   };
   const keywordFocusHandler = () => {
     setIsKeywordFocus(true);
   };
 
-  const addKeywordHandler = (theme: Themes) => {
-    const isRepeat = keywords.find(prevTheme => theme.id === prevTheme.id);
+  const addKeywordHandler = (theme: string) => {
+    const isRepeat = keywords.find(prevTheme => '#'+theme === prevTheme);
     if (keywords.length <= 2 && !isRepeat)
-      setKeywords((prevState: Themes[]) => [...prevState, theme]);
+      setKeywords((prevState: string[]) => [...prevState,'#'+theme]);
   };
 
-  const removeKeywordHandler = (theme: Themes) => {
-    setKeywords((prevState: Themes[]) => {
-      return [...prevState.filter(prevTheme => theme.id !== prevTheme.id)];
+  const removeKeywordHandler = (theme: string) => {
+    setKeywords((prevState: string[]) => {
+      return [...prevState.filter(prevTheme =>!prevTheme.includes(theme))];
     });
   };
 
@@ -435,8 +432,8 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
             <ul className="tags">
               {keywords.map(keyword => {
                 return (
-                  <li key={keyword.id} className="keyword-box">
-                    <span className="keyword-title">{keyword.keyword}</span>
+                  <li key={keyword} className="keyword-box">
+                    <span className="keyword-title">{keyword}</span>
                     <span
                       className="box_close"
                       onClick={() => removeKeywordHandler(keyword)}
@@ -456,11 +453,11 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
               themes.map(theme => {
                 return (
                   <Button
-                    key={theme.id}
-                    id={String(theme.id)}
+                    key={theme}
+                    id={theme}
                     onClick={() => addKeywordHandler(theme)}
                   >
-                    {theme.keyword}
+                    {theme}
                   </Button>
                 );
               })}
@@ -473,9 +470,10 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
         <Button
           onClick={postCampHandler}
           border={'var(--chamong__color)'}
-          color={'var(--chamong__color)'}
-          hcolor={'white'}
-          hover={'var(--chamong__color)'}
+          color={'white'}
+          bg={'var(--chamong__color)'}
+          hcolor={'var(--chamong__color)'}
+          hover={'white'}
           hborder={'var(--chamong__color)'}
           padding="13px 15px"
           radius="12px"
