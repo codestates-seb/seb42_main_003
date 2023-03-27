@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { login } from '../store/isLoginSlice';
 import { setMemberInfo } from '../store/memberInfoSlice';
+import { KeyboardEvent } from 'react';
 
 export const Background = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
@@ -200,11 +201,18 @@ function Login({ setIsLogin }: LoginInfo) {
       console.log('login error 없음');
       const data = { email, password };
       loginTs(data).then(data => {
+        console.log(data);
         dispatch(setMemberInfo(data));
       });
       dispatch(login());
       navigate('/');
       setIsLogin(false);
+    }
+  };
+
+  const loginRequestKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      loginRequestHandler();
     }
   };
   //회원가입 함수입니다.
@@ -221,9 +229,7 @@ function Login({ setIsLogin }: LoginInfo) {
     let pwCheck = true;
     //* Email: a@a 형태 아니면? `{loginInfo.email} is not a valid email address.`
     if (
-      //! 로그인창에서 유효성 검사 진행하지 않도록 하는 부분
       !isUserState &&
-      //! 로그인창에서 유효성 검사 진행하지 않도록 하는 부분
       email.length >= 1 &&
       !email.match(
         /^[0-9a-zA-Z]([-_]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/
@@ -240,9 +246,7 @@ function Login({ setIsLogin }: LoginInfo) {
 
     //* Password: num + letter + symbol
     if (
-      //! 로그인창에서 유효성 검사 진행하지 않도록 하는 부분
       !isUserState &&
-      //! 로그인창에서 유효성 검사 진행하지 않도록 하는 부분
       password &&
       !password.match(
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]/
@@ -252,12 +256,10 @@ function Login({ setIsLogin }: LoginInfo) {
       setPasswordErrorMessage('영문, 숫자, 특수문자를 1개 이상 포함시켜주세요');
     }
 
-    //! 로그인창에서 유효성 검사 진행하지 않도록 하는 부분
     //* Password: 강력 비번형태 맞다면 or 로그인 창이라면 에러메시지 초기화
     if (pwCheck && password) {
       setPasswordErrorMessage('');
     }
-    //! 로그인창에서 유효성 검사 진행하지 않도록 하는 부분
     if (!isUserState && pwCheck && password) {
       if (password.length < 8) {
         setPasswordErrorMessage(`8글자 이상 입력해주세요`);
@@ -269,6 +271,9 @@ function Login({ setIsLogin }: LoginInfo) {
     if (!password) setPasswordErrorMessage('');
   };
 
+  const socialRequestHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    console.log('소셜로 로그인');
+  };
   return (
     <Background onClick={() => setIsLogin(false)}>
       <Container onClick={e => e.stopPropagation()}>
@@ -336,6 +341,7 @@ function Login({ setIsLogin }: LoginInfo) {
                   type={'password'}
                   value={password}
                   onChange={passwordHandler}
+                  onKeyPress={loginRequestKeyPress}
                 ></Input>
               </div>
               {passwordErrorMessage ? (
