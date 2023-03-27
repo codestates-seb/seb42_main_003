@@ -157,13 +157,23 @@ export const MyPageMemberInfo = styled(PageArticle)`
 `;
 
 export const PostArticle = styled(MyPageMemberInfo)`
+  @media screen and (min-width: 768px) {
+    border: none;
+    h2 {
+      font-size: var(--fs__h1);
+      font-weight: 500;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--chamong__color);
+      margin-bottom: 12px;
+    }
+  }
   img {
     width: 35px;
     height: 35px;
   }
   .member-info-upper {
     .member-info-nickname {
-      font-size: 16px;
+      font-size: var(--fs__h2);
       padding-bottom: 5px;
     }
     .member-created-at {
@@ -179,8 +189,34 @@ export const PostArticle = styled(MyPageMemberInfo)`
       }
     }
   }
+  p {
+    padding-top: 12px;
+    line-height: 1.3em;
+    padding-bottom: 24px;
+    @media screen and (min-width: 768px) {
+      padding-top: 30px;
+      min-height: 100px;
+    }
+  }
 `;
+
+export const CommentCounter = styled.div`
+  max-width: 1000px;
+  width: 100%;
+  padding: 12px;
+  border-bottom: 1px solid #d9d9d9;
+  @media screen and (min-width: 768px) {
+    border-bottom: 1px solid var(--chamong__color);
+  }
+`;
+
 export const CommentArticle = styled(MyPageMemberInfo)`
+  p {
+    padding-top: 12px;
+  }
+  @media screen and (min-width: 768px) {
+    border: none;
+  }
   img {
     width: 35px;
     height: 35px;
@@ -196,12 +232,16 @@ export const CommentArticle = styled(MyPageMemberInfo)`
       margin-left: 12px;
     }
   }
+  @media screen and (min-width: 768px) {
+    margin-top: 0px;
+  }
 `;
 
 export const PostCommentStyle = styled.form`
   position: fixed;
   display: flex;
   width: 100%;
+  max-width: 1000px;
   height: 128px;
   padding: 6px 12px 64px;
   border-radius: 25px 25px 0px 0px;
@@ -212,14 +252,39 @@ export const PostCommentStyle = styled.form`
     height: 100%;
     align-items: center;
     display: flex;
-    > button {
+    .post-comment-mobile-button {
       font-size: var(--fs__h1);
       color: var(--chamong__color);
       padding: 12px;
       cursor: pointer;
     }
+    ${Button} {
+      display: none;
+    }
   }
   @media screen and (min-width: 768px) {
-    display: none;
+    position: static;
+    background-color: transparent;
+    height: auto;
+    padding: 6px 12px;
+    .post-comment-input {
+      .post-comment-mobile-button {
+        display: none;
+      }
+      ${Button} {
+        display: inline-block;
+      }
+    }
   }
 `;
+
+export const ErrorPageStyle=styled(PageMain)`
+pointer-events: none;
+ height : 80vh;
+ align-items: center;
+ justify-content: center;
+ h1 {
+  font-size: var(--fs__h1);
+  padding:24px;
+ }
+`
