@@ -16,6 +16,7 @@ import { FloatButton } from '../styles/mapStyle';
 import Pagination from '../components/destop/Pagination';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { click } from '../store/clickedSlice';
+import { getDataTs } from '../api/tsapi';
 
 export const Container = styled.div`
   @media (max-width: 768px) {
@@ -104,7 +105,7 @@ export function Community() {
   };
 
   useEffect(() => {
-    getData('articles').then(res => setIsCommunity(res));
+    getDataTs('articles').then(res => setIsCommunity(res.content));
   }, []);
 
   return (

@@ -70,8 +70,8 @@ function Main() {
 
   useEffect(() => {
     getData(isURL).then(res => {
-      setContent(res);
-      if (res) setData(res);
+      setContent(res.content);
+      if (res) setData(res.content);
     });
   }, []);
 
