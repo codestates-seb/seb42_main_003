@@ -10,6 +10,7 @@ import { MobileHeader } from '../styles/mobileStyle';
 import { useState, useEffect } from 'react';
 import { getData } from '../api/api';
 import MapContainer from '../components/map/MapContainer';
+import {AiOutlineHeart} from 'react-icons/ai'
 const Container = styled.div`
   /* @media (min-width: 768px) {
       display: flex;
@@ -119,7 +120,7 @@ function Wishlist() {
       <MobileHeader>
         <h1>위시리스트</h1>
       </MobileHeader>
-      <PageHeader title={'위시리스트'}></PageHeader>
+      <PageHeader title={'위시리스트'} icon={<AiOutlineHeart/>} width="800px"></PageHeader>
       <div className="container_flex">
         <div className="content_body">
           <div className="card_field">
