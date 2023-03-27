@@ -10,6 +10,7 @@ import Nav from './components/mobile/Nav';
 import PostDetail from './pages/PostDetail';
 import Wishlist from './pages/Wishlist';
 import UserPick from './pages/UserPick';
+import { ErrorPage } from './pages/ErrorPage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/community/:postId" element={<PostDetail></PostDetail>} />
         <Route path="/wishlist" element={<Wishlist></Wishlist>} />
         <Route path="/userpick" element={<UserPick></UserPick>} />
+        <Route path="/*" element={<ErrorPage></ErrorPage>} />
       </Routes>
       <Nav></Nav>
     </BrowserRouter>
