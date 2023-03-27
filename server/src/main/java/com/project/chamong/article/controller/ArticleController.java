@@ -76,7 +76,7 @@ public class ArticleController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/articles/{id}/unlike")
+    @DeleteMapping("/articles/{id}/like")
     public ResponseEntity<Void> unlikeArticle(@PathVariable Long id, @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto) {
         articleLikeService.unlikeArticle(authorizedMemberDto, id);
         return ResponseEntity.ok().build();
