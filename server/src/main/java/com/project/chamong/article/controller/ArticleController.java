@@ -64,6 +64,7 @@ public class ArticleController {
         return ResponseEntity.ok(response);
     }
 
+
     @DeleteMapping("/articles/{id}")
     public ResponseEntity<Void> deleteArticle(@AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto,@PathVariable Long id) {
         articleService.deleteArticle(authorizedMemberDto, id);
@@ -75,7 +76,7 @@ public class ArticleController {
         articleLikeService.likeArticle(authorizedMemberDto, id);
         return ResponseEntity.noContent().build();
     }
-
+    // PostMapping -> DeleteMapping
     @DeleteMapping("/articles/{id}/like")
     public ResponseEntity<Void> unlikeArticle(@PathVariable Long id, @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto) {
         articleLikeService.unlikeArticle(authorizedMemberDto, id);
