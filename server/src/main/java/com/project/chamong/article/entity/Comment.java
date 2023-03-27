@@ -1,6 +1,6 @@
 package com.project.chamong.article.entity;
 
-import com.project.chamong.audit.Auditable;
+import com.project.chamong.audit.BaseTime;
 import com.project.chamong.member.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
 @Entity
 @Getter
 @Setter
-public class Comment extends Auditable {
+public class Comment extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

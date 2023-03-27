@@ -10,9 +10,17 @@ import java.time.LocalDateTime;
 public interface CommentMapper {
     Comment commentPostDtoToComment(CommentDto.Post postDto);
     Comment commentPatchDtoToComment(CommentDto.Patch patchDto);
-    CommentDto.Response commentResponse(Comment comment);
-
-    default LocalDateTime toLocalDateTime(String dateTimeString) {
-        return LocalDateTime.parse(dateTimeString);
+    default CommentDto.Response commentResponse(Comment comment){
+        return CommentDto.Response.builder()
+                .id(comment.getId())
+                .content(comment.getContent())
+                .articleId(comment.getArticle().getId())
+                .memberId(comment.getMember().getId())
+                .nickname(comment.getMember().getNickname())
+                .profileImg(comment.getMember().getProfileImg())
+                .createdAt(comment.getCreatedAt())
+                .updatedAt(comment.getUpdatedAt())
+                .build();
     }
+
 }

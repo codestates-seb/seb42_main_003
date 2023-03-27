@@ -18,10 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,6 +51,7 @@ public class ArticleService {
 
         return articleResponsePage;
     }
+
 
     // 상세페이지 - 게시글과 댓글 조회
     @Transactional
