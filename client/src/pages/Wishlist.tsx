@@ -10,8 +10,9 @@ import { MobileHeader } from '../styles/mobileStyle';
 import { useState, useEffect } from 'react';
 import { getData } from '../api/api';
 import MapContainer from '../components/map/MapContainer';
-import {AiOutlineHeart} from 'react-icons/ai'
-const Container = styled.div`
+import { AiOutlineHeart } from 'react-icons/ai';
+import { useWindowSize } from '../hooks/useWindowSize';
+const Container = styled.div<MapHeightProps>`
   /* @media (min-width: 768px) {
       display: flex;
       flex-direction: row;
@@ -45,7 +46,7 @@ const Container = styled.div`
     }
     @media (min-width: 768px) {
       width: 100%;
-      padding: 20px 40px;
+      padding: 0 20px 40px;
       max-width: 600px;
     }
   }
@@ -54,7 +55,8 @@ const Container = styled.div`
       display: none;
     }
     width: 100%;
-    height: 670px;
+    min-height: 765px;
+    height: ${props => props.map_height};
   }
   .mapview_mobile {
     @media (min-width: 768px) {
@@ -100,8 +102,9 @@ const Container = styled.div`
     cursor: pointer;
   }
 `;
-
-function Wishlist() {
+type MapHeightProps = { map_height?: string };
+function Wishlist(map_height: MapHeightProps) {
+  const size = useWindowSize();
   type Info = any | null;
   const [data, setData] = useState<Info>([]);
   const [isMap, setIsMap] = useState<boolean>(false);
@@ -112,22 +115,31 @@ function Wishlist() {
     });
   }, []);
   return (
-    <Container onClick={() => dispatch(click(false))}>
+    <Container
+      map_height={String(size.height)}
+      onClick={() => dispatch(click(false))}
+    >
       <div className="mapview_mobile">
         {isMap ? null : <MapViewButton setIsMap={setIsMap}></MapViewButton>}
       </div>
-      <Header width_M={'1000px'}></Header>
+      <Header width_M={'100vw'}></Header>
       <MobileHeader>
         <h1>위시리스트</h1>
       </MobileHeader>
-      <PageHeader title={'위시리스트'} icon={<AiOutlineHeart/>} width="800px"></PageHeader>
       <div className="container_flex">
         <div className="content_body">
-          <div className="card_field">
-            <ContentListOnlyRow
-              setIsMap={setIsMap}
-              data={data}
-            ></ContentListOnlyRow>
+          <div style={{ width: '100%', maxWidth: '500px' }}>
+            <PageHeader
+              title={'위시리스트'}
+              icon={<AiOutlineHeart />}
+              width="500px"
+            ></PageHeader>
+            <div className="card_field">
+              <ContentListOnlyRow
+                setIsMap={setIsMap}
+                data={data}
+              ></ContentListOnlyRow>
+            </div>
           </div>
           <div className="map_field">
             {Object.keys(data).length >= 1 && (

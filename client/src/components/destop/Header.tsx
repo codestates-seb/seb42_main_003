@@ -88,6 +88,8 @@ function Header({ width_M }: SearchState) {
   const navigate = useNavigate();
   const [isNav, setIsNav] = useState<Number | null>(null);
   const [isLogin, setIsLogin] = useState<boolean>(false);
+  const loginState = useAppSelector(state => state.isLogin);
+  const memberInfo = useAppSelector(state => state.memberInfo);
   const navMenu = [
     {
       id: 1,
@@ -105,9 +107,7 @@ function Header({ width_M }: SearchState) {
       link: '/community',
     },
   ];
-  const loginState = useAppSelector(state => state.isLogin);
-  const memberInfo = useAppSelector(state => state.memberInfo);
-  console.log(memberInfo.profileImg);
+
   return (
     <Container width_M={width_M}>
       {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}

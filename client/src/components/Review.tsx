@@ -51,7 +51,8 @@ const Container = styled.div`
     margin-right: 10px;
   }
   img {
-    width: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 100%;
     margin-right: 10px;
   }
@@ -161,12 +162,15 @@ const Container = styled.div`
 `;
 type ReviewType =
   | {
+      reviewId: number;
+      createdAt: string;
+      updatedat: string;
+      contend: string;
+      rating: number;
+
       id: number;
       image: string;
       user: string;
-      createdAt: string;
-      grade: number;
-      body: string;
       setIsModal: (foo: any) => void;
       isContent?: any;
     }
@@ -179,6 +183,13 @@ export function Review({ isContent, isReview, setIsModal }: ReviewType) {
       '각각의 캠핑장 상세페이지에 달린 리뷰를 삭제할 수 있는 API를 호출'
     );
   };
+  // {
+  //   createdAt: '2023-03-22T23:26:35',
+  //   updatedat: '2023-03-22T23:26:35',
+  //   reviewId: 6,
+  //   content: '처음뵙겠습니다.',
+  //   rating: 5,
+  // },
   return (
     <Container className="post">
       <div key={isReview.id} className="top">
@@ -190,7 +201,7 @@ export function Review({ isContent, isReview, setIsModal }: ReviewType) {
           </div>
           <div className="top_right">
             <AiFillStar className="star" />
-            <div className="grade">{isReview.grade}</div>
+            <div className="grade">{isReview.rating}</div>
           </div>
         </div>
         <div className="right">
@@ -203,7 +214,7 @@ export function Review({ isContent, isReview, setIsModal }: ReviewType) {
           <AiFillDelete className="delete" onClick={reviewDeleteHandler} />
         </div>
       </div>
-      <p className="bottom">{isReview.body}</p>
+      <p className="bottom">{isReview.content}</p>
     </Container>
   );
 }
@@ -229,9 +240,9 @@ export function Post({ data }: Community) {
         <div className="header">
           <div className="post_left">
             <div className="header_left">
-              <img src={data.image} alt="img"></img>
+              <img src={data.profileImg} alt="img"></img>
               <div className="top_mid">
-                <div>{data.user}</div>
+                <div>{data.nickname}</div>
                 <div className="date">{data.createdAt}</div>
               </div>
             </div>
@@ -242,11 +253,11 @@ export function Post({ data }: Community) {
           <div className="header_right">
             <div className="field">
               <AiOutlineEye className="post_icon" />
-              <span>{data.views}</span>
+              <span>{data.viewCnt}</span>
             </div>
             <div className="field">
               <BsTextCenter className="post_icon" />
-              <span>{data.comment}</span>
+              <span>{data.commentCnt}</span>
             </div>
             <div className="field heart">
               {data.islike ? (
@@ -254,7 +265,7 @@ export function Post({ data }: Community) {
               ) : (
                 <FcLikePlaceholder className="post_icon" />
               )}
-              <span>{data.like}</span>
+              <span>{data.likeCnt}</span>
             </div>
           </div>
         </div>

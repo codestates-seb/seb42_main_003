@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Post } from '../components/Review';
 import { HiPlus, HiOutlineSearch } from 'react-icons/hi';
-import {AiOutlineComment} from 'react-icons/ai'
+import { AiOutlineComment } from 'react-icons/ai';
 import SearchBar from '../components/SearchBar';
 import { MobileHeader } from '../styles/mobileStyle';
 import Header from '../components/destop/Header';
@@ -14,6 +14,8 @@ import { Button } from '../styles/Button';
 import PostModal from '../components/PostModal';
 import { FloatButton } from '../styles/mapStyle';
 import Pagination from '../components/destop/Pagination';
+import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
+import { click } from '../store/clickedSlice';
 
 export const Container = styled.div`
   @media (max-width: 768px) {
@@ -90,6 +92,7 @@ export const Container = styled.div`
   }
 `;
 export function Community() {
+  const dispatch = useAppDispatch();
   const [isCommunity, setIsCommunity] = useState<any>([]);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
@@ -97,20 +100,19 @@ export function Community() {
   const totalPages = 10;
 
   const handlePageChange = (page: number) => {
-    console.log("Page changed to", page);
+    console.log('Page changed to', page);
   };
 
-
   useEffect(() => {
-    getData('community').then(res => setIsCommunity(res));
+    getData('articles').then(res => setIsCommunity(res));
   }, []);
 
   return (
-    <Container>
+    <Container onClick={() => dispatch(click(false))}>
       <Header width_M={'1000px'}></Header>
       <div className="desktop">
-        <PageHeader 
-          title="커뮤니티" 
+        <PageHeader
+          title="커뮤니티"
           icon={<AiOutlineComment />}
           width="900px"
         />
@@ -118,7 +120,7 @@ export function Community() {
           <div className="desktop_header">
             <SearchbarPlain>
               <HiOutlineSearch className="search_icon" />
-              <input placeholder="검색"></input>
+              <input style={{ width: '100%' }} placeholder="검색"></input>
             </SearchbarPlain>
             <Button
               margin={'0'}
@@ -158,10 +160,10 @@ export function Community() {
         </div>
       </div>
       <Pagination
-             currentPage={currentPage}
-             totalPages={totalPages}
-             onPageChange={handlePageChange}
-             />
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
       <Footer width_page={'1000px'} fix={'none'}></Footer>
     </Container>
   );

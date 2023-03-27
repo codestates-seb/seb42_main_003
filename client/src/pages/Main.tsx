@@ -12,6 +12,7 @@ import { click } from '../store/clickedSlice';
 import { MapViewButton } from '../components/MapViewButton';
 import MapContainer from '../components/map/MapContainer';
 import { getData } from '../api/api';
+import { useWindowSize } from '../hooks/useWindowSize';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -59,20 +60,26 @@ const Container = styled.div`
 function Main() {
   type Info = any | null;
   // const [isClicked, setIsClicked] = useState<boolean>(false);
+  const size = useWindowSize();
+  const clicked = useAppSelector(state => state.clicked);
   const [content, setContent] = useState<Info>();
   const [data, setData] = useState<Info>();
   const [isMap, setIsMap] = useState<boolean>(false);
+  const [isURL, setIsURL] = useState<string>('main?page=1');
   const dispatch = useAppDispatch();
+
   useEffect(() => {
-    getData('main?page=1').then(res => {
+    getData(isURL).then(res => {
       setContent(res);
-      if (res) setData([...res.slice(0, 10)]);
+      if (res) setData(res);
     });
   }, []);
 
   return (
     <Container onClick={() => dispatch(click(false))}>
-      <MapViewButton isMap={isMap} setIsMap={setIsMap}></MapViewButton>
+      {clicked ? null : (
+        <MapViewButton isMap={isMap} setIsMap={setIsMap}></MapViewButton>
+      )}
       <Header></Header>
       <HeaderSearch view={'none'} />
       {isMap ? (
@@ -94,15 +101,33 @@ function Main() {
         </div>
       ) : null}
       <Banner></Banner>
-      <Category></Category>
-      <div className={isMap ? 'community' : ''}>
-        <CommunityBestM></CommunityBestM>
-      </div>
-      <ContentList
-        data={data}
-        setData={setData}
-        content={content}
-      ></ContentList>
+      {size.width > 768 ? (
+        <>
+          <Category setIsURL={setIsURL}></Category>
+          <div className={isMap ? 'community' : ''}>
+            <CommunityBestM></CommunityBestM>
+          </div>
+          <ContentList
+            data={data}
+            setData={setData}
+            content={content}
+            setContent={setContent}
+          ></ContentList>
+        </>
+      ) : clicked ? null : (
+        <>
+          <Category setIsURL={setIsURL}></Category>
+          <div className={isMap ? 'community' : ''}>
+            <CommunityBestM></CommunityBestM>
+          </div>
+          <ContentList
+            data={data}
+            setData={setData}
+            content={content}
+            setContent={setContent}
+          ></ContentList>
+        </>
+      )}
       <Footer></Footer>
     </Container>
   );
