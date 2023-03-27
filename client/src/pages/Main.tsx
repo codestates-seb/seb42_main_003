@@ -12,7 +12,6 @@ import { click } from '../store/clickedSlice';
 import { MapViewButton } from '../components/MapViewButton';
 import MapContainer from '../components/map/MapContainer';
 import { getData } from '../api/api';
-import { getCampList } from '../api/tsapi';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -65,9 +64,7 @@ function Main() {
   const [isMap, setIsMap] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    // getData('main?page=1').then(res => {
-    getData('content').then(res => {
-      // getCampList(1).then(res => console.log(res));
+    getData('main?page=1').then(res => {
       setContent(res);
       if (res) setData([...res.slice(0, 10)]);
     });
