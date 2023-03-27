@@ -56,7 +56,7 @@ export const sendFormDataTs = (
 export const loginTs = (data: {}) => {
   return axios({
     method: 'post',
-    url: 'http://localhost:3002/members/login',
+    url: `${url}/members/login`,
     data: data,
     headers: {
       Authorization: loadAccessToken(),
