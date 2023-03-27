@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getCategory } from '../api/api';
+import { MouseEvent } from 'react';
 import { Button } from '../styles/Button';
+import { getDataTs } from '../api/tsapi';
 
 export const Container = styled.div`
   width: 100%;
@@ -25,12 +26,51 @@ export const Container = styled.div`
     }
   }
 `;
-function Category() {
-  type CategoryType = { id: string; keyword: string | null };
-  const [isCategory, setIsCategory] = useState<CategoryType[]>([]);
-  useEffect(() => {
-    getCategory().then(res => setIsCategory(res));
-  }, []);
+type SetterType = { setIsURL: (foo: any) => void };
+function Category({ setIsURL }: SetterType) {
+  const isCategory = [
+    {
+      id: 9,
+      keyword: '인기',
+    },
+    {
+      id: 1,
+      keyword: '오션뷰',
+    },
+    {
+      id: 2,
+      keyword: '피톤치드',
+    },
+    {
+      id: 3,
+      keyword: '애견동반',
+    },
+    {
+      id: 4,
+      keyword: '운동',
+    },
+    {
+      id: 5,
+      keyword: '물놀이 시간',
+    },
+    {
+      id: 6,
+      keyword: '단풍',
+    },
+    {
+      id: 7,
+      keyword: '봄꽃여행',
+    },
+    {
+      id: 8,
+      keyword: '일몰장소',
+    },
+  ];
+  type CustomMouseEvent = MouseEvent<HTMLElement>;
+  const clickHandler = (event: CustomMouseEvent) => {
+    const categoryUrl = (event.target as HTMLLIElement).id;
+    setIsURL(`/main/search/keyword/${categoryUrl}?page=1`);
+  };
   return (
     <Container>
       <div className="main">
@@ -38,6 +78,7 @@ function Category() {
           return (
             <Button
               key={ele.id}
+              id={String(ele.id)}
               border={'var(--chamong__color)'}
               color={'var(--chamong__color)'}
               hcolor={'white'}
@@ -45,6 +86,7 @@ function Category() {
               hborder={'var(--chamong__color)'}
               padding="13px 15px"
               radius="16px"
+              onClick={clickHandler}
             >
               {ele.keyword}
             </Button>

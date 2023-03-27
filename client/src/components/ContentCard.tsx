@@ -184,7 +184,7 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
             className={!isLike ? 'heart' : 'active'}
             fill="none"
             onClick={e => {
-              e.preventDefault();
+              e.stopPropagation();
               setIsLike(!isLike);
             }}
           >
@@ -235,7 +235,8 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
             </div>
           ) : (
             <div className="userpick_bottom">
-              <div className="tag">{data.keyword[0].split(', ').join(' ')}</div>
+              {/* <div className="tag">{data.keywords.split(', ').join(' ')}</div> */}
+              {/* <div className="tag">{data.keywords.join(' ')}</div> */}
             </div>
           )}
         </div>
@@ -449,10 +450,7 @@ export function ContentCardRow({
   const [isLike, setIsLike] = useState(false);
   const [isShare, setIsShare] = useState(false);
   let { pathname } = useLocation();
-  // const [mycamp, setMycamp] = useState<MycampType>();
-  // useEffect(() => {
-  //   getData('userpick').then(res => setMycamp(res));
-  // });
+
   const visitedPlaceDeleteHandler = () => {
     //*FIXME 여행의 흔적 삭제하는 API 호출
     console.log('방문한 캠핑장 목록, members_visitedPlaceInfo에서 삭제');
@@ -468,17 +466,9 @@ export function ContentCardRow({
   //TODO index.d.ts_MyPlaceInfo타입(MyPage에서 API 호출)
   //TODO 유저인포에 담긴 내가찾은 차박지 contentID와 동일하면 하트표시 없애기
   return (
-    // <Link
-    //   to={data.facltNm ? `/content/${data.contentId}` : '#'}
-    //   style={{ width: '100%', maxWidth: '420px' }}
-    //   onClick={() =>
-    //     data.facltNm ? setIsMap && setIsMap(false) : setIsMap && setIsMap(true)
-    //   }
-    // >
     <div
       style={{ width: '100%', maxWidth: '420px' }}
       onClick={() => {
-        console.log('a');
         data.facltNm
           ? navigate(`/content/${data.contentId}`)
           : setIsMap && setIsMap(true);
@@ -496,7 +486,7 @@ export function ContentCardRow({
             className={!isLike ? 'heart' : 'active'}
             fill="none"
             onClick={e => {
-              e.preventDefault();
+              e.stopPropagation();
               setIsLike(!isLike);
             }}
           >
@@ -508,7 +498,7 @@ export function ContentCardRow({
           <AiFillDelete
             className="delete remove"
             onClick={e => {
-              e.preventDefault();
+              e.stopPropagation();
               visitedPlaceDeleteHandler();
             }}
           />
@@ -554,12 +544,12 @@ export function ContentCardRow({
             </div>
           ) : (
             <div className="userpick_bottom">
-              <div className="tag">{data.keyword.join(' ')}</div>
+              {/* <div className="tag">{data.keywords.join(' ')}</div> */}
               {pathname === '/mypage' ? (
                 <RiShareBoxLine
                   className="share_icon"
                   onClick={e => {
-                    e.preventDefault();
+                    e.stopPropagation();
                     setIsShare(true);
                   }}
                 />
@@ -578,7 +568,7 @@ export function ContentCardRow({
                       margin={'0px 10px'}
                       padding={'10px 16px'}
                       onClick={(e: any) => {
-                        e.preventDefault();
+                        e.stopPropagation();
                         sharedAddHandler();
                       }}
                     >
