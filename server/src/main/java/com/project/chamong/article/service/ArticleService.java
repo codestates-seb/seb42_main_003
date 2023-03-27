@@ -102,6 +102,7 @@ public class ArticleService {
         return articleMapper.articleResponse(article);
     }
 
+    @Transactional
     // Article 삭제
     public void deleteArticle(Long id) {
         Article article = articleRepository.findById(id)
@@ -109,12 +110,13 @@ public class ArticleService {
 
         List<Comment> comments = article.getComments();
         article.setComments(new ArrayList<>());
-        articleRepository.delete(article);
 
-        // 댓글 삭제
-        for (Comment comment : comments) {
-            commentRepository.delete(comment);
-        }
+        // article 삭제 전에 연관된 comments 컬렉션 비우기
+        comments.forEach(comment -> comment.setArticle(null));
+        commentRepository.deleteAll(comments);
+
+        // 게시글 삭제
+        articleRepository.delete(article);
     }
 
 

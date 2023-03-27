@@ -1,6 +1,7 @@
 package com.project.chamong.article.entity;
 
 import com.project.chamong.article.dto.ArticleDto;
+import com.project.chamong.article.dto.CommentDto;
 import com.project.chamong.audit.BaseTime;
 import com.project.chamong.member.entity.Member;
 import lombok.*;
@@ -56,13 +57,10 @@ public class Article extends BaseTime {
         this.likeCnt--;
     }
 
-//    public void setMember(Member member) {
-//        if (this.member != null) {
-//            this.member.getArticles().remove(this);
-//        }
-//        this.member = member;
-//        member.getArticles().add(this);
-//    }
+    public void removeComment(Comment comment){
+        comments.remove(comment);
+        comment.setArticle(null);
+    }
 
     public void update(ArticleDto.Patch patchDto) {
         if (patchDto.getTitle() != null) {
