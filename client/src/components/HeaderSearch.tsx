@@ -5,6 +5,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { remove, reset } from '../store/keywordSlice';
 import { click } from '../store/clickedSlice';
 import SearchModal from './SearchModal';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled('div')<Info>`
   padding: 10px 10px 10px 10px;
@@ -77,6 +78,7 @@ const Main = styled('div')<Info>`
     top: 23%;
     font-size: ${props => props.size || '27px'};
     color: var(--chamong__color);
+    cursor: pointer;
   }
 `;
 
@@ -85,16 +87,20 @@ interface SearchState {
   input?: string;
   place?: string;
   size?: string;
+  setIsURL?: (foo: any) => void;
 }
 type Info = { view?: string; input?: string; place?: string; size?: string };
-function HeaderSearch({ view, input, place, size }: SearchState) {
+function HeaderSearch({ setIsURL, view, input, place, size }: SearchState) {
   const dispatch = useAppDispatch();
   const isKeyword = useAppSelector(state => state.keyword);
   const isClicked = useAppSelector(state => state.clicked);
-
+  // /main/search/{thema_id}/{place_id}?
   const removeKeyword = (index: number) => {
     dispatch(remove(index));
   };
+  // console.log(isKeyword);
+  // console.log(isClicked);
+  const navigate = useNavigate();
   return (
     <Container view={view}>
       <Main input={input} place={place} size={size}>
@@ -103,8 +109,9 @@ function HeaderSearch({ view, input, place, size }: SearchState) {
             <div
               className="back"
               onClick={() => {
-                dispatch(click(false));
-                dispatch(reset([]));
+                // dispatch(click(false));
+                console.log('a');
+                // dispatch(reset([]));
               }}
             >
               <FiArrowLeft />
@@ -117,7 +124,19 @@ function HeaderSearch({ view, input, place, size }: SearchState) {
               dispatch(click(true));
             }}
           >
-            <HiOutlineSearch className="search_icon" />
+            <HiOutlineSearch
+              className="search_icon"
+              onClick={e => {
+                e.stopPropagation();
+                setIsURL &&
+                  setIsURL(
+                    `main/search/${isKeyword[0].id}/${isKeyword[1].id}?`
+                  );
+                dispatch(click(false));
+                navigate('/');
+                console.log('a');
+              }}
+            />
             <ul className="keywords">
               {isKeyword &&
                 isKeyword.map(keyword => {

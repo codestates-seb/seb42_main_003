@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useState, useRef } from 'react';
-import { getData } from '../../api/api';
+import { getDataTs } from '../../api/tsapi';
 
 interface CardList {
   data?: string[];
@@ -62,7 +62,9 @@ function CommunityBestM({}: CardList) {
   const [isCommunity, setIsCommunity] = useState<ArticleType[]>([]);
   const [isDot, setIsDot] = useState<number>(1);
   useEffect(() => {
-    getData('articles').then(res => setIsCommunity(res.slice(0, 3)));
+    getDataTs('articles/popular-app').then(res => {
+      if (res) setIsCommunity(res);
+    });
   }, []);
   const arr = [1, 2, 3];
   return (

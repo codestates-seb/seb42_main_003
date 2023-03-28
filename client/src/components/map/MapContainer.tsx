@@ -30,7 +30,6 @@ export function MapContainer({
   const [map, setMap] = useState<any>(null);
   const [currentCamp, setCurrentCamp] = useState<any>(null);
   const [markerList, setMarkerList] = useState<any>([]);
-  console.log(campList);
   useEffect(() => {
     // container.current=null;
     // console.log(container)
@@ -59,7 +58,7 @@ export function MapContainer({
     //마커 클래스 배열 생성
     if (map && campList) {
       if (Object.keys(campList).length >= 1)
-      map.panTo(new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX));
+        map.panTo(new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX));
       setCurrentCamp(null);
       mapReload();
       map.relayout();
@@ -98,7 +97,6 @@ export function MapContainer({
         });
         //클릭 이벤트리스너 추가
         kakao.maps.event.addListener(marker, 'click', () => {
-          console.log('clicked');
           map.panTo(new kakao.maps.LatLng(camp.mapY, camp.mapX));
           markerSizeHandler(marker);
           setCurrentCamp(camp);
@@ -120,9 +118,7 @@ export function MapContainer({
   };
 
   //test
-  useEffect(() => {
-    console.log(markerList);
-  }, [markerList]);
+  useEffect(() => {}, [markerList]);
 
   const mapReload = () => {
     if (markerList.length >= 1) {

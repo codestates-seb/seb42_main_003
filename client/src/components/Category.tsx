@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MouseEvent } from 'react';
-import { Button } from '../styles/Button';
+// import { Button } from '../styles/Button';
 import { getDataTs } from '../api/tsapi';
 
 export const Container = styled.div`
@@ -24,6 +24,25 @@ export const Container = styled.div`
     .main {
       width: 1174px;
     }
+  }
+`;
+export const Button = styled('button')`
+  padding: 13px 15px;
+  width: fit-content;
+  height: fit-content;
+  white-space: nowrap !important;
+  background: white;
+  color: var(--chamong__color);
+  border: 1px solid var(--chamong__color);
+  margin: 8px;
+  border-radius: 16px;
+  font-size: var(--fs--mid);
+  font-weight: 550;
+  cursor: pointer;
+  &.active {
+    background: var(--chamong__color);
+    color: white;
+    border: 1px solid var(--chamong__color);
   }
 `;
 type SetterType = { setIsURL: (foo: any) => void };
@@ -66,10 +85,12 @@ function Category({ setIsURL }: SetterType) {
       keyword: '일몰장소',
     },
   ];
+  const [isId, setIsId] = useState(9);
   type CustomMouseEvent = MouseEvent<HTMLElement>;
   const clickHandler = (event: CustomMouseEvent) => {
     const categoryUrl = (event.target as HTMLLIElement).id;
-    setIsURL(`/main/search/keyword/${categoryUrl}?page=1`);
+    if (categoryUrl === '9') setIsURL('main?page=1');
+    else setIsURL(`main/search?keyword=${categoryUrl}`);
   };
   return (
     <Container>
@@ -79,14 +100,11 @@ function Category({ setIsURL }: SetterType) {
             <Button
               key={ele.id}
               id={String(ele.id)}
-              border={'var(--chamong__color)'}
-              color={'var(--chamong__color)'}
-              hcolor={'white'}
-              hover={'var(--chamong__color)'}
-              hborder={'var(--chamong__color)'}
-              padding="13px 15px"
-              radius="16px"
-              onClick={clickHandler}
+              onClick={(e: any) => {
+                setIsId(ele.id);
+                clickHandler(e);
+              }}
+              className={ele.id === isId ? 'active' : ''}
             >
               {ele.keyword}
             </Button>
