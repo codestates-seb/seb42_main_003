@@ -99,7 +99,7 @@ export function Community() {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPages, setCurrentPages] = useState<number>(1);
 
-  const totalPage = Math.ceil(totalPages / 5);
+  const totalPage = Math.ceil(totalPages / 15);
   const currentPage = currentPages;
 
   const handlePageChange = (page: number) => {
@@ -112,7 +112,7 @@ export function Community() {
   useEffect(() => {
     getDataTs('articles').then(res => {
       setIsCommunity(res.content);
-      setTotalPages(res.content.length);
+      setTotalPages(res.totalElements);
     });
   }, []);
 
