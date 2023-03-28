@@ -5,7 +5,9 @@ import com.project.chamong.member.dto.MemberDto;
 import com.project.chamong.member.entity.Member;
 import com.project.chamong.member.mapper.MemberMapper;
 import com.project.chamong.member.service.MemberService;
+import com.project.chamong.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +24,8 @@ import java.io.IOException;
 public class MemberController {
   private final MemberMapper mapper;
   private final MemberService memberService;
+  private final S3Service s3Service;
+
   @PostMapping
   public ResponseEntity<?> postMember(@Valid @RequestBody MemberDto.Post postDto) {
     Member member = mapper.memberPostDtoToMember(postDto);
@@ -41,12 +45,16 @@ public class MemberController {
   public ResponseEntity<?> patchMember(@Valid @RequestPart("memberUpdate") MemberDto.Patch patchDto,
                                        @RequestPart MultipartFile profileImg,
                                        @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto) throws IOException {
-    
+
     Member savedMember = memberService.updateMember(mapper.memberPatchDtoToMember(patchDto), authorizedMemberDto.getEmail());
+    // 이미지 S3 저장
+    String fileName = s3Service.uploadFile(profileImg);
+    savedMember.setProfileImg(fileName);
     MemberDto.Response response = mapper.memberToMemberResponseDto(savedMember);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
-  
+
+
   @DeleteMapping
   public ResponseEntity<?> deleteMember(@AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto){
     memberService.deleteMember(authorizedMemberDto.getEmail());

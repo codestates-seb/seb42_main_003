@@ -45,7 +45,6 @@ public class MemberService {
     Member findMember = findByEmail(email);
 //    customBeanUtils.copyNonNullProperties(member, findMember);
     mapper.memberToMember(member, findMember);
-    findMember.setPassword(passwordEncoder.encode(member.getPassword()));
     return findMember;
   }
   @Transactional
