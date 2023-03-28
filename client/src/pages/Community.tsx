@@ -96,16 +96,19 @@ export function Community() {
   const dispatch = useAppDispatch();
   const [isCommunity, setIsCommunity] = useState<any>([]);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [currentPages, setCurrentPages] = useState<number>(1);
 
-  const currentPage = 1;
-  const totalPages = 10;
+  const totalPage = Math.ceil(totalPages/5);
+  const currentPage = currentPages;
 
   const handlePageChange = (page: number) => {
-    console.log('Page changed to', page);
+    getDataTs('articles', { page: page }).then(res => setIsCommunity(res.content));
+    setCurrentPages(page);
   };
 
   useEffect(() => {
-    getDataTs('articles').then(res => setIsCommunity(res.content));
+    getDataTs('articles').then(res => {setIsCommunity(res.content); setTotalPages(res.content.length);});
   }, []);
 
   return (
@@ -162,7 +165,7 @@ export function Community() {
       </div>
       <Pagination
         currentPage={currentPage}
-        totalPages={totalPages}
+        totalPages={totalPage}
         onPageChange={handlePageChange}
       />
       <Footer width_page={'1000px'} fix={'none'}></Footer>

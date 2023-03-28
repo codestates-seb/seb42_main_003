@@ -13,10 +13,10 @@ const Container = styled.div`
   margin-bottom: 20px;
 `;
 
-const Button = styled.button`
-  background-color: white;
+const Button = styled.button<{ isActive?: boolean, background?: string }>`
+  background-color: ${props => props.background};
   border: 1px solid var(--chamong__color);
-  color: var(--chamong__color);
+  color: ${props => props.color};
   font-size: 16px;
   padding: 8px 16px;
   margin: 0 4px;
@@ -43,8 +43,9 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
   const renderPageNumbers = () => {
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
+      const isActive = i === currentPage;
       pageNumbers.push(
-        <Button key={i} onClick={() => onPageChange(i)}>
+        <Button key={i} onClick={() => onPageChange(i)} background={isActive ? "var(--chamong__color)" : "white"}  color={isActive ? "white" : "var(--chamong__color)"}>
           {i}
         </Button>
       );
