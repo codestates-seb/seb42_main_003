@@ -4,17 +4,9 @@ import { useState, useEffect } from 'react';
 import CommunityBestD from './destop/CommunityBestD';
 import MyPick from './destop/MyPick';
 import { getDataTs } from '../api/tsapi';
+// import { debounce } from 'lodash';
 
 interface CardList {
-  // flex_dir?: string;
-  // bottom_justify?: string;
-  // fs_h1?: string;
-  // body?: string;
-  // heart?: string;
-  // radius?: string;
-  // img_width?: string;
-  // content_align?: string;
-  // line?: string;
   content?: any;
   data?: any;
   setData?: any;
@@ -61,28 +53,74 @@ const Container = styled('div')<CardList>`
   }
 `;
 
-function ContentList({ content, setContent, data, setData }: CardList) {
+function ContentList({ data, setData }: CardList) {
   const [num, setNum] = useState(2);
-  const [index, setIndex] = useState(0);
+  // const [index, setIndex] = useState(31);
 
-  //* 무한스크롤 유튜브
-  //* content = 30개
-  //* data = 6개
+  // useEffect(() => {
+  //   window.addEventListener('scroll', e => {
+  //     const isScrollEnd =
+  //       window.innerHeight + window.scrollY + 1000 > document.body.offsetHeight;
+  //     const isScrollstart = window.innerHeight > window.scrollY - 415;
+
+  //     let prevData = data;
+  //     let nextData = data;
+  //     //* 스크롤 올릴 때
+  //     if (data && isScrollstart && num > 2) {
+  //       nextData = data.slice(10, 20);
+  //       getDataTs(`main?page=${num - 1}`).then(res => {
+  //         const newData = res.content.concat(nextData);
+  //         setData(newData);
+  //       });
+
+  //       setNum(num - 1);
+  //     } else if (data && data.length === 40 && isScrollstart && num === 2) {
+  //       getDataTs(`main?page=${1}`).then(res => {
+  //         const newData = res.content;
+  //         setData(newData);
+  //       });
+  //     }
+
+  //     //* 스크롤 내릴 때
+  //     if (isScrollEnd && data) {
+  //       if (data && data.length > 30) {
+  //         prevData = data.slice(30, 40);
+  //       }
+  //       if (data && data.length === 30) {
+  //         prevData = data.slice(20, 30);
+  //       }
+  //       getDataTs(`main?page=${num}`).then(res => {
+  //         const newData = prevData.concat(res.content);
+  //         setData(newData);
+  //         setNum(num + 1);
+  //       });
+  //     }
+  //   });
+  // }, [data]);
   useEffect(() => {
     window.addEventListener('scroll', e => {
+      let prevData = data;
+      let nextData = data;
+      // const isScrollEnd =
+      //   window.innerHeight + window.scrollY + 1000 > document.body.offsetHeight;
+      const isScrollstart = window.innerHeight > window.scrollY - 415;
+      //* 화면크기 : window.innerHeight
+      //* 컨텐츠 : document.body.offsetHeight
+      //* 스크롤 위치 : window.scrollY
       const isScrollEnd =
-        window.innerHeight + window.scrollY + 200 > document.body.offsetHeight;
+        (document.body.offsetHeight - window.innerHeight) / 2 <= window.scrollY;
+      console.log(isScrollEnd);
+      //* 스크롤 내릴 때
       if (isScrollEnd && data) {
         getDataTs(`main?page=${num}`).then(res => {
-          setData(data.concat(res));
+          setData(data.concat(res.content));
           setNum(num + 1);
         });
       }
-      if (data && data.length > 30) {
-        setData(data.slice(0, 30));
-      }
     });
   }, [data]);
+  console.log(data);
+  console.log(num);
 
   return (
     <Container>

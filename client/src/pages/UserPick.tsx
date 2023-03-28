@@ -32,6 +32,14 @@ const Container = styled.div<MapHeightProps>`
     justify-content: center;
     width: 100%;
     max-width: 100vw;
+    height: 760px;
+    overflow: hidden;
+  }
+  .card_wrap {
+    width: 100%;
+    max-width: 650px;
+    height: 100vh;
+    overflow: scroll;
   }
   .card_field {
     @media (max-width: 768px) {
@@ -43,6 +51,7 @@ const Container = styled.div<MapHeightProps>`
       width: 100%;
       padding: 0 20px 20px 20px;
       max-width: 750px;
+      max-height: 500px;
     }
   }
   .map_field {
@@ -50,8 +59,7 @@ const Container = styled.div<MapHeightProps>`
       display: none;
     }
     width: 100%;
-    height: ${props => props.map_height};
-    /* height: 670px; */
+    /* height: ${props => props.map_height}; */
   }
 
   .map_field_mobile {
@@ -68,7 +76,6 @@ const Container = styled.div<MapHeightProps>`
     }
   }
   .map_header {
-    /* height: 50px; */
     @media (min-width: 768px) {
       display: none;
     }
@@ -137,7 +144,7 @@ function UserPick({ map_height }: MapHeightProps) {
       </MobileHeader>
       <div className="container_flex">
         <div className="content_body">
-          <div style={{ width: '100%', maxWidth: '600px' }}>
+          <div className="card_wrap">
             <PageHeader
               title={'유저픽'}
               icon={<RiPencilFill />}

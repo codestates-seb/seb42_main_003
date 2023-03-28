@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import { getData } from '../../api/api';
+import { getDataTs } from '../../api/tsapi';
 
 interface CardList {
   data?: string[];
@@ -66,7 +66,9 @@ const Container = styled.div`
 function CommunityBestD({}: CardList) {
   const [isCommunity, setIsCommunity] = useState<ArticleType[]>([]);
   useEffect(() => {
-    getData('articles').then(res => setIsCommunity(res.slice(0, 3)));
+    getDataTs('articles/popular-web').then(res => {
+      if (res) setIsCommunity(res);
+    });
   }, []);
   return (
     <Container>

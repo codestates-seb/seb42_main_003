@@ -1,16 +1,19 @@
 import styled from 'styled-components';
 import HeaderSearch from '../HeaderSearch';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxTK';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Login from '../Login';
 import logo from '../../assets/logo/logo_mascot.svg';
 import chamong from '../../assets/logo/logo_kor.svg';
+import { useLocation } from 'react-router-dom';
+import { navNumber } from '../../store/navSlice';
 
 interface SearchState {
   width_M?: string;
+  setIsURL?: (foo: any) => void;
 }
 type Info = { width_M?: string };
 
@@ -53,6 +56,7 @@ export const Container = styled.div<Info>`
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: flex-end;
   }
   h1 {
     color: var(--fontBlack__600);
@@ -84,12 +88,14 @@ export const Container = styled.div<Info>`
     }
   }
 `;
-function Header({ width_M }: SearchState) {
+function Header({ width_M, setIsURL }: SearchState) {
   const navigate = useNavigate();
-  const [isNav, setIsNav] = useState<Number | null>(null);
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const loginState = useAppSelector(state => state.isLogin);
   const memberInfo = useAppSelector(state => state.memberInfo);
+  const { pathname } = useLocation();
+  const isNav = useAppSelector(state => state.navmenu);
+  const dispatch = useAppDispatch();
   const navMenu = [
     {
       id: 1,
@@ -107,12 +113,24 @@ function Header({ width_M }: SearchState) {
       link: '/community',
     },
   ];
+  const navChangeHandler = (id: number) => {
+    dispatch(navNumber(id));
+  };
+  useEffect(() => {
+    console.log('change');
+  }, [pathname]);
 
   return (
     <Container width_M={width_M}>
       {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}
       <div className="header">
-        <div className="logo" onClick={() => navigate('/')}>
+        <div
+          className="logo"
+          onClick={() => {
+            dispatch(navNumber(0));
+            navigate('/');
+          }}
+        >
           <img src={logo} alt="logo" style={{ width: '35px' }}></img>
           <img src={chamong} alt="logo" style={{ width: '50px' }}></img>
         </div>
@@ -122,10 +140,17 @@ function Header({ width_M }: SearchState) {
               <h1
                 key={menu.id}
                 id={String(menu.id)}
-                onClick={() => setIsNav(menu.id)}
                 className={isNav === menu.id ? 'active' : ''}
               >
-                <Link to={menu.link}>{menu.title}</Link>
+                <Link
+                  to={`${menu.link}`}
+                  onClick={() => {
+                    console.log(menu.id);
+                    navChangeHandler(menu.id);
+                  }}
+                >
+                  {menu.title}
+                </Link>
               </h1>
             );
           })}
@@ -134,7 +159,7 @@ function Header({ width_M }: SearchState) {
               className="user"
               onClick={() => {
                 loginState ? navigate('/mypage') : setIsLogin(true);
-                setIsNav(null);
+                dispatch(navNumber(0));
               }}
             />
           ) : (
@@ -150,14 +175,19 @@ function Header({ width_M }: SearchState) {
               onClick={() => navigate('/mypage')}
             ></img>
           )}
-          <div className="search">
-            <HeaderSearch
-              view={'block'}
-              place={'13px'}
-              input={'45px'}
-              size={'22px'}
-            />
-          </div>
+          {pathname === '/' ? (
+            <div className="search">
+              (
+              <HeaderSearch
+                view={'block'}
+                place={'13px'}
+                input={'45px'}
+                size={'22px'}
+                setIsURL={setIsURL}
+              />
+              )
+            </div>
+          ) : null}
         </div>
       </div>
     </Container>

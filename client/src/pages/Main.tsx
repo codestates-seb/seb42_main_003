@@ -11,8 +11,8 @@ import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { click } from '../store/clickedSlice';
 import { MapViewButton } from '../components/MapViewButton';
 import MapContainer from '../components/map/MapContainer';
-import { getData } from '../api/api';
 import { useWindowSize } from '../hooks/useWindowSize';
+import { getDataTs } from '../api/tsapi';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,26 +62,32 @@ function Main() {
   // const [isClicked, setIsClicked] = useState<boolean>(false);
   const size = useWindowSize();
   const clicked = useAppSelector(state => state.clicked);
-  const [content, setContent] = useState<Info>();
+  // const [content, setContent] = useState<Info>();
   const [data, setData] = useState<Info>();
   const [isMap, setIsMap] = useState<boolean>(false);
   const [isURL, setIsURL] = useState<string>('main?page=1');
   const dispatch = useAppDispatch();
-
   useEffect(() => {
-    getData(isURL).then(res => {
-      setContent(res.content);
-      if (res) setData(res.content);
+    getDataTs(isURL).then(res => {
+      // getData('content').then(res => {
+      // console.log(res);
+      if (res) {
+        // setContent(res);
+        // setData(res.slice(0, 30));
+        // setContent(res.content);
+        if (isURL === 'main?page=1') setData(res.content);
+        else setData(res);
+      }
     });
-  }, []);
+  }, [isURL]);
 
   return (
     <Container onClick={() => dispatch(click(false))}>
       {clicked ? null : (
         <MapViewButton isMap={isMap} setIsMap={setIsMap}></MapViewButton>
       )}
-      <Header></Header>
-      <HeaderSearch view={'none'} />
+      <Header setIsURL={setIsURL}></Header>
+      <HeaderSearch setIsURL={setIsURL} view={'none'} />
       {isMap ? (
         <div className="map">
           <div className="map_header">
@@ -107,12 +113,7 @@ function Main() {
           <div className={isMap ? 'community' : ''}>
             <CommunityBestM></CommunityBestM>
           </div>
-          <ContentList
-            data={data}
-            setData={setData}
-            content={content}
-            setContent={setContent}
-          ></ContentList>
+          <ContentList data={data} setData={setData}></ContentList>
         </>
       ) : clicked ? null : (
         <>
@@ -120,12 +121,7 @@ function Main() {
           <div className={isMap ? 'community' : ''}>
             <CommunityBestM></CommunityBestM>
           </div>
-          <ContentList
-            data={data}
-            setData={setData}
-            content={content}
-            setContent={setContent}
-          ></ContentList>
+          <ContentList data={data} setData={setData}></ContentList>
         </>
       )}
       <Footer></Footer>
