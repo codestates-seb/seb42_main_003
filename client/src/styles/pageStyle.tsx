@@ -158,11 +158,12 @@ export const MyPageMemberInfo = styled(PageArticle)`
 
 export const PostArticle = styled(MyPageMemberInfo)`
   @media screen and (min-width: 768px) {
+    margin-top: 12px !important;
     border: none;
     h2 {
       font-size: var(--fs__h1);
       font-weight: 500;
-      padding-bottom: 12px;
+      padding-bottom: 24px;
       border-bottom: 1px solid var(--chamong__color);
       margin-bottom: 12px;
     }
@@ -181,22 +182,42 @@ export const PostArticle = styled(MyPageMemberInfo)`
     }
   }
   .post-info {
-    font-size: 16px;
-    span {
-      padding-right: 12px;
-      span {
-        padding-left: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 18px;
+    div { 
+      display: flex;
+      .post-info-span {
+        display: flex;
+        align-items: center;
+        span {
+          padding:12px;
+        }
       }
     }
+    button {
+        cursor: pointer;
+        transition: 0.1s;
+        &:hover {
+          transition:0.1s;
+          transform: scale(1.2);
+        }
+      }
   }
   p {
     padding-top: 12px;
     line-height: 1.3em;
     padding-bottom: 24px;
     @media screen and (min-width: 768px) {
-      padding-top: 30px;
+      font-size: var(--fs__big);
+      padding-top: 12px;
       min-height: 100px;
     }
+  }
+  .post-buttonbox {
+    display: flex;
+    justify-content: end;
   }
 `;
 
@@ -278,13 +299,34 @@ export const PostCommentStyle = styled.form`
   }
 `;
 
-export const ErrorPageStyle=styled(PageMain)`
-pointer-events: none;
- height : 80vh;
- align-items: center;
- justify-content: center;
- h1 {
-  font-size: var(--fs__h1);
-  padding:24px;
- }
-`
+export const ErrorPageStyle = styled(PageMain)`
+  pointer-events: none;
+  height: 80vh;
+  align-items: center;
+  justify-content: center;
+  h1 {
+    font-size: var(--fs__h1);
+    padding: 24px;
+  }
+`;
+
+export const ButtonBoxStyle = styled.div`
+  ${Button} {
+    display: flex;
+    align-items: center;
+  }
+  .button-desktop {
+    display: none;
+  }
+  .button-mobile {
+    display: inline-block;
+  }
+  @media screen and (min-width: 768px) {
+    .button-desktop {
+      display: inline-block;
+    }
+    .button-mobile {
+      display: none;
+    }
+  }
+`;

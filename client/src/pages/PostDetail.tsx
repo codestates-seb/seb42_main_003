@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { HiArrowSmLeft } from 'react-icons/hi';
 import { GrFormView } from 'react-icons/gr';
-import { FaThumbsUp } from 'react-icons/fa';
 import { BsPencilSquare } from 'react-icons/bs';
 import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
@@ -14,6 +13,7 @@ import {
   CommentArticle,
   PostCommentStyle,
   CommentCounter,
+  ButtonBoxStyle,
 } from '../styles/pageStyle';
 import { Input, TextArea, ImageInput } from '../styles/Input';
 import { getDataTs, sendDataTs, sendFormDataTs } from '../api/tsapi';
@@ -21,7 +21,11 @@ import { Button } from '../styles/Button';
 import { useAppSelector } from '../hooks/reduxTK';
 import { Modal } from '../styles/Modal';
 import { HiOutlineX } from 'react-icons/hi';
+import { FcLike } from 'react-icons/fc';
+import { AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineComment } from 'react-icons/ai';
 import useUploadImage from '../hooks/useUploadImage';
+import { PageHeader } from '../components/destop/PageHeader';
 
 function PostDetail() {
   const isLogin = useAppSelector((state) => state.isLogin);
@@ -29,13 +33,38 @@ function PostDetail() {
   const [postData, setPostData] = useState<ArticleType | null>(null);
   const [commentData, setCommentData] = useState<any>(null);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const [isAlreadyLike, setIsAlreadyLike] = useState(false);
 
   useEffect(() => {
-    getDataTs(`articles/${postId}`).then((data) =>{
+    getDataTs(`articles/${postId}`).then((data) => {
       setPostData(data);
+
       setCommentData(data.comments);
     });
   }, []);
+
+  const navigate = useNavigate();
+
+  const removeArticleHandler = () => {
+    sendDataTs(`articles/${postId}`, 'delete', {})
+      .then(() => {
+        console.log('removed');
+        navigate('/community');
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const likeHandler = () => {
+    sendDataTs(`articles/${postId}/like`, 'post', {})
+      .then(() => {
+        if (postData) postData.likeCnt += 1;
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsAlreadyLike(true);
+      });
+  };
 
   useEffect(() => {
     if (postData) console.log(postData);
@@ -43,17 +72,24 @@ function PostDetail() {
 
   return (
     <>
-      <Header></Header>
+      <Header width_M={'1000px'}></Header>
+      
       <MobileHeader>
         <h1>커뮤니티</h1>
-        <button>
+        <button onClick={()=>navigate(-1)}>
           <HiArrowSmLeft />
         </button>
-        <button>삭제</button>
+        {/* <button>삭제</button> */}
       </MobileHeader>
       {postData && (
         <PageMain bottom={'128px'}>
-          <ViewContent post={postData} setIsSubmit={setIsSubmit} />
+          <ViewContent
+            post={postData}
+            setIsSubmit={setIsSubmit}
+            setIsDelete={setIsDelete}
+            isAlreadyLike={isAlreadyLike}
+            likeHandler={likeHandler}
+          />
           <CommentCounter>
             댓글 {postData.commentCnt ? postData.commentCnt : '0'}개
           </CommentCounter>
@@ -70,23 +106,33 @@ function PostDetail() {
       {isSubmit && postData && (
         <PostEditModal setIsSubmit={setIsSubmit} postData={postData} />
       )}
+      {isDelete && (
+        <DeleteConfirmModal
+          removeArticleHandler={removeArticleHandler}
+          setIsDelete={setIsDelete}
+        />
+      )}
     </>
   );
 }
 
 interface PostProps {
   post: ArticleType;
+  setIsDelete: (T: boolean) => void;
   setIsSubmit: (T: boolean) => void;
+  isAlreadyLike: boolean;
+  likeHandler: () => void;
 }
 
-function ViewContent({ post, setIsSubmit }: PostProps) {
-  const navigate=useNavigate();
-  const isLogin=useAppSelector(state=>state.isLogin);
-  const memberInfo=useAppSelector(state=>state.memberInfo);
-
-  const removeArticleHandler=()=>{
-    sendDataTs(`articles/${post.id}`,'delete',{}).then(()=>navigate('/community'))
-  }
+function ViewContent({
+  post,
+  setIsSubmit,
+  setIsDelete,
+  isAlreadyLike,
+  likeHandler,
+}: PostProps) {
+  const isLogin = useAppSelector((state) => state.isLogin);
+  const memberInfo = useAppSelector((state) => state.memberInfo);
 
   return (
     <PostArticle>
@@ -102,53 +148,113 @@ function ViewContent({ post, setIsSubmit }: PostProps) {
           </div>
         </div>
         <div className='post-info'>
-          
-          <span className='post-info-span'>
-            <GrFormView />
-            <span>{post.memberId}</span>
-          </span>
-          <span className='post-info-span'>
-            <button>
-              <FaThumbsUp />
-            </button>
-            <span>{post.likeCnt}</span>
-          </span>
-          {isLogin&&memberInfo.id===post.memberId&&
-          <><span className='post-info-span'>
-            <Button
-              padding='8px'
-              border={'var(--chamong__color)'}
-              color={'var(--chamong__color)'}
-              hcolor={'white'}
-              hover={'var(--chamong__color)'}
-              hborder={'var(--chamong__color)'}
-              radius='12px'
-              width='100%'
-              onClick={()=>setIsSubmit(true)}
-              >
-              <BsPencilSquare />
-            </Button>
-          </span>
-          <span className='post-info-span'>
-            <Button
-              padding='8px'
-              border={'var(--chamong__color)'}
-              color={'var(--chamong__color)'}
-              hcolor={'white'}
-              hover={'var(--chamong__color)'}
-              hborder={'var(--chamong__color)'}
-              radius='12px'
-              width='100%'
-              onClick={()=>setIsSubmit(true)}
-              >
-              <HiOutlineX/>
-            </Button>
-          </span>
-          </>}
+          <div>
+            <span className='post-info-span'>
+              <AiOutlineEye />
+              <span>{post.memberId}</span>
+            </span>
+            <span className='post-info-span'>
+              <button onClick={likeHandler}>
+                <FcLike />
+              </button>
+              <span>{post.likeCnt}</span>
+            </span>
+          </div>
+          {isAlreadyLike && <div style={{fontSize:'14px',color:'var(--chamong__color)'}}>이미 좋아요를 누른 게시글입니다.</div>}
         </div>
       </div>
       <p>{post.content}</p>
+      <div className='post-buttonbox'>
+        {isLogin&&memberInfo.id===post.memberId && (
+          <ButtonBox setIsSubmit={setIsSubmit} setIsDelete={setIsDelete} />
+        )}
+      </div>
     </PostArticle>
+  );
+}
+
+interface ButtonBoxProps {
+  setIsSubmit: (T: boolean) => void;
+  setIsDelete: (T: boolean) => void;
+}
+
+function ButtonBox({ setIsSubmit, setIsDelete }: ButtonBoxProps) {
+  return (
+    <ButtonBoxStyle>
+      <span className='button-wrapper'>
+        <Button
+          padding='8px'
+          border={'var(--chamong__color)'}
+          color={'var(--chamong__color)'}
+          hcolor={'white'}
+          hover={'var(--chamong__color)'}
+          hborder={'var(--chamong__color)'}
+          radius='12px'
+          width='100%'
+          onClick={() => setIsSubmit(true)}>
+          <BsPencilSquare />
+          <span className='button-desktop'> 수정하기</span>
+        </Button>
+      </span>
+      <span className='button-wrapper'>
+        <Button
+          padding='8px'
+          border={'var(--chamong__color)'}
+          color={'var(--chamong__color)'}
+          hcolor={'white'}
+          hover={'var(--chamong__color)'}
+          hborder={'var(--chamong__color)'}
+          radius='12px'
+          width='100%'
+          onClick={() => setIsDelete(true)}>
+          <HiOutlineX />
+          <span className='button-desktop'> 삭제하기</span>
+        </Button>
+      </span>
+    </ButtonBoxStyle>
+  );
+}
+
+interface DeleteConfirmModalProps {
+  removeArticleHandler: () => void;
+  setIsDelete: (T: boolean) => void;
+}
+
+function DeleteConfirmModal({
+  removeArticleHandler,
+  setIsDelete,
+}: DeleteConfirmModalProps) {
+  return (
+    <Modal maxWidth='200px'>
+      <div className='wrapper'>
+        <div className='modal-text'>정말로 삭제할까요?</div>
+        <div className='modal-text'>
+          <Button
+            onClick={removeArticleHandler}
+            border={'var(--chamong__color)'}
+            color={'white'}
+            bg={'var(--chamong__color)'}
+            hcolor={'var(--chamong__color)'}
+            hover={'white'}
+            hborder={'var(--chamong__color)'}
+            padding='14px 15px'
+            radius='12px'>
+            삭제
+          </Button>
+          <Button
+            onClick={() => setIsDelete(false)}
+            radius='12px'
+            padding='14px 15px'
+            border={'var(--chamong__color)'}
+            color={'var(--chamong__color)'}
+            hcolor={'white'}
+            hover={'var(--chamong__color)'}
+            hborder={'var(--chamong__color)'}>
+            취소
+          </Button>
+        </div>
+      </div>
+    </Modal>
   );
 }
 
@@ -248,7 +354,7 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
 
   const articleSubmitHandler = () => {
     const data = { title, content };
-    sendFormDataTs('articles', 'patch', data, image).then(() =>
+    sendFormDataTs('articles', 'patch', data, image, 'data').then(() =>
       navigate('/articles')
     );
   };
@@ -282,14 +388,15 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
           )}
           <input type='file' id='file' onChange={imageChange}></input>
         </ImageInput>
-        <Input placeholder='제목' onChange={titleHandler} value={title}/>
+        <Input placeholder='제목' onChange={titleHandler} value={title} />
         <TextArea
-        value={content}
+          value={content}
           height={'200px'}
           placeholder='내용'
           onChange={contentHandler}
         />
         <Button
+          onClick={articleSubmitHandler}
           border={'var(--chamong__color)'}
           color={'white'}
           bg={'var(--chamong__color)'}

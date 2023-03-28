@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
-export const Modal = styled.div`
+interface ModalStyleProps {
+  maxWidth?:string;
+}
+export const Modal = styled.div<ModalStyleProps>`
   width: 100%;
   height: 100%;
   z-index: 500;
@@ -19,9 +22,10 @@ export const Modal = styled.div`
    top:0px;
    padding-bottom : 0px;
   }
+  
 
   .wrapper {
-    max-width: 1000px;
+    max-width: ${props=>props.maxWidth||'1000px'};
     width: 100%;
     background-color: white;
     padding: 16px;
@@ -60,6 +64,13 @@ export const Modal = styled.div`
         height: 300px;
       }
     }
+    .modal-text {
+    width: 100%;
+    text-align: center;
+    font-size:var(--fs__big);
+    font-weight: 500;
+    margin-bottom:0px !important;
+  }
   }
 `;
 

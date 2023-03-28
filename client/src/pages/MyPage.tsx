@@ -352,7 +352,7 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
     useUploadImage();
 
   const postCampHandler = () => {
-    if (!position) return;
+    if (!position||!memo||!address) return;
     const data = {
       memo,
       keywords,
@@ -360,7 +360,8 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       mapX: position[1],
       address,
     };
-    sendFormDataTs('pick-places', 'post', data, image).then(() => navigate('/mypage'));
+    sendFormDataTs('pick-places', 'post', data, image, 'postMyPlace').then(() => navigate('/mypage'))
+    .catch(err=>console.log(err))
   };
   const keywordFocusHandler = () => {
     setIsKeywordFocus(true);
@@ -504,7 +505,7 @@ function EditProfileModal({
 
   const profileSubmitHandler = () => {
     const data = { nickname, about, carName, oilInfo };
-    sendFormDataTs('members', 'patch', data, image).then(editProfileHandler);
+    sendFormDataTs('members', 'patch', data, image, 'memberUpdate').then(editProfileHandler);
   };
 
   return (
