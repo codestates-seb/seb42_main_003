@@ -33,9 +33,7 @@ public class ReviewService {
     // 리뷰 수정
     @Transactional
     public Review updateReview(Long reviewId, Review review){
-        System.out.println("review 아이디 : " + reviewId);
         Review findReview = findVerifiedReview(reviewId);
-
 
         Optional.ofNullable(review.getRating())
                 .ifPresent(rating -> findReview.setRating(rating));
