@@ -17,6 +17,7 @@ interface MapProps {
   level?: number;
   padding?: string;
   border_rd?: string;
+  clickable?:boolean;
 }
 export function MapContainer({
   campList,
@@ -24,6 +25,7 @@ export function MapContainer({
   level = 13,
   padding,
   border_rd,
+  clickable=true
 }: MapProps) {
   let lastestMarker: any = null;
   const container = useRef<HTMLDivElement | null>(null);
@@ -56,7 +58,7 @@ export function MapContainer({
 
   useEffect(() => {
     //마커 클래스 배열 생성
-    if (map && campList) {
+    if (map && Array.isArray(campList)) {
       if (Object.keys(campList).length >= 1)
         map.panTo(new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX));
       setCurrentCamp(null);
@@ -76,9 +78,10 @@ export function MapContainer({
           position: markerPosition,
           map: map,
           image: markerImageNormal,
-          clickable: true,
+          clickable:clickable
         });
         //호버 이벤트리스너
+        if(clickable)
         kakao.maps.event.addListener(marker, 'mouseover', () => {
           if (currentCamp !== camp) {
             marker.setImage(markerImageBig);

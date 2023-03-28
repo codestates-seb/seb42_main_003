@@ -273,7 +273,7 @@ export function ContentM({
         <h1 className="h1_title">지도</h1>
         <div className="map">
           {Object.keys(isContent).length >= 1 && (
-            <MapContainer campList={[isContent]} />
+            <MapContainer campList={[isContent]}  clickable={false} />
           )}
         </div>
       </div>
