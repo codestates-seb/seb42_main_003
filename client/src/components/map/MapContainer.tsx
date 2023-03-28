@@ -59,10 +59,11 @@ export function MapContainer({
     //마커 클래스 배열 생성
     if (map && campList) {
       if (Object.keys(campList).length >= 1)
-        map.panTo(new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX));
+      map.panTo(new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX));
       setCurrentCamp(null);
       mapReload();
       map.relayout();
+      map.setMaxLevel(13);
       //마커가 아닌 지도 클릭시 currentCamp=null, 마커사이즈 초기화
       kakao.maps.event.addListener(map, 'click', function (mouseEvent: any) {
         setCurrentCamp(null);
