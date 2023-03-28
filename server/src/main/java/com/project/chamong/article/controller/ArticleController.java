@@ -19,6 +19,7 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
     private final ArticleLikeService articleLikeService;
+
     // 인기글 보여주기 - web
     @GetMapping("/articles/popular-web")
     public ResponseEntity<List<ArticleDto.Response>> getPopularArticlesForWeb(){
@@ -76,7 +77,7 @@ public class ArticleController {
         articleLikeService.likeArticle(authorizedMemberDto, id);
         return ResponseEntity.noContent().build();
     }
-    // PostMapping -> DeleteMapping
+
     @DeleteMapping("/articles/{id}/like")
     public ResponseEntity<Void> unlikeArticle(@PathVariable Long id, @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto) {
         articleLikeService.unlikeArticle(authorizedMemberDto, id);

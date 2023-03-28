@@ -7,6 +7,8 @@ import com.project.chamong.article.mapper.ArticleMapper;
 import com.project.chamong.article.repository.ArticleRepository;
 import com.project.chamong.article.repository.CommentRepository;
 import com.project.chamong.auth.dto.AuthorizedMemberDto;
+import com.project.chamong.exception.BusinessLogicException;
+import com.project.chamong.exception.ExceptionCode;
 import com.project.chamong.member.entity.Member;
 import com.project.chamong.member.repository.MemberRepository;
 import com.project.chamong.member.service.MemberService;
@@ -18,8 +20,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,8 +31,8 @@ import java.util.stream.Collectors;
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
-    private final ArticleMapper articleMapper;
     private final MemberRepository memberRepository;
+    private final ArticleMapper articleMapper;
     private final MemberService memberService;
 
     // 게시글 전체 조회
@@ -42,11 +46,12 @@ public class ArticleService {
 
         for (ArticleDto.Response articleResponse : articleResponsePage.getContent()) {
             Article article = articleRepository.findById(articleResponse.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + articleResponse.getId()));
+                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
             Member member = article.getMember();
             articleResponse.setNickname(member.getNickname());
             articleResponse.setProfileImg(member.getProfileImg());
             articleResponse.setCarName(member.getCarName());
+
         }
 
         return articleResponsePage;
@@ -57,7 +62,7 @@ public class ArticleService {
     @Transactional
     public ArticleDto.Response getArticle(Long id, AuthorizedMemberDto authorizedMemberDto) {
         Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Article not found ID: " + id));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
         Member findMember = memberService.findByEmail(authorizedMemberDto.getEmail());
         increaseViewCnt(id);
 
@@ -72,13 +77,15 @@ public class ArticleService {
 
     // 인기글 조회 (5개씩, 1순위: 좋아요 수, 2순위: 조회수)
     public List<ArticleDto.Response> getPopularArticlesForWeb() {
-        List<Article> popularArticles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "likeCnt", "viewCnt")).stream().limit(5).collect(Collectors.toList());
+        List<Article> popularArticles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "likeCnt", "viewCnt"))
+                .stream().limit(5).collect(Collectors.toList());
         return popularArticles.stream().map(articleMapper::articleResponse).collect(Collectors.toList());
     }
 
     // app 화면에서는 3개씩 조회
     public List<ArticleDto.Response> getPopularArticlesForApp() {
-        List<Article> popularArticles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "likeCnt", "viewCnt")).stream().limit(3).collect(Collectors.toList());
+        List<Article> popularArticles = articleRepository.findAll(Sort.by(Sort.Direction.DESC, "likeCnt", "viewCnt"))
+                .stream().limit(3).collect(Collectors.toList());
         return popularArticles.stream().map(articleMapper::articleResponse).collect(Collectors.toList());
     }
 
@@ -97,7 +104,7 @@ public class ArticleService {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + id));
 
-        if(!article.isWriter(memberService.findByEmail(authorizedMemberDto.getEmail()))){
+        if (!article.isWriter(memberService.findByEmail(authorizedMemberDto.getEmail()))) {
             throw new IllegalStateException("Only the author of the article can delete it.");
 
         }
@@ -116,7 +123,7 @@ public class ArticleService {
         Member member = memberRepository.findById(authorizedMemberDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + authorizedMemberDto.getId()));
 
-        if(!article.isWriter(member)){
+        if (!article.isWriter(member)) {
             throw new IllegalStateException("Only the author of the article can delete it.");
         }
 
@@ -133,10 +140,10 @@ public class ArticleService {
         articleRepository.delete(article);
     }
 
-        // 조회수 증가
-        public void increaseViewCnt (Long id){
-            Article article = articleRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Article not found ID:" + id));
-            article.setViewCnt(article.getViewCnt() + 1);
-        }
+    // 조회수 증가
+    public void increaseViewCnt(Long id) {
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Article not found ID:" + id));
+        article.setViewCnt(article.getViewCnt() + 1);
     }
+}

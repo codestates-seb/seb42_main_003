@@ -17,8 +17,6 @@ public class Comment extends BaseTime {
     private Long id;
     @NotEmpty
     private String content;
-    private String profileImg;
-    private String nickname;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")

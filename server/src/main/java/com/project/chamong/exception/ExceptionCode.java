@@ -24,7 +24,9 @@ public enum ExceptionCode {
   My_PLACE_NOT_FOUND(404, "나만의 차박지 장소가 존재하지 않습니다."),
   My_PLACE_UPDATE_OR_DELETE_NO_PERMISSION(404, "나만의 차박지를 수정, 삭제할 권한이 없습니다. 등록자 본인만 수정, 삭제가 가능 합니다."),
   //REVIEW_NOT_FOUND(404, "해당 리뷰가 존재하지 않습니다."),
-  BOOKMARK_NOT_FOUND(404, "해당 북마크가 존재하지 않습니다.");
+  BOOKMARK_NOT_FOUND(404, "해당 북마크가 존재하지 않습니다."),
+  ARTICLE_NOT_FOUND(404,"해당게시물이 존재하지 않습니다." );
+
   @Getter
   private int status;
 
