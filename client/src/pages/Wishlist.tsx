@@ -114,6 +114,11 @@ function Wishlist(map_height: MapHeightProps) {
       setData(res);
     });
   }, []);
+
+useEffect(()=>{
+  console.log(data);
+},[data])
+
   return (
     <Container
       map_height={String(size.height)}
@@ -142,14 +147,14 @@ function Wishlist(map_height: MapHeightProps) {
             </div>
           </div>
           <div className="map_field">
-            {Object.keys(data).length >= 1 && (
+            {data&&Array.isArray(data)&&
               <MapContainer
                 level={13}
                 padding={'100px'}
                 campList={data}
                 border_rd={'0'}
               ></MapContainer>
-            )}
+            }
           </div>
           <div
             className={isMap ? 'map_field_mobile active' : 'map_field_mobile'}
@@ -160,7 +165,7 @@ function Wishlist(map_height: MapHeightProps) {
                 &times;
               </p>
             </div>
-            {Object.keys(data).length >= 1 && (
+            {data&&Array.isArray(data)&& (
               <MapContainer
                 level={12}
                 padding={'200px'}
