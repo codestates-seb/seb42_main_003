@@ -53,21 +53,21 @@ export function MapContainer({
     }
   }, []);
 
-  //마커 이미지 설정 변수
-  const imageSizeNormal = new kakao.maps.Size(37, 50);
-  const imageSizeBig = new kakao.maps.Size(60, 78);
-  const markerImageNormal = new kakao.maps.MarkerImage(
-    mapMarker,
-    imageSizeNormal
-  );
-  const markerImageBig = new kakao.maps.MarkerImage(
-    mapMarker,
-    imageSizeBig
-  );
-
   useEffect(() => {
     //마커 클래스 배열 생성
     if (map && Array.isArray(campList)) {
+      //마커 이미지 설정 변수
+      const imageSizeNormal = new kakao.maps.Size(37, 50);
+      const imageSizeBig = new kakao.maps.Size(60, 78);
+      const markerImageNormal = new kakao.maps.MarkerImage(
+        mapMarker,
+        imageSizeNormal
+      );
+      const markerImageBig = new kakao.maps.MarkerImage(
+        mapMarker,
+        imageSizeBig
+      );
+
       if (Object.keys(campList).length >= 1)
         map.panTo(
           new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX)
@@ -126,6 +126,18 @@ export function MapContainer({
 
   //마커 사이즈 수정
   const markerSizeHandler = (newMarker: any) => {
+    //마커 이미지 설정 변수
+    const imageSizeNormal = new kakao.maps.Size(37, 50);
+    const imageSizeBig = new kakao.maps.Size(60, 78);
+    const markerImageNormal = new kakao.maps.MarkerImage(
+      mapMarker,
+      imageSizeNormal
+    );
+    const markerImageBig = new kakao.maps.MarkerImage(
+      mapMarker,
+      imageSizeBig
+    );
+
     if (lastestMarker) {
       lastestMarker.setImage(markerImageNormal);
       lastestMarker.setZIndex(1);
