@@ -123,7 +123,7 @@ function Content() {
     //     return ele.contentId === contentId;
     //   });
     //   setIsContent(content[0]);
-    getDataTs(`/main/${contentId}`).then(res => {
+    getDataTs(`main/${contentId}`).then(res => {
       setIsContent(res);
     });
     return () => {
