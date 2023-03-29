@@ -62,14 +62,6 @@ function useUploadImage () {
     }
   },[image])
 
-  useEffect(()=>{
-    if(imageSrc.length>=1) console.log(imageSrc);
-  },[imageSrc])
-
-  useEffect(()=>{
-    if(image) console.log('imageFormSuccess!!');
-  },[imageFormData])
-
   return {image, imageName,imageSrc, imageChange, imageFormData, imageDelete}
 }
 
