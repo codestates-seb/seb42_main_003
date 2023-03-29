@@ -208,11 +208,11 @@ function Login({ setIsLoginModal }: LoginInfo) {
       const data = { email, password };
       loginTs(data)
         .then(data => {
-          console.log(data);
           // members/login에서 회원정보를 넘겨주지 않음
           // dispatch(setMemberInfo(data));
           dispatch(login());
           navigate('/');
+          dispatch(loginModal(false));
         })
         .catch(err => console.log(err));
       setIsLoginModal && setIsLoginModal(false);

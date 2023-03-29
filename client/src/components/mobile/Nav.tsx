@@ -112,12 +112,21 @@ function Nav() {
     setIsNav(Number((event.target as HTMLLIElement).id));
     const menu = event.target as HTMLLIElement;
 
-    if (menu.id === '4') {
+    if (menu.id === '4' || '5') {
       if (loginState) navigate(navMenu[+menu.id - 1].link);
       else {
-        dispatch(loginModal(true));
-        navigate('/');
-        setIsNav(1);
+        if (menu.id === '4') {
+          dispatch(loginModal(true));
+          navigate('/');
+          setIsNav(1);
+        } else if (menu.id === '5') {
+          if (loginState) navigate('/mypage');
+          else {
+            dispatch(loginModal(true));
+            navigate('/');
+            setIsNav(1);
+          }
+        }
       }
     } else {
       navigate(navMenu[+menu.id - 1].link);
