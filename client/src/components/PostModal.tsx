@@ -23,7 +23,7 @@ function PostModal({ setIsSubmit }: PostType) {
 
   const articleSubmitHandler = () => {
     const data = { title, content };
-    sendFormDataTs('articles', 'post', data, image, 'data').then(() =>
+    sendFormDataTs('articles', 'post', data, image, 'articleCreate','articleImg').then(() =>
       navigate('/articles')
     );
   };

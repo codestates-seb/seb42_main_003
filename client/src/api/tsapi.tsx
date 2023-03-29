@@ -49,11 +49,12 @@ export const sendFormDataTs = async (
   method: string,
   data: object,
   image: FileList | undefined,
-  key: string
+  key: string,
+  imageKey:string,
 ) => {
   let formData = new FormData();
   formData.append(key, JSON.stringify(data));
-  if (image) formData.append('image', image[0]);
+  if (image) formData.append(imageKey, image[0]);
   try {
     const res = await axios({
       method,
