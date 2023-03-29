@@ -21,10 +21,12 @@ import { MapGetPosition } from '../components/map/MapGetPosition';
 import { PageMain, PageArticle, MyPageMemberInfo } from '../styles/pageStyle';
 import ViewHistoryModal from '../components/mobile/ViewHistoryModal';
 import useUploadImage from '../hooks/useUploadImage';
-import { getDataTs, sendDataTs, sendFormDataTs } from '../api/tsapi';
+import { getDataTs, sendDataTs, sendFormDataTs, logoutTs } from '../api/tsapi';
 import { Post } from '../components/Review';
 import { HistoryContainer } from '../components/HistoryContainer';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch,useAppSelector } from '../hooks/reduxTK';
+import { logout } from '../store/isLoginSlice';
 
 const themes=['화장실','산','강','섬','숲','호수','해변','와이파이','전기','운동시설','물놀이','마트','편의점','체험활동','낚시','반려동물']
 
@@ -59,6 +61,9 @@ interface VisitedPlaceInfo {
 /* 배열: [string, 함수, 함수]  */
 
 function MyPage() {
+
+  
+
   const [addCampModal, setAddCampModal] = useState<boolean>(false);
   const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
   //viewHistory state는 모바일에서만 사용
@@ -80,7 +85,14 @@ function MyPage() {
     ArticleType[] | null
   >(null);
 
+  const dispatch=useAppDispatch();
+  const navigate=useNavigate();
+  const isLogin=useAppSelector(state=>state.isLogin);
+  console.log(isLogin)
+  
+
   useEffect(() => {
+    if(!isLogin) navigate('/error')
     //실제 서버 테스트때는 members/mypage로 바꿔야 합니다.
     getDataTs('members/mypage').then(data => {
       setMemberInfo(data.memberInfo[0]);
@@ -230,6 +242,13 @@ function MyPage() {
         <PageArticle>
           <h2>메뉴</h2>
           <Button
+          onClick={()=>{
+            logoutTs().then(()=>{
+              dispatch(logout());
+              alert('정상적으로 로그아웃 되었습니다.')
+              navigate('/')
+            })
+          }}
             border={'var(--chamong__color)'}
             color={'var(--chamong__color)'}
             hcolor={'white'}

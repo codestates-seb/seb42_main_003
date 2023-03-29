@@ -10,6 +10,10 @@ export const getDataTs = async (endpoint: string, params: {} = {}) => {
       method: 'get',
       url: `${url}/${endpoint}`,
       params: params,
+      headers: {
+        Authorization: loadAccessToken(),
+        Refresh: loadRefreshToken(),
+      },
     });
     return Promise.resolve(res.data);
   } catch (err) {
@@ -45,7 +49,7 @@ export const sendFormDataTs = async (
   method: string,
   data: object,
   image: FileList | undefined,
-  key:string
+  key: string
 ) => {
   let formData = new FormData();
   formData.append(key, JSON.stringify(data));
@@ -69,7 +73,7 @@ export const sendFormDataTs = async (
 
 export const loginTs = async (data: {}) => {
   try {
-    const res = await axios({
+    const response = await axios({
       method: 'post',
       url: `${url}/members/login`,
       data: data,
@@ -78,8 +82,50 @@ export const loginTs = async (data: {}) => {
         Refresh: loadRefreshToken(),
       },
     });
-    return Promise.resolve(res.data);
+    sessionStorage.setItem(
+      'authorization',
+      response.headers.authorization
+    );
+    localStorage.setItem('refresh', response.headers.refresh);
+    return Promise.resolve(response);
   } catch (err) {
     return Promise.reject(err);
   }
 };
+
+export const refreshTs=async()=>{
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${url}/members/token`,
+      headers: {
+        Refresh: loadRefreshToken(),
+      },
+    });
+    sessionStorage.setItem(
+      'authorization',
+      response.headers.authorization
+    );
+    return Promise.resolve(response);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
+export const logoutTs=async ()=>{
+  sessionStorage.removeItem('authorization');
+  localStorage.removeItem('refresh');
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${url}/members/logout`,
+      headers: {
+        Authorization: loadAccessToken()
+      },
+    });
+    return Promise.resolve(response);
+  }
+  catch (err) {
+    return Promise.reject(err);
+  }
+}
