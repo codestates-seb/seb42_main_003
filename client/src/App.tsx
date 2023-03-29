@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles/global.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { GlobalStyle } from './styles/globalStyle';
 import Main from './pages/Main';
 import MyPage from './pages/MyPage';
@@ -11,20 +11,37 @@ import PostDetail from './pages/PostDetail';
 import Wishlist from './pages/Wishlist';
 import UserPick from './pages/UserPick';
 import { ErrorPage } from './pages/ErrorPage';
+import { loginTs, refreshTs } from './api/tsapi';
+import { useDispatch } from 'react-redux';
+import { login } from './store/isLoginSlice';
 
 function App() {
+  const [isRefreshed,setIsRefreshed]=useState(false);
+  const dispatch=useDispatch();
+
+  useEffect(()=>{
+    refreshTs().then(()=>{
+      dispatch(login());
+      setIsRefreshed(true);
+    }).catch(err=>{
+      setIsRefreshed(true);
+      console.log(err)
+    })
+  },[])
+
   return (
     <BrowserRouter>
       <GlobalStyle />
       <Routes>
         <Route path="/" element={<Main></Main>} />
-        <Route path="/mypage" element={<MyPage></MyPage>} />
+        <Route path="/mypage" element={isRefreshed&&<MyPage></MyPage>} />
         <Route path="/content/:contentId" element={<Content></Content>} />
         <Route path="/community" element={<Community></Community>} />
         <Route path="/community/:postId" element={<PostDetail></PostDetail>} />
-        <Route path="/wishlist" element={<Wishlist></Wishlist>} />
+        <Route path="/wishlist" element={isRefreshed&&<Wishlist></Wishlist>} />
         <Route path="/userpick" element={<UserPick></UserPick>} />
         <Route path="/*" element={<ErrorPage></ErrorPage>} />
+        <Route path="/error" element={<ErrorPage></ErrorPage>} />
       </Routes>
       <Nav></Nav>
     </BrowserRouter>

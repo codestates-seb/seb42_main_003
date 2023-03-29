@@ -16,17 +16,24 @@ https://www.figma.com/file/QqbxOMuxsCglNtxJ2oAA6c/Untitled?node-id=0%3A1&t=yd5GY
     * 공용 컴포넌트는 components에 바로, 특정 페이지에서 사용할 컴포넌트는 폴더에 정리합니다.
     * 예시) mypage
     * 예시) Search.js
+  * pages
+    * 컴포넌트를 취합해 react-router에서 제공할 페이지 컴포넌트를 정리합니다.
   * utils
     * 함수들을 정리합니다.
+  @ types
+    * 전역 관리할 타입을 정리합니다.
   * api
     * api 호출시 사용될 함수를 정리합니다.
-  * redux
-    * redux 사용시 관련 파일을 정리합니다.
+  * store
+    * redux, redux toolkit 사용시 관련 파일을 정리합니다.
   * hooks
+    * 커스텀 hook를 정리합니다.
   * assets
+    * 사용된 이미지 애셋을 정리합니다.
   * styles
     * globalStyle.js
     * global.css
+    * 기타 styled components를 정리합니다.
 
 ## 코드 컨벤션
 
