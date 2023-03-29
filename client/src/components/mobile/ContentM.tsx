@@ -153,19 +153,8 @@ export function ContentM({
   setIsModal,
 }: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
-  // const [isContent, setIsContent] = useState<any>({});
   const [isLike, setIsLike] = useState(false);
 
-  // useEffect(() => {
-  //   getData('content').then(res => {
-  //     const content = res.filter((ele: any) => {
-  //       return ele.contentId === contentId;
-  //     });
-  //     setIsContent(content[0]);
-  //   });
-  //   window.scrollTo(0, 0);
-  // }, [contentId]);
-  // window.scrollTo(0, 0);
   return (
     <Container
       isContent={isContent}
@@ -273,7 +262,7 @@ export function ContentM({
         <h1 className="h1_title">지도</h1>
         <div className="map">
           {Object.keys(isContent).length >= 1 && (
-            <MapContainer campList={[isContent]}  clickable={false} />
+            <MapContainer campList={[isContent]} clickable={false} />
           )}
         </div>
       </div>

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MouseEvent } from 'react';
-// import { Button } from '../styles/Button';
-import { getDataTs } from '../api/tsapi';
 
 export const Container = styled.div`
   width: 100%;
@@ -90,7 +88,7 @@ function Category({ setIsURL }: SetterType) {
   const clickHandler = (event: CustomMouseEvent) => {
     const categoryUrl = (event.target as HTMLLIElement).id;
     if (categoryUrl === '9') setIsURL('main?page=1');
-    else setIsURL(`main/search?keyword=${categoryUrl}`);
+    else setIsURL(`main/search/keyword/${categoryUrl}?page=1`);
   };
   return (
     <Container>
