@@ -254,9 +254,7 @@ function MyPage() {
         <PageArticle>
           <h2>메뉴</h2>
           <Button
-          onClick={()=>{
-            
-          }}
+          onClick={logoutHandler}
             border={'var(--chamong__color)'}
             color={'var(--chamong__color)'}
             hcolor={'white'}
