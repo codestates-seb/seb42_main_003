@@ -95,7 +95,7 @@ function MyPage() {
     if(!isLogin) navigate('/error')
     //실제 서버 테스트때는 members/mypage로 바꿔야 합니다.
     getDataTs('members/mypage').then(data => {
-      setMemberInfo(data.memberInfo[0]);
+      setMemberInfo(data.memberInfo);
       setMyPlaceInfos(data.myPlaceInfos);
       setVisitedPlaceInfos(data.visitedPlaceInfos);
       setWrittenArticleInfos(data.writtenArticleInfos);
@@ -134,6 +134,18 @@ function MyPage() {
     setEditProfileModal(false);
     setViewHistoryModal(!viewHistoryModal);
   };
+
+  const logoutHandler=()=>{
+    logoutTs().then(()=>{
+      dispatch(logout());
+      alert('정상적으로 로그아웃 되었습니다.')
+      navigate('/')
+    }).catch((err)=>{
+      console.log(err);
+      dispatch(logout());
+      navigate('/')
+    })
+  }
 
   useEffect(() => {
     if (memberInfo) console.log(memberInfo.about);
@@ -243,11 +255,7 @@ function MyPage() {
           <h2>메뉴</h2>
           <Button
           onClick={()=>{
-            logoutTs().then(()=>{
-              dispatch(logout());
-              alert('정상적으로 로그아웃 되었습니다.')
-              navigate('/')
-            })
+            
           }}
             border={'var(--chamong__color)'}
             color={'var(--chamong__color)'}
