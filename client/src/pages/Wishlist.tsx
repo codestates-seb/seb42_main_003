@@ -12,6 +12,7 @@ import { getData } from '../api/api';
 import MapContainer from '../components/map/MapContainer';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { useWindowSize } from '../hooks/useWindowSize';
+import { useNavigate } from 'react-router';
 const Container = styled.div<MapHeightProps>`
   /* @media (min-width: 768px) {
       display: flex;
@@ -104,18 +105,22 @@ const Container = styled.div<MapHeightProps>`
 `;
 type MapHeightProps = { map_height?: string };
 function Wishlist(map_height: MapHeightProps) {
+  const isLogin=useAppSelector(state=>state.isLogin);
+  const navigate=useNavigate();
   const size = useWindowSize();
   type Info = any | null;
   const [data, setData] = useState<Info>([]);
   const [isMap, setIsMap] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   useEffect(() => {
+    if(!isLogin) navigate('/error')
     getData('wishlist').then(res => {
       setData(res);
     });
   }, []);
 
 useEffect(()=>{
+  if(!isLogin) navigate('/error')
   console.log(data);
 },[data])
 

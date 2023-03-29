@@ -94,6 +94,7 @@ export const Container = styled.div`
 `;
 export function Community() {
   const dispatch = useAppDispatch();
+  const isLogin=useAppSelector(state=>state.isLogin);
   const [isCommunity, setIsCommunity] = useState<any>([]);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -131,7 +132,7 @@ export function Community() {
               <HiOutlineSearch className="search_icon" />
               <input style={{ width: '100%' }} placeholder="검색"></input>
             </SearchbarPlain>
-            <Button
+            {isLogin&&<Button
               margin={'0'}
               padding={'12px 18px'}
               bg={'var(--chamong__color)'}
@@ -143,7 +144,7 @@ export function Community() {
               onClick={() => setIsSubmit(true)}
             >
               글쓰기
-            </Button>
+            </Button>}
           </div>
           {isSubmit ? (
             <div className="modal_submit">

@@ -10,6 +10,7 @@ import logo from '../../assets/logo/logo_mascot.svg';
 import chamong from '../../assets/logo/logo_kor.svg';
 import { useLocation } from 'react-router-dom';
 import { navNumber } from '../../store/navSlice';
+import { Button } from '../../styles/Button';
 
 interface SearchState {
   width_M?: string;
@@ -90,7 +91,7 @@ export const Container = styled.div<Info>`
 `;
 function Header({ width_M, setIsURL }: SearchState) {
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
   const loginState = useAppSelector(state => state.isLogin);
   const memberInfo = useAppSelector(state => state.memberInfo);
   const { pathname } = useLocation();
@@ -122,7 +123,7 @@ function Header({ width_M, setIsURL }: SearchState) {
 
   return (
     <Container width_M={width_M}>
-      {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}
+      {isLoginModal ? <Login setIsLoginModal={setIsLoginModal}></Login> : null}
       <div className="header">
         <div
           className="logo"
@@ -155,13 +156,28 @@ function Header({ width_M, setIsURL }: SearchState) {
             );
           })}
           {!loginState ? (
-            <FaUserCircle
-              className="user"
-              onClick={() => {
-                loginState ? navigate('/mypage') : setIsLogin(true);
-                dispatch(navNumber(0));
-              }}
-            />
+            // <FaUserCircle
+            //   className="user"
+            //   onClick={() => {
+            //     loginState ? navigate('/mypage') : setIsLoginModal(true);
+            //     dispatch(navNumber(0));
+            //   }}
+            // />
+            <Button
+            border={'var(--chamong__color)'}
+                color={'var(--chamong__color)'}
+                hcolor={'white'}
+                hover={'var(--chamong__color)'}
+                hborder={'var(--chamong__color)'}
+                padding="13px 15px"
+                radius="12px"
+                onClick={() => {
+                  loginState ? navigate('/mypage') : setIsLoginModal(true);
+                  dispatch(navNumber(0));
+                }}
+                >
+              로그인
+            </Button>
           ) : (
             <img
               style={{

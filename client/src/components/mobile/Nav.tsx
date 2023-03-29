@@ -102,7 +102,7 @@ const title: Title = [
 
 function Nav() {
   const [isNav, setIsNav] = useState<Number>(1);
-  const [isLogin, setIsLogin] = useState<Boolean>(false);
+  const [isLoginModal, setIsLoginModal] = useState<Boolean>(false);
   type CustomMouseEvent = MouseEvent<HTMLElement>;
 
   const clickHandler = (event: CustomMouseEvent) => {
@@ -111,15 +111,15 @@ function Nav() {
 
   return (
     <Container>
-      {isLogin ? <Login setIsLogin={setIsLogin}></Login> : null}
+      {isLoginModal ? <Login setIsLoginModal={setIsLoginModal}></Login> : null}
       {title.map(ele => {
         return (
           <div id={String(ele.id)} key={ele.id} onClick={clickHandler}>
             <MenuLink
               id={String(ele.id)}
               key={ele.id}
-              to={ele.id === 5 ? (isLogin ? ele.link : '#') : ele.link}
-              onClick={() => (ele.id === 5 ? setIsLogin(true) : null)}
+              to={ele.id === 5 ? (isLoginModal ? ele.link : '#') : ele.link}
+              onClick={() => (ele.id === 5 ? setIsLoginModal(true) : null)}
               className={isNav !== ele.id ? 'nav_box' : 'nav_box_active'}
             >
               {ele.id === 1 ? (
