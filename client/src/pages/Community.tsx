@@ -17,6 +17,8 @@ import Pagination from '../components/destop/Pagination';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { click } from '../store/clickedSlice';
 import { getDataTs } from '../api/tsapi';
+import { useNavigate } from 'react-router-dom';
+import Login from '../components/Login';
 
 export const Container = styled.div`
   @media (max-width: 768px) {
@@ -93,13 +95,15 @@ export const Container = styled.div`
   }
 `;
 export function Community() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const isLogin=useAppSelector(state=>state.isLogin);
+
   const [isCommunity, setIsCommunity] = useState<any>([]);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
+
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPages, setCurrentPages] = useState<number>(1);
-
+  const isLogin = useAppSelector(state => state.isLogin);
   const totalPage = Math.ceil(totalPages / 15);
   const currentPage = currentPages;
 
@@ -116,7 +120,11 @@ export function Community() {
       setTotalPages(res.totalElements);
     });
   }, []);
-
+  console.log(isSubmit);
+  const submitHandler = () => {
+    if (isLogin) setIsSubmit(true);
+    else navigate('/mypage');
+  };
   return (
     <Container onClick={() => dispatch(click(false))}>
       <Header width_M={'1000px'}></Header>
@@ -132,19 +140,21 @@ export function Community() {
               <HiOutlineSearch className="search_icon" />
               <input style={{ width: '100%' }} placeholder="검색"></input>
             </SearchbarPlain>
-            {isLogin&&<Button
-              margin={'0'}
-              padding={'12px 18px'}
-              bg={'var(--chamong__color)'}
-              border={'var(--chamong__color)'}
-              color={'white'}
-              hborder={'var(--chamong__color)'}
-              hover={'white'}
-              hcolor={'var(--chamong__color)'}
-              onClick={() => setIsSubmit(true)}
-            >
-              글쓰기
-            </Button>}
+            {isLogin && (
+              <Button
+                margin={'0'}
+                padding={'12px 18px'}
+                bg={'var(--chamong__color)'}
+                border={'var(--chamong__color)'}
+                color={'white'}
+                hborder={'var(--chamong__color)'}
+                hover={'white'}
+                hcolor={'var(--chamong__color)'}
+                onClick={submitHandler}
+              >
+                글쓰기
+              </Button>
+            )}
           </div>
           {isSubmit ? (
             <div className="modal_submit">
@@ -152,7 +162,7 @@ export function Community() {
             </div>
           ) : null}
           <div className="float_Button">
-            <FloatButton onClick={() => setIsSubmit(true)}>
+            <FloatButton onClick={submitHandler}>
               <HiPlus />
             </FloatButton>
           </div>

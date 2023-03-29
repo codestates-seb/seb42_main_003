@@ -6,9 +6,9 @@ import { AiOutlineUnorderedList } from 'react-icons/ai';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { AiOutlineUser } from 'react-icons/ai';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxTK';
 import { useNavigate } from 'react-router-dom';
-import { is } from 'immer/dist/internal';
-import Login from '../Login';
+import { loginModal } from '../../store/loginModal';
 
 export const Container = styled.div`
   display: flex;
@@ -72,7 +72,7 @@ type Title = {
   link: string | any;
 }[];
 
-const title: Title = [
+const navMenu: Title = [
   {
     id: 1,
     text: '메인',
@@ -101,25 +101,41 @@ const title: Title = [
 ];
 
 function Nav() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [isNav, setIsNav] = useState<Number>(1);
   const [isLoginModal, setIsLoginModal] = useState<Boolean>(false);
   type CustomMouseEvent = MouseEvent<HTMLElement>;
+  const loginState = useAppSelector(state => state.isLogin);
 
   const clickHandler = (event: CustomMouseEvent) => {
     setIsNav(Number((event.target as HTMLLIElement).id));
+    const menu = event.target as HTMLLIElement;
+
+    if (menu.id === '4') {
+      if (loginState) navigate(navMenu[+menu.id - 1].link);
+      else {
+        dispatch(loginModal(true));
+        navigate('/');
+        setIsNav(1);
+      }
+    } else {
+      navigate(navMenu[+menu.id - 1].link);
+      dispatch(loginModal(false));
+    }
   };
 
   return (
     <Container>
-      {isLoginModal ? <Login setIsLoginModal={setIsLoginModal}></Login> : null}
-      {title.map(ele => {
+      {/* {isLoginModal ? <Login setIsLoginModal={setIsLoginModal}></Login> : null} */}
+      {navMenu.map(ele => {
         return (
           <div id={String(ele.id)} key={ele.id} onClick={clickHandler}>
             <MenuLink
               id={String(ele.id)}
               key={ele.id}
               to={ele.id === 5 ? (isLoginModal ? ele.link : '#') : ele.link}
-              onClick={() => (ele.id === 5 ? setIsLoginModal(true) : null)}
+              // onClick={() => (ele.id === 5 ? setIsLoginModal(true) : null)}
               className={isNav !== ele.id ? 'nav_box' : 'nav_box_active'}
             >
               {ele.id === 1 ? (
