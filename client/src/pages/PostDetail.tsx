@@ -354,7 +354,7 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
 
   const articleSubmitHandler = () => {
     const data = { title, content };
-    sendFormDataTs('articles', 'patch', data, image, 'data').then(() =>
+    sendFormDataTs('articles', 'patch', data, image,'articleCreate','articleImg').then(() =>
       navigate('/articles')
     );
   };
