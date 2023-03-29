@@ -64,6 +64,7 @@ function PostModal({ setIsSubmit }: PostType) {
           onChange={contentHandler}
         />
         <Button
+        onClick={articleSubmitHandler}
           border={'var(--chamong__color)'}
           color={'white'}
           bg={'var(--chamong__color)'}
