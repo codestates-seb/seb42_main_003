@@ -11,6 +11,8 @@ import chamong from '../../assets/logo/logo_kor.svg';
 import { useLocation } from 'react-router-dom';
 import { navNumber } from '../../store/navSlice';
 import { Button } from '../../styles/Button';
+import { loginModal } from '../../store/loginModal';
+import { MouseEvent } from 'react';
 
 interface SearchState {
   width_M?: string;
@@ -91,12 +93,14 @@ export const Container = styled.div<Info>`
 `;
 function Header({ width_M, setIsURL }: SearchState) {
   const navigate = useNavigate();
-  const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
+  // const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
   const loginState = useAppSelector(state => state.isLogin);
   const memberInfo = useAppSelector(state => state.memberInfo);
   const { pathname } = useLocation();
-  const isNav = useAppSelector(state => state.navmenu);
   const dispatch = useAppDispatch();
+  const isNav = useAppSelector(state => state.navmenu);
+  type CustomMouseEvent = MouseEvent<HTMLElement>;
+  // const loginModal = useAppSelector(state => state.loginmodal);
   const navMenu = [
     {
       id: 1,
@@ -120,16 +124,30 @@ function Header({ width_M, setIsURL }: SearchState) {
   useEffect(() => {
     console.log('change');
   }, [pathname]);
-
+  const loginHandler = () => {
+    if (loginState) navigate('/mypage');
+    else dispatch(loginModal(true));
+    dispatch(navNumber(0));
+  };
+  const wishlistHandler = (event: CustomMouseEvent) => {
+    const menu = event.target as HTMLLIElement;
+    console.log(menu);
+    if (menu.id === '2') {
+      if (loginState) navigate(navMenu[+menu.id - 1].link);
+      else dispatch(loginModal(true));
+    } else navigate(navMenu[+menu.id - 1].link);
+    navChangeHandler(+menu.id);
+  };
   return (
     <Container width_M={width_M}>
-      {isLoginModal ? <Login setIsLoginModal={setIsLoginModal}></Login> : null}
+      {/* {isLoginModal ? <Login setIsLoginModal={setIsLoginModal}></Login> : null} */}
       <div className="header">
         <div
           className="logo"
           onClick={() => {
             dispatch(navNumber(0));
             navigate('/');
+            dispatch(loginModal(false));
           }}
         >
           <img src={logo} alt="logo" style={{ width: '35px' }}></img>
@@ -142,16 +160,22 @@ function Header({ width_M, setIsURL }: SearchState) {
                 key={menu.id}
                 id={String(menu.id)}
                 className={isNav === menu.id ? 'active' : ''}
+                onClick={e => wishlistHandler(e)}
               >
-                <Link
-                  to={`${menu.link}`}
+                {/* <Link
+                  to={
+                    menu.id === 2
+                      ? loginState
+                        ? `${menu.link}`
+                        : '#'
+                      : `${menu.link}`
+                  }
                   onClick={() => {
-                    console.log(menu.id);
                     navChangeHandler(menu.id);
                   }}
-                >
-                  {menu.title}
-                </Link>
+                > */}
+                {menu.title}
+                {/* </Link> */}
               </h1>
             );
           })}
@@ -164,19 +188,21 @@ function Header({ width_M, setIsURL }: SearchState) {
             //   }}
             // />
             <Button
-            border={'var(--chamong__color)'}
-                color={'var(--chamong__color)'}
-                hcolor={'white'}
-                hover={'var(--chamong__color)'}
-                hborder={'var(--chamong__color)'}
-                padding="13px 15px"
-                radius="12px"
-                onClick={() => {
-                  loginState ? navigate('/mypage') : setIsLoginModal(true);
-                  dispatch(navNumber(0));
-                }}
-                >
-              로그인
+              border={'var(--chamong__color)'}
+              color={'var(--chamong__color)'}
+              hcolor={'white'}
+              hover={'var(--chamong__color)'}
+              hborder={'var(--chamong__color)'}
+              padding="13px 15px"
+              radius="12px"
+              // onClick={() => {
+              //   // loginState ? navigate('/mypage') : setIsLoginModal(true);
+              //   loginState ? navigate('/mypage') : dispatch(loginModal(true));
+              //   dispatch(navNumber(0));
+              // }}
+              onClick={loginHandler}
+            >
+              로그인/회원가입
             </Button>
           ) : (
             <img

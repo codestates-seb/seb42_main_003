@@ -13,6 +13,7 @@ import MapContainer from '../components/map/MapContainer';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { useNavigate } from 'react-router';
+import { loginModal } from '../store/loginModal';
 const Container = styled.div<MapHeightProps>`
   /* @media (min-width: 768px) {
       display: flex;
@@ -105,24 +106,24 @@ const Container = styled.div<MapHeightProps>`
 `;
 type MapHeightProps = { map_height?: string };
 function Wishlist(map_height: MapHeightProps) {
-  const isLogin=useAppSelector(state=>state.isLogin);
-  const navigate=useNavigate();
+  const isLogin = useAppSelector(state => state.isLogin);
+  const navigate = useNavigate();
   const size = useWindowSize();
   type Info = any | null;
   const [data, setData] = useState<Info>([]);
   const [isMap, setIsMap] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if(!isLogin) navigate('/error')
+    if (!isLogin) dispatch(loginModal(true));
     getData('wishlist').then(res => {
-      setData(res);
+      if (res) setData(res);
     });
   }, []);
 
-useEffect(()=>{
-  if(!isLogin) navigate('/error')
-  console.log(data);
-},[data])
+  // useEffect(()=>{
+  //   if(!isLogin) navigate('/error')
+  //   console.log(data);
+  // },[data])
 
   return (
     <Container
@@ -152,14 +153,14 @@ useEffect(()=>{
             </div>
           </div>
           <div className="map_field">
-            {data&&Array.isArray(data)&&
+            {data && Array.isArray(data) && (
               <MapContainer
                 level={13}
                 padding={'100px'}
                 campList={data}
                 border_rd={'0'}
               ></MapContainer>
-            }
+            )}
           </div>
           <div
             className={isMap ? 'map_field_mobile active' : 'map_field_mobile'}
@@ -170,7 +171,7 @@ useEffect(()=>{
                 &times;
               </p>
             </div>
-            {data&&Array.isArray(data)&& (
+            {data && Array.isArray(data) && (
               <MapContainer
                 level={12}
                 padding={'200px'}

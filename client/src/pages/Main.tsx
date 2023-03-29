@@ -62,19 +62,14 @@ function Main() {
   // const [isClicked, setIsClicked] = useState<boolean>(false);
   const size = useWindowSize();
   const clicked = useAppSelector(state => state.clicked);
-  // const [content, setContent] = useState<Info>();
+  const [content, setContent] = useState<Info>();
   const [data, setData] = useState<Info>();
   const [isMap, setIsMap] = useState<boolean>(false);
   const [isURL, setIsURL] = useState<string>('main?page=1');
   const dispatch = useAppDispatch();
   useEffect(() => {
     getDataTs(isURL).then(res => {
-      // getData('content').then(res => {
-      // console.log(res);
       if (res) {
-        // setContent(res);
-        // setData(res.slice(0, 30));
-        // setContent(res.content);
         if (isURL === 'main?page=1') setData(res.content);
         else setData(res);
       }
@@ -113,7 +108,12 @@ function Main() {
           <div className={isMap ? 'community' : ''}>
             <CommunityBestM></CommunityBestM>
           </div>
-          <ContentList data={data} setData={setData}></ContentList>
+          <ContentList
+            setContent={setContent}
+            content={content && content}
+            data={data}
+            setData={setData}
+          ></ContentList>
         </>
       ) : clicked ? null : (
         <>

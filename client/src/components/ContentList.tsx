@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import CommunityBestD from './destop/CommunityBestD';
 import MyPick from './destop/MyPick';
 import { getDataTs } from '../api/tsapi';
-// import { debounce } from 'lodash';
+import useIntersectionObserver from '../hooks/useIO';
 
 interface CardList {
   content?: any;
@@ -52,93 +52,110 @@ const Container = styled('div')<CardList>`
     top: 10px;
   }
 `;
+const Spinner = styled.div`
+  height: 200px;
+  width: 100%;
+  .layerPopup {
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .spinner {
+    @media (max-width: 768px) {
+      top: 20%;
+      left: 50%;
+    }
+    @media (min-width: 768px) {
+      top: 20%;
+      left: 37%;
+    }
+    position: absolute;
 
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid var(--chamong__color); /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spinner 2s linear infinite;
+  }
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .background {
+    display: flex;
+    flex-direction: column;
+  }
+`;
 function ContentList({ data, setData }: CardList) {
-  const [num, setNum] = useState(2);
-  // const [index, setIndex] = useState(31);
+  type Info = any | null;
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [pageNum, setpageNum] = useState(2);
 
-  // useEffect(() => {
-  //   window.addEventListener('scroll', e => {
-  //     const isScrollEnd =
-  //       window.innerHeight + window.scrollY + 1000 > document.body.offsetHeight;
-  //     const isScrollstart = window.innerHeight > window.scrollY - 415;
+  const testFetch = (delay = 500) => new Promise(res => setTimeout(res, delay));
 
-  //     let prevData = data;
-  //     let nextData = data;
-  //     //* 스크롤 올릴 때
-  //     if (data && isScrollstart && num > 2) {
-  //       nextData = data.slice(10, 20);
-  //       getDataTs(`main?page=${num - 1}`).then(res => {
-  //         const newData = res.content.concat(nextData);
-  //         setData(newData);
-  //       });
+  const getMoreItem = async () => {
+    if (data) {
+      setIsLoaded(true);
+      await testFetch();
+      getDataTs(`main?page=${pageNum}`).then(res => {
+        setData(data.concat(res.content));
+      });
+      setIsLoaded(false);
+      setpageNum(pageNum + 1);
+    }
+  };
 
-  //       setNum(num - 1);
-  //     } else if (data && data.length === 40 && isScrollstart && num === 2) {
-  //       getDataTs(`main?page=${1}`).then(res => {
-  //         const newData = res.content;
-  //         setData(newData);
-  //       });
-  //     }
+  const onIntersect: IntersectionObserverCallback = async (
+    [entry],
+    observer
+  ) => {
+    if (entry.isIntersecting && !isLoaded) {
+      observer.unobserve(entry.target);
+      await getMoreItem();
+      observer.observe(entry.target);
+    }
+  };
 
-  //     //* 스크롤 내릴 때
-  //     if (isScrollEnd && data) {
-  //       if (data && data.length > 30) {
-  //         prevData = data.slice(30, 40);
-  //       }
-  //       if (data && data.length === 30) {
-  //         prevData = data.slice(20, 30);
-  //       }
-  //       getDataTs(`main?page=${num}`).then(res => {
-  //         const newData = prevData.concat(res.content);
-  //         setData(newData);
-  //         setNum(num + 1);
-  //       });
-  //     }
-  //   });
-  // }, [data]);
-  useEffect(() => {
-    window.addEventListener('scroll', e => {
-      let prevData = data;
-      let nextData = data;
-      // const isScrollEnd =
-      //   window.innerHeight + window.scrollY + 1000 > document.body.offsetHeight;
-      const isScrollstart = window.innerHeight > window.scrollY - 415;
-      //* 화면크기 : window.innerHeight
-      //* 컨텐츠 : document.body.offsetHeight
-      //* 스크롤 위치 : window.scrollY
-      const isScrollEnd =
-        (document.body.offsetHeight - window.innerHeight) / 2 <= window.scrollY;
-      console.log(isScrollEnd);
-      //* 스크롤 내릴 때
-      if (isScrollEnd && data) {
-        getDataTs(`main?page=${num}`).then(res => {
-          setData(data.concat(res.content));
-          setNum(num + 1);
-        });
-      }
-    });
-  }, [data]);
-  console.log(data);
-  console.log(num);
+  const { setTarget } = useIntersectionObserver({
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5,
+    onIntersect,
+  });
 
   return (
-    <Container>
-      <div className="wrapper">
-        <div className="main">
-          {data &&
-            data.map((e: any, idx: number) => {
-              return <ContentCard key={idx} data={e} />;
-            })}
-        </div>
-        <div className="item">
-          <div className="item_wrapper">
-            <CommunityBestD></CommunityBestD>
-            <MyPick></MyPick>
+    <div className="background">
+      <Container>
+        <div className="wrapper">
+          <div className="main">
+            {data &&
+              data.map((e: any, idx: number) => {
+                return <ContentCard key={idx} data={e} />;
+              })}
+          </div>
+          <div className="item">
+            <div className="item_wrapper">
+              <CommunityBestD></CommunityBestD>
+              <MyPick></MyPick>
+            </div>
           </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+      <Spinner>
+        <div className="layerPopup">
+          <div className="spinner" ref={setTarget}></div>
+        </div>
+      </Spinner>
+      <div style={{ height: '60px' }}></div>
+    </div>
   );
 }
 

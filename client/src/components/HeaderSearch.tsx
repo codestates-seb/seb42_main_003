@@ -110,7 +110,6 @@ function HeaderSearch({ setIsURL, view, input, place, size }: SearchState) {
               className="back"
               onClick={() => {
                 // dispatch(click(false));
-                console.log('a');
                 // dispatch(reset([]));
               }}
             >
@@ -130,11 +129,12 @@ function HeaderSearch({ setIsURL, view, input, place, size }: SearchState) {
                 e.stopPropagation();
                 setIsURL &&
                   setIsURL(
-                    `main/search/${isKeyword[0].id}/${isKeyword[1].id}?`
+                    // main/search/{themaId}/{placeId}?page=1&keyword=”충청”
+
+                    `main/search/${isKeyword[0].id}/${isKeyword[1].id}?page=1`
                   );
                 dispatch(click(false));
                 navigate('/');
-                console.log('a');
               }}
             />
             <ul className="keywords">

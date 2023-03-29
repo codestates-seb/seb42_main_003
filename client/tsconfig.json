@@ -17,11 +17,14 @@
     "module": "esnext",
     "moduleResolution": "node",
     "isolatedModules": true,
+    "jsx": "react-jsx",
+    "removeComments": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "downlevelIteration": true,
   },
   "include": [
     "src"
   ],
-  "typeRoots":["node_modules/@types", "src/@types"]
+  "typeRoots":["node_modules/@types", "src/@types"],
+
 }

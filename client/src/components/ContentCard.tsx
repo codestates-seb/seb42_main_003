@@ -168,7 +168,6 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
     <div
       style={{ width: '100%', maxWidth: '420px' }}
       onClick={() => {
-        console.log('a');
         data.facltNm
           ? navigate(`/content/${data.contentId}`)
           : setIsMap && setIsMap(true);
@@ -453,12 +452,12 @@ export function ContentCardRow({
 
   const visitedPlaceDeleteHandler = () => {
     //*FIXME 여행의 흔적 삭제하는 API 호출
-    console.log('방문한 캠핑장 목록, members_visitedPlaceInfo에서 삭제');
+    // console.log('방문한 캠핑장 목록, members_visitedPlaceInfo에서 삭제');
   };
 
   const sharedAddHandler = () => {
     //*FIXME 유저픽_유저의 차박지에 등록하는 API 호출
-    console.log('유저픽_유저의 차박지에 등록');
+    // console.log('유저픽_유저의 차박지에 등록');
     navigate('/userpick');
   };
 
