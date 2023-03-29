@@ -81,7 +81,7 @@ function CommunityBestD({}: CardList) {
                 <img src={data.profileImg} alt="cat" className="avatar"></img>
                 <p>{data.nickname}</p>
               </div> */}
-              <li className="title">{data.content}</li>
+              <li className="title">{data.title}</li>
             </ul>
           );
         })}

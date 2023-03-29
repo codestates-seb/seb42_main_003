@@ -5,7 +5,7 @@ import reviewSlice from './reviewSlice';
 import memberInfoSlice from './memberInfoSlice';
 import isLoginSlice from './isLoginSlice';
 import navSlice from './navSlice';
-
+import LoginModal from './loginModal';
 export const store = configureStore({
   reducer: {
     keyword: keywordSlice.reducer,
@@ -14,6 +14,7 @@ export const store = configureStore({
     memberInfo: memberInfoSlice.reducer,
     isLogin: isLoginSlice.reducer,
     navmenu: navSlice.reducer,
+    loginmodal: LoginModal.reducer,
   },
 });
 

@@ -5,6 +5,7 @@ import { loginTs, sendDataTs } from '../api/tsapi';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { login } from '../store/isLoginSlice';
+import { loginModal } from '../store/loginModal';
 import { setMemberInfo } from '../store/memberInfoSlice';
 import { KeyboardEvent } from 'react';
 
@@ -139,7 +140,7 @@ export const Container = styled.div`
   }
 `;
 type LoginInfo = {
-  setIsLoginModal: (foo: any) => void;
+  setIsLoginModal?: (foo: any) => void;
 };
 
 function Login({ setIsLoginModal }: LoginInfo) {
@@ -156,8 +157,8 @@ function Login({ setIsLoginModal }: LoginInfo) {
 
   //로그인 데이터를 저장하는 redux hook 코드
   const dispatch = useAppDispatch();
-  const isLogin = useAppSelector((state) => state.isLogin);
-  const memberInfo = useAppSelector((state) => state.memberInfo);
+  const isLogin = useAppSelector(state => state.isLogin);
+  const memberInfo = useAppSelector(state => state.memberInfo);
 
   useEffect(() => {
     setNicknameErrorMessage('');
@@ -185,7 +186,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
   //todo 버튼 : onClick 핸들러=>빈 필드를 검사하는 함수로 바꿨습니다.
   const requestFieldCheck = () => {
     let pass = true;
-    if (!isUserState&&!nickname) {
+    if (!isUserState && !nickname) {
       pass = false;
       setNicknameErrorMessage('닉네임을 입력해주세요');
     }
@@ -202,23 +203,19 @@ function Login({ setIsLoginModal }: LoginInfo) {
 
   //로그인 함수입니다.
   const loginRequestHandler = () => {
-    if (
-      requestFieldCheck() &&
-      !emailErrorMessage &&
-      !passwordErrorMessage
-    ) {
+    if (requestFieldCheck() && !emailErrorMessage && !passwordErrorMessage) {
       console.log('login error 없음');
       const data = { email, password };
       loginTs(data)
-        .then((data) => {
-          console.log(data);
+        .then(data => {
           // members/login에서 회원정보를 넘겨주지 않음
           // dispatch(setMemberInfo(data));
           dispatch(login());
           navigate('/');
+          dispatch(loginModal(false));
         })
-        .catch((err) => console.log(err));
-      setIsLoginModal(false);
+        .catch(err => console.log(err));
+      setIsLoginModal && setIsLoginModal(false);
     }
   };
 
@@ -270,9 +267,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
       )
     ) {
       pwCheck = false;
-      setPasswordErrorMessage(
-        '영문, 숫자, 특수문자를 1개 이상 포함시켜주세요'
-      );
+      setPasswordErrorMessage('영문, 숫자, 특수문자를 1개 이상 포함시켜주세요');
     }
 
     //* Password: 강력 비번형태 맞다면 or 로그인 창이라면 에러메시지 초기화
@@ -294,45 +289,49 @@ function Login({ setIsLoginModal }: LoginInfo) {
     console.log('소셜로 로그인');
   };
   return (
-    <Background onClick={() => setIsLoginModal(false)}>
-      <Container onClick={(e) => e.stopPropagation()}>
-        <div className='login_header'>
-          <div className='tab'>
-            <div className='login'>
+    <Background onClick={() => dispatch(loginModal(false))}>
+      <Container onClick={e => e.stopPropagation()}>
+        <div className="login_header">
+          <div className="tab">
+            <div className="login">
               <span
                 className={isUserState ? 'active' : ''}
-                onClick={() => setIsUserState(!isUserState)}>
+                onClick={() => setIsUserState(!isUserState)}
+              >
                 로그인
               </span>
             </div>
-            <div className='signup'>
+            <div className="signup">
               <span
                 className={!isUserState ? 'active' : ''}
-                onClick={() => setIsUserState(!isUserState)}>
+                onClick={() => setIsUserState(!isUserState)}
+              >
                 회원가입
               </span>
             </div>
           </div>
           <div>
-            <span onClick={() => setIsLoginModal(false)}>&times;</span>
+            {/* <span onClick={() => setIsLoginModal && setIsLoginModal(false)}> */}
+            <span onClick={() => dispatch(loginModal(false))}>&times;</span>
           </div>
         </div>
 
-        <div className='mobile_box'>
-          <div className='mid'>
-            <div className='hello'>
+        <div className="mobile_box">
+          <div className="mid">
+            <div className="hello">
               {isUserState ? '환영합니다 🎉' : '🚗 차박 여행지는 차몽에서'}
             </div>
             {!isUserState ? (
-              <div className='input_field'>
-                <div className='input_mg_bottom'>
+              <div className="input_field">
+                <div className="input_mg_bottom">
                   <Input
                     color={nicknameErrorMessage ? 'red' : 'green'}
                     value={nickname}
                     onChange={nicknameHandler}
-                    placeholder='닉네임'></Input>
+                    placeholder="닉네임"
+                  ></Input>
                   {nicknameErrorMessage ? (
-                    <div className='error'>{nicknameErrorMessage}</div>
+                    <div className="error">{nicknameErrorMessage}</div>
                   ) : (
                     ''
                   )}
@@ -340,77 +339,86 @@ function Login({ setIsLoginModal }: LoginInfo) {
               </div>
             ) : null}
 
-            <div className='input_field'>
+            <div className="input_field">
               <Input
                 color={emailErrorMessage ? 'red' : 'green'}
-                placeholder='이메일'
+                placeholder="이메일"
                 value={email}
-                onChange={emailHandler}></Input>
+                onChange={emailHandler}
+              ></Input>
               {/* </div> */}
               {emailErrorMessage ? (
-                <div className='error'>{emailErrorMessage}</div>
+                <div className="error">{emailErrorMessage}</div>
               ) : (
                 ''
               )}
             </div>
-            <div className='input_field'>
-              <div className='input_mg'>
+            <div className="input_field">
+              <div className="input_mg">
                 <Input
                   color={passwordErrorMessage ? 'red' : 'green'}
-                  placeholder='비밀번호'
+                  placeholder="비밀번호"
                   type={'password'}
                   value={password}
                   onChange={passwordHandler}
-                  onKeyPress={loginRequestKeyPress}></Input>
+                  onKeyPress={loginRequestKeyPress}
+                ></Input>
               </div>
               {passwordErrorMessage ? (
-                <div className='error'>{passwordErrorMessage}</div>
+                <div className="error">{passwordErrorMessage}</div>
               ) : (
                 ''
               )}
             </div>
           </div>
 
-          <div className='bottom'>
-            <div className='login_button'>
+          <div className="bottom">
+            <div className="login_button">
               {isUserState ? (
                 <button
-                  className='login_submit login'
-                  onClick={loginRequestHandler}>
+                  className="login_submit login"
+                  onClick={loginRequestHandler}
+                >
                   로그인
                 </button>
               ) : (
                 <button
-                  className='login_submit signup'
-                  onClick={signupRequestHandler}>
+                  className="login_submit signup"
+                  onClick={signupRequestHandler}
+                >
                   회원가입
                 </button>
               )}
             </div>
             {isUserState ? (
-              <div className='social'>
+              <div className="social">
                 <svg
-                  viewBox='0 0 32 32'
-                  xmlns='http://www.w3.org/2000/svg'
-                  aria-hidden='true'
-                  role='presentation'
-                  focusable='false'>
-                  <g transform='translate(4.376957 4.073369)'>
+                  viewBox="0 0 32 32"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  role="presentation"
+                  focusable="false"
+                >
+                  <g transform="translate(4.376957 4.073369)">
                     <path
-                      d='m19.7480429 20.9266305c2.813-2.625 4.063-7 3.313-11.18799996h-11.188v4.62599996h6.375c-.25 1.5-1.125 2.75-2.375 3.562z'
-                      fill='#4285f4'></path>
+                      d="m19.7480429 20.9266305c2.813-2.625 4.063-7 3.313-11.18799996h-11.188v4.62599996h6.375c-.25 1.5-1.125 2.75-2.375 3.562z"
+                      fill="#4285f4"
+                    ></path>
                     <path
-                      d='m1.24804285 17.2396305c.82223 1.6196 2.0014 3.0314 3.4486 4.129s3.1247 1.8523 4.906 2.2073c1.78130005.355 3.62000005.301 5.37740005-.1579s3.3877-1.3108 4.768-2.4914l-3.875-3c-3.313 2.188-8.81300005 1.375-10.68800005-3.75z'
-                      fill='#34a853'></path>
+                      d="m1.24804285 17.2396305c.82223 1.6196 2.0014 3.0314 3.4486 4.129s3.1247 1.8523 4.906 2.2073c1.78130005.355 3.62000005.301 5.37740005-.1579s3.3877-1.3108 4.768-2.4914l-3.875-3c-3.313 2.188-8.81300005 1.375-10.68800005-3.75z"
+                      fill="#34a853"
+                    ></path>
                     <path
-                      d='m5.18573285 14.1766305c-.5-1.563-.5-3 0-4.56299996l-3.938-3.062c-1.438 2.875-1.875 6.93799996 0 10.68799996z'
-                      fill='#fbbc02'></path>
+                      d="m5.18573285 14.1766305c-.5-1.563-.5-3 0-4.56299996l-3.938-3.062c-1.438 2.875-1.875 6.93799996 0 10.68799996z"
+                      fill="#fbbc02"
+                    ></path>
                     <path
-                      d='m5.18604285 9.61463054c1.374-4.31301 7.25000005-6.81301 11.18700005-3.126l3.438-3.37401c-4.875-4.688-14.37500005-4.5-18.56300005 3.43601l3.938 3.063z'
-                      fill='#ea4335'></path>
+                      d="m5.18604285 9.61463054c1.374-4.31301 7.25000005-6.81301 11.18700005-3.126l3.438-3.37401c-4.875-4.688-14.37500005-4.5-18.56300005 3.43601l3.938 3.063z"
+                      fill="#ea4335"
+                    ></path>
                   </g>
                 </svg>
-                <button className='goggle'>구글로 로그인</button>
+                <button className="goggle">구글로 로그인</button>
               </div>
             ) : null}
           </div>

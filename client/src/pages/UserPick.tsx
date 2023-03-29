@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import Header from '../components/destop/Header';
-import Footer from '../components/destop/Footer';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { click } from '../store/clickedSlice';
 import { MapViewButton } from '../components/MapViewButton';
@@ -16,6 +15,10 @@ import {
 import MapContainer from '../components/map/MapContainer';
 import { RiPencilFill } from 'react-icons/ri';
 import { useWindowSize } from '../hooks/useWindowSize';
+import { getDataTs } from '../api/tsapi';
+import { useNavigate } from 'react-router-dom';
+import { loginModal } from '../store/loginModal';
+import Login from '../components/Login';
 
 const Container = styled.div<MapHeightProps>`
   .container_flex {
@@ -114,20 +117,29 @@ const Container = styled.div<MapHeightProps>`
 type MapHeightProps = { map_height?: string };
 function UserPick({ map_height }: MapHeightProps) {
   const dispatch = useAppDispatch();
+  const size = useWindowSize();
   type Info = any | null;
   const [data, setData] = useState<Info>([]);
   const [isTab, setIsTab] = useState(1);
-  const size = useWindowSize();
   const [isMap, setIsMap] = useState<boolean>(false);
-
+  // const [loginModal, setLoginModal] = useState(false);
+  const isLogin = useAppSelector(state => state.isLogin);
+  const navigate = useNavigate();
   useEffect(() => {
-    isTab === 1
-      ? getData('pick-places/shared').then(res => {
-          setData(res);
-        })
-      : getData('members').then(res => {
-          setData(res.myPlaceInfos);
+    if (isTab === 1) {
+      getDataTs('pick-places/shared').then(res => {
+        if (res) setData(res);
+      });
+    } else {
+      if (isLogin) {
+        getDataTs('pick-places/member').then(res => {
+          if (res) setData(res);
         });
+      } else {
+        dispatch(loginModal(true));
+        setIsTab(1);
+      }
+    }
   }, [isTab]);
 
   return (
@@ -135,6 +147,7 @@ function UserPick({ map_height }: MapHeightProps) {
       onClick={() => dispatch(click(false))}
       map_height={String(size.height)}
     >
+      {/* {loginModal ? <Login></Login> : null} */}
       <div className="mapview_mobile">
         {isMap ? null : <MapViewButton setIsMap={setIsMap}></MapViewButton>}
       </div>
