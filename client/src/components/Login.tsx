@@ -155,7 +155,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
   const [nicknameErrorMessage, setNicknameErrorMessage] = useState('');
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-  const [submitErrorMessage,setSubmitErrorMessage]=useState('');
+  const [submitErrorMessage, setSubmitErrorMessage] = useState('');
 
   //로그인 데이터를 저장하는 redux hook 코드
   const dispatch = useAppDispatch();
@@ -221,11 +221,10 @@ function Login({ setIsLoginModal }: LoginInfo) {
           dispatch(loginModal(false));
         })
         .catch(err => {
-          console.log(err)
-          if(err.response.status===401) {
+          console.log(err);
+          if (err.response.status === 401) {
             setSubmitErrorMessage(`이메일과 비밀번호를 확인해주세요.`);
-          }
-          else {
+          } else {
             setSubmitErrorMessage(`로그인에 실패했습니다.`);
           }
         });
@@ -248,13 +247,16 @@ function Login({ setIsLoginModal }: LoginInfo) {
     ) {
       console.log('signup error 없음');
       const data = { nickname, email, password };
-      sendDataTs('members', 'post', data).then(()=>{
-        alert('회원가입 되었습니다.')
-        window.location.reload();
-      }).catch((err)=>{
-        if(err.response.data) setSubmitErrorMessage(err.response.data.message);
-        else setSubmitErrorMessage('회원가입에 실패했습니다.')
-      })
+      sendDataTs('members', 'post', data)
+        .then(() => {
+          alert('회원가입 되었습니다.');
+          window.location.reload();
+        })
+        .catch(err => {
+          if (err.response.data)
+            setSubmitErrorMessage(err.response.data.message);
+          else setSubmitErrorMessage('회원가입에 실패했습니다.');
+        });
     }
   };
 
@@ -306,8 +308,9 @@ function Login({ setIsLoginModal }: LoginInfo) {
   };
 
   const socialRequestHandler = () => {
-    loginTs({}, 'oauth2/authorization/google')
+    getDataTs('oauth2/authorization/google')
       .then(data => {
+        console.log(data);
         // members/login에서 회원정보를 넘겨주지 않음
         // dispatch(setMemberInfo(data));
         dispatch(login());
@@ -419,10 +422,12 @@ function Login({ setIsLoginModal }: LoginInfo) {
                 </button>
               )}
               {submitErrorMessage ? (
-                    <div style={{padding:'12px'}} className="error">{submitErrorMessage}</div>
-                  ) : (
-                    ''
-                  )}
+                <div style={{ padding: '12px' }} className="error">
+                  {submitErrorMessage}
+                </div>
+              ) : (
+                ''
+              )}
             </div>
             {isUserState ? (
               <div className="social">

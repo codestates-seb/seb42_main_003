@@ -25,20 +25,21 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(loadRefreshToken()){
-    refreshTs()
-      .then((data) => {
-        dispatch(login());
-        dispatch(setMemberInfo(data));
-        setIsRefreshed(true);
-      })
-      .catch(err => {
-        console.log(err);
-        localStorage.clearItem('refresh');
-        alert(`로그아웃 되었습니다. (${err.response.status})`);
-        
-        setIsRefreshed(true);
-      });
+    if (loadRefreshToken()) {
+      refreshTs()
+        .then(data => {
+          dispatch(login());
+          dispatch(setMemberInfo(data));
+          setIsRefreshed(true);
+        })
+        .catch(err => {
+          console.log(err);
+          localStorage.clearItem('refresh');
+          alert(`로그아웃 되었습니다. (${err.response.status})`);
+          setIsRefreshed(true);
+        });
+    } else {
+      setIsRefreshed(true);
     }
   }, []);
 

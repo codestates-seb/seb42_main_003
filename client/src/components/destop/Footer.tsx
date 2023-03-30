@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import logo from '../../assets/logo/logo_chamong.svg';
+import chamong from '../../assets/logo/logo_eng.svg';
 
 const Container = styled.div<Info>`
   display: flex;
@@ -44,13 +46,23 @@ const Container = styled.div<Info>`
     font-size: 12px;
     font-weight: 500;
   }
+  .logo {
+    display: flex;
+  }
 `;
 type Info = { width_page?: string; fix?: string };
 function Footer({ width_page, fix }: Info) {
   return (
     <Container width_page={width_page} fix={fix}>
       <div className="wrapper">
-        <h1 className="title">Chamong</h1>
+        <div className="logo">
+          <img
+            src={logo}
+            alt="logo"
+            style={{ width: '30px', paddingRight: '5px' }}
+          ></img>
+          <img src={chamong} alt="logo" style={{ width: '110px' }}></img>
+        </div>
         <div className="body">
           <div className="member">
             최준영 박진선 김연주 이세환 신현민 김윤혜
