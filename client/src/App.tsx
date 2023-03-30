@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux';
 import { login } from './store/isLoginSlice';
 import { useAppSelector } from './hooks/reduxTK';
 import Login from './components/Login';
+import { setMemberInfo } from './store/memberInfoSlice';
 
 function App() {
   const [isRefreshed, setIsRefreshed] = useState(false);
@@ -24,8 +25,9 @@ function App() {
 
   useEffect(() => {
     refreshTs()
-      .then(() => {
+      .then((data) => {
         dispatch(login());
+        dispatch(setMemberInfo(data));
         setIsRefreshed(true);
       })
       .catch(err => {

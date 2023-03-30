@@ -53,18 +53,25 @@ export const sendFormDataTs = async (
   imageKey: string
 ) => {
   let formData = new FormData();
-  formData.append(key, JSON.stringify(data));
-  if (image) formData.append(imageKey, image[0]);
-  try {
+  formData.append(key, new Blob([JSON.stringify(data)]),"application/json");
+  let headers:any={
+    Authorization: loadAccessToken(),
+    Refresh: loadRefreshToken(),
+    'Content-Type': 'multipart/form-data',
+    [key]:'application/json',
+  }
+  if (image) {
+    let imgType=image[0].type;
+    formData.append(imageKey, image[0],imgType);
+    headers={...headers, [imageKey]:image[0].type}
+  }
+  console.log(headers);
+  try{
     const res = await axios({
       method,
       url: `${url}/${endpoint}`,
       data: formData,
-      headers: {
-        Authorization: loadAccessToken(),
-        Refresh: loadRefreshToken(),
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: headers
     });
     return Promise.resolve(res.data);
   } catch (err) {
@@ -101,7 +108,7 @@ export const refreshTs = async () => {
       },
     });
     sessionStorage.setItem('authorization', response.headers.authorization);
-    return Promise.resolve(response);
+    return Promise.resolve(response.data);
   } catch (err) {
     return Promise.reject(err);
   }
