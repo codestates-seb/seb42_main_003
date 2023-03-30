@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import Login from '../components/Login';
 
 export const Container = styled.div`
+  margin-bottom: 70px;
   @media (max-width: 768px) {
     .search_mobile {
       margin-top: 60px;
@@ -94,6 +95,31 @@ export const Container = styled.div`
     }
   }
 `;
+const Container2 = styled('div')`
+  display: flex;
+  border: 1px solid var(--searchbar__color);
+  background-color: var(--searchbar__color);
+  border-radius: 20px;
+  height: 50px;
+  width: 100%;
+  position: relative;
+
+  input {
+    padding-left: 10px;
+    width: 100%;
+    ::placeholder {
+      font-size: 15px;
+    }
+  }
+  .search_icon {
+    position: absolute;
+    right: 5%;
+    top: 23%;
+    font-size: 27px;
+    color: var(--chamong__color);
+    cursor: pointer;
+  }
+`;
 export function Community() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -103,6 +129,7 @@ export function Community() {
 
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPages, setCurrentPages] = useState<number>(1);
+  const [keyword, setKeyword] = useState<string>('');
   const isLogin = useAppSelector(state => state.isLogin);
   const totalPage = Math.ceil(totalPages / 15);
   const currentPage = currentPages;
@@ -120,10 +147,20 @@ export function Community() {
       setTotalPages(res.totalElements);
     });
   }, []);
-  console.log(isSubmit);
+
   const submitHandler = () => {
     if (isLogin) setIsSubmit(true);
     else navigate('/mypage');
+  };
+  const searchHandler = () => {
+    getDataTs(`articles?keyword=${keyword}&page=0`).then(res =>
+      setIsCommunity(res.content)
+    );
+  };
+
+  const keywordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+    console.log(e.target.value);
   };
   return (
     <Container onClick={() => dispatch(click(false))}>
@@ -137,8 +174,15 @@ export function Community() {
         <div className="max_width">
           <div className="desktop_header">
             <SearchbarPlain>
-              <HiOutlineSearch className="search_icon" />
-              <input style={{ width: '100%' }} placeholder="검색"></input>
+              <HiOutlineSearch
+                onClick={searchHandler}
+                className="search_icon"
+              />
+              <input
+                onChange={keywordHandler}
+                style={{ width: '100%' }}
+                placeholder="검색"
+              ></input>
             </SearchbarPlain>
             {isLogin && (
               <Button
@@ -170,7 +214,13 @@ export function Community() {
             <h1>커뮤니티</h1>
           </MobileHeader>
           <div className="search_mobile">
-            <SearchBar></SearchBar>
+            <Container2>
+              <HiOutlineSearch
+                onClick={searchHandler}
+                className="search_icon"
+              />
+              <input onChange={keywordHandler} placeholder="검색"></input>
+            </Container2>
           </div>
           <div className="post">
             {isCommunity.map((ele: any) => (

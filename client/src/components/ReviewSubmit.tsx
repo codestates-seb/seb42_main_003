@@ -4,7 +4,8 @@ import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { AiFillStar } from 'react-icons/ai';
 import { Button } from '../styles/Button';
 import { reset } from '../store/reviewSlice';
-
+import { getDataTs } from '../api/tsapi';
+import { useLocation } from 'react-router-dom';
 export const Container = styled.div`
   @media (max-width: 768px) {
     .review_input_header {
@@ -52,6 +53,12 @@ export const Container = styled.div`
       justify-content: flex-end;
     }
   }
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 10px;
+  }
   .review_input {
     display: flex;
     flex-direction: column;
@@ -77,6 +84,7 @@ export const Container = styled.div`
   p {
     font-weight: 500;
     font-size: var(--fs__big);
+    padding-top: 8px;
   }
 `; //font-size: ${props => props.fs || var(--fs__mid)};
 export const RatingBox = styled.div`
@@ -111,6 +119,7 @@ export function ReviewSubmit() {
     false,
     false,
   ]);
+  const { pathname } = useLocation();
 
   type ReviewType = {
     id: number;
@@ -131,15 +140,18 @@ export function ReviewSubmit() {
     }
     setClicked(clickStates);
   };
+  const memberInfo = useAppSelector(state => state.memberInfo);
   const score = clicked.filter(Boolean).length;
-
+  const submitHandler = () => {
+    getDataTs(`main/${pathname}`).then(res => console.log(res));
+  };
   return (
     <Container>
       <div className="review_input">
         <div className="review_input_header">
           <div className="userInfo">
-            <p>아바타</p>
-            <p>차몽</p>
+            <img src={memberInfo.profileImg} alt="img"></img>
+            <p>{memberInfo.nickname}</p>
           </div>
           <div className="rating">
             <p className="question">여행은 어떠셨나요?</p>
@@ -176,6 +188,7 @@ export function ReviewSubmit() {
             hcolor="var(--chamong__color)"
             hborder="var(--chamong__color)"
             font="12px"
+            onClick={submitHandler}
           >
             {isEdit.id ? '수정' : '등록'}
           </Button>

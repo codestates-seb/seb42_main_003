@@ -122,7 +122,7 @@ function Header({ width_M, setIsURL }: SearchState) {
     dispatch(navNumber(id));
   };
   useEffect(() => {
-    console.log('change');
+    // console.log('change');
   }, [pathname]);
   const loginHandler = () => {
     if (loginState) navigate('/mypage');
@@ -131,7 +131,7 @@ function Header({ width_M, setIsURL }: SearchState) {
   };
   const wishlistHandler = (event: CustomMouseEvent) => {
     const menu = event.target as HTMLLIElement;
-    console.log(menu);
+    // console.log(menu);
     if (menu.id === '2') {
       if (loginState) navigate(navMenu[+menu.id - 1].link);
       else dispatch(loginModal(true));

@@ -5,6 +5,9 @@ import CommunityBestD from './destop/CommunityBestD';
 import MyPick from './destop/MyPick';
 import { getDataTs } from '../api/tsapi';
 import useIntersectionObserver from '../hooks/useIO';
+import { useRef } from 'react';
+import Nav from './mobile/Nav';
+// import { debounce } from 'lodash';
 
 interface CardList {
   content?: any;
@@ -55,13 +58,21 @@ const Container = styled('div')<CardList>`
 const Spinner = styled.div`
   height: 200px;
   width: 100%;
+  /* margin-bottom: -30px; */
   .layerPopup {
+    /* display: none; */
+    /* position: fixed;
+    top: 0;
+    left: 0; */
     width: 100%;
     height: 100%;
+
+    /* background: rgba(255, 202, 202, 0.8); */
     z-index: 1000;
     justify-content: center;
     align-items: center;
     position: relative;
+    /* margin: 0 0 -60px 0px; */
   }
   .spinner {
     @media (max-width: 768px) {
@@ -94,29 +105,54 @@ const Spinner = styled.div`
     flex-direction: column;
   }
 `;
-function ContentList({ data, setData }: CardList) {
+function ContentList({}: CardList) {
   type Info = any | null;
   const [isLoaded, setIsLoaded] = useState(false);
-  const [pageNum, setpageNum] = useState(2);
-
+  const [itemIndex, setItemIndex] = useState(31);
+  const [content, setContent] = useState<Info>();
+  const [data, setData] = useState<Info>();
+  useEffect(() => {
+    // getDataTs(isURL).then(res => {
+    getDataTs('content').then(res => {
+      // console.log(res);
+      if (res) {
+        setData(res);
+        setContent(res.slice(0, 30));
+        // setContent(res.content);
+        // if (isURL === 'main?page=1') setData(res.content);
+        // else setData(res);
+      }
+    });
+  }, []);
+  //* 자른게 content
+  //로딩 테스트를 위해서 가짜 fetch 함수를 넣었다.
   const testFetch = (delay = 500) => new Promise(res => setTimeout(res, delay));
 
+  //현재 목업 데이터(data)를 사용하고 있기 때문에, 최대한 데이터를 재활용하는 코드를 작성.
+  //(0~4번 게시물, 1~5번 게시물, 2~6번 게시물 이런 식으로 가져와서 5개씩 concat함수로 붙였다.)
+  //getMoreItem 함수가 실행되면 isLoaded를 true로 만들어 로딩 컴포넌트를 보여주고,
+  //함수가 종료될 때 isLoaded를 false로 만들어 로딩컴포넌트를 숨겼다.
   const getMoreItem = async () => {
     if (data) {
       setIsLoaded(true);
       await testFetch();
-      getDataTs(`main?page=${pageNum}`).then(res => {
-        setData(data.concat(res.content));
-      });
+      setItemIndex(i => i + 1);
+      //*
+      setContent(content.concat(data.slice(itemIndex, itemIndex + 30)));
       setIsLoaded(false);
-      setpageNum(pageNum + 1);
     }
   };
+  // console.log(isLoaded);
+  //intersection 콜백함수
+  //entry는 IntersectionObserverEntry 인스턴스의 배열
+  //isIntersecting: 대상 객체와 루트 영역의 교차상태를 boolean값으로 나타냄
+  //대상 객체가 루트 영역과 교차 상태로 들어갈 때(true), 나갈 때(false)
 
   const onIntersect: IntersectionObserverCallback = async (
     [entry],
     observer
   ) => {
+    //보통 교차여부만 확인하는 것 같다. 코드는 로딩상태까지 확인함.
     if (entry.isIntersecting && !isLoaded) {
       observer.unobserve(entry.target);
       await getMoreItem();
@@ -124,10 +160,11 @@ function ContentList({ data, setData }: CardList) {
     }
   };
 
+  //현재 대상 및 option을 props로 전달
   const { setTarget } = useIntersectionObserver({
     root: null,
     rootMargin: '0px',
-    threshold: 1,
+    threshold: 0.5,
     onIntersect,
   });
 
@@ -136,8 +173,8 @@ function ContentList({ data, setData }: CardList) {
       <Container>
         <div className="wrapper">
           <div className="main">
-            {data &&
-              data.map((e: any, idx: number) => {
+            {content &&
+              content.map((e: any, idx: number) => {
                 return <ContentCard key={idx} data={e} />;
               })}
           </div>
@@ -151,11 +188,7 @@ function ContentList({ data, setData }: CardList) {
       </Container>
       <Spinner>
         <div className="layerPopup">
-          {data && data.length < 60 ? (
-            <div className="spinner" ref={setTarget}></div>
-          ) : (
-            <div style={{ fontSize: '18px' }}>마지막 데이터입니다</div>
-          )}
+          <div className="spinner" ref={setTarget}></div>
         </div>
       </Spinner>
       <div style={{ height: '60px' }}></div>

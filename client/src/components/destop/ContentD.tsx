@@ -244,7 +244,7 @@ export function ContentD({ isContent, contentId }: ContentInfo) {
           <hr className="title_line"></hr>
           <div className="header_review">
             <div className="review_grade">
-              <p className="average">리뷰 {isContent.contentId} </p>
+              <p className="average">리뷰 4 </p>
             </div>
             <div className="review_grade">
               <AiFillStar

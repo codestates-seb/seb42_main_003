@@ -8,6 +8,7 @@ import { login } from '../store/isLoginSlice';
 import { loginModal } from '../store/loginModal';
 import { setMemberInfo } from '../store/memberInfoSlice';
 import { KeyboardEvent } from 'react';
+import { getDataTs } from '../api/tsapi';
 
 export const Background = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
@@ -206,8 +207,11 @@ function Login({ setIsLoginModal }: LoginInfo) {
     if (requestFieldCheck() && !emailErrorMessage && !passwordErrorMessage) {
       console.log('login error 없음');
       const data = { email, password };
-      loginTs(data)
+      loginTs(data, 'members/login')
         .then(data => {
+          getDataTs('members/mypage').then(res => {
+            dispatch(setMemberInfo(res.memberInfo));
+          });
           // members/login에서 회원정보를 넘겨주지 않음
           // dispatch(setMemberInfo(data));
           dispatch(login());
@@ -235,6 +239,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
       console.log('signup error 없음');
       const data = { nickname, email, password };
       sendDataTs('members', 'post', data);
+      window.location.reload();
     }
   };
 
@@ -285,8 +290,17 @@ function Login({ setIsLoginModal }: LoginInfo) {
     if (!password) setPasswordErrorMessage('');
   };
 
-  const socialRequestHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    console.log('소셜로 로그인');
+  const socialRequestHandler = () => {
+    loginTs({}, 'oauth2/authorization/google')
+      .then(data => {
+        // members/login에서 회원정보를 넘겨주지 않음
+        // dispatch(setMemberInfo(data));
+        dispatch(login());
+        navigate('/');
+        dispatch(loginModal(false));
+      })
+      .catch(err => console.log(err));
+    setIsLoginModal && setIsLoginModal(false);
   };
   return (
     <Background onClick={() => dispatch(loginModal(false))}>
@@ -418,7 +432,9 @@ function Login({ setIsLoginModal }: LoginInfo) {
                     ></path>
                   </g>
                 </svg>
-                <button className="goggle">구글로 로그인</button>
+                <button className="goggle" onClick={socialRequestHandler}>
+                  구글로 로그인
+                </button>
               </div>
             ) : null}
           </div>
