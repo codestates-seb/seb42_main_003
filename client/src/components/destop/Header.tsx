@@ -212,7 +212,7 @@ function Header({ width_M, setIsURL }: SearchState) {
                 height: '40px',
                 cursor: 'pointer',
               }}
-              src="https://cdn.pixabay.com/photo/2022/05/11/22/17/pink-hibiscus-7190314_1280.jpg"
+              src={memberInfo.profileImg}
               alt="profile-img"
               onClick={() => navigate('/mypage')}
             ></img>

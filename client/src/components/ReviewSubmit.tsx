@@ -140,7 +140,7 @@ export function ReviewSubmit() {
     }
     setClicked(clickStates);
   };
-
+  const memberInfo = useAppSelector(state => state.memberInfo);
   const score = clicked.filter(Boolean).length;
   const submitHandler = () => {
     getDataTs(`main/${pathname}`).then(res => console.log(res));
@@ -150,11 +150,8 @@ export function ReviewSubmit() {
       <div className="review_input">
         <div className="review_input_header">
           <div className="userInfo">
-            <img
-              src="https://cdn.pixabay.com/photo/2022/08/17/07/10/strawberries-7391738_1280.jpg"
-              alt="img"
-            ></img>
-            <p>차몽</p>
+            <img src={memberInfo.profileImg} alt="img"></img>
+            <p>{memberInfo.nickname}</p>
           </div>
           <div className="rating">
             <p className="question">여행은 어떠셨나요?</p>

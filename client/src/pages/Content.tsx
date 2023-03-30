@@ -155,7 +155,7 @@ function Content() {
 
       <div className="review_top_mobile">
         <div className="review_left">
-          <h1 className="h1_title">리뷰 3</h1>
+          <h1 className="h1_title">리뷰 4</h1>
           <div className="grade_title">
             <AiFillStar
               size="20px"
