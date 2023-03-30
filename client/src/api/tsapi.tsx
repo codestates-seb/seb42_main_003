@@ -76,7 +76,7 @@ export const loginTs = async (data: {}, endpoint: string) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${url}/${endpoint}}`,
+      url: `${url}/${endpoint}`,
       data: data,
       headers: {
         Authorization: loadAccessToken(),
