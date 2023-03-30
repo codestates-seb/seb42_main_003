@@ -259,7 +259,7 @@ position: relative;
     cursor:pointer;
     position: absolute;
     font-size: var(--fs__h2);
-    right:0px;
+    right:12px;
     transition:0.2s;
     &:hover {
       transition:0.2s;
