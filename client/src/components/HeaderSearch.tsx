@@ -111,13 +111,13 @@ function HeaderSearch({ setIsURL, view, input, place, size }: SearchState) {
     let placeId;
     let keyword;
 
-    if (isKeyword[0].id) themaId = isKeyword[0].id;
+    if (isKeyword && isKeyword[0]) themaId = isKeyword[0].id;
     else themaId = 0;
 
-    if (isKeyword[1].id) placeId = isKeyword[0].id;
+    if (isKeyword && isKeyword[1]) placeId = isKeyword[0].id;
     else placeId = 0;
 
-    if (randomKeyword) keyword = randomKeyword;
+    if (randomKeyword && randomKeyword) keyword = randomKeyword;
     else keyword = '';
 
     setIsURL &&
@@ -127,18 +127,17 @@ function HeaderSearch({ setIsURL, view, input, place, size }: SearchState) {
     // {themaId}/{placeId}?
     // page=1&keyword=”충청”
   };
+  // const requestKeyPress = (e: KeyboardEventHandler<HTMLInputElement>) => {
+  //     if (e.key === 'Enter') {
+  //     }
+  //   };
+  // }
   return (
     <Container view={view}>
       <Main input={input} place={place} size={size}>
         <div style={{ display: 'flex' }}>
           {isClicked ? (
-            <div
-              className="back"
-              onClick={() => {
-                // dispatch(click(false));
-                // dispatch(reset([]));
-              }}
-            >
+            <div className="back" onClick={() => {}}>
               <FiArrowLeft />
             </div>
           ) : null}
