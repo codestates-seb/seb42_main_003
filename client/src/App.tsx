@@ -40,6 +40,7 @@ function App() {
         setIsRefreshed(true);
       });
     }
+    else setIsRefreshed(true);
   }, []);
 
   return (
