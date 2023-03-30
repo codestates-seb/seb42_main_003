@@ -41,7 +41,6 @@ function App() {
     } else {
       setIsRefreshed(true);
     }
-    else setIsRefreshed(true);
   }, []);
 
   return (
