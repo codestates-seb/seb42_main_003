@@ -19,7 +19,7 @@ interface SearchState {
   setIsURL?: (foo: any) => void;
 }
 type Info = { width_M?: string };
-
+//
 export const Container = styled.div<Info>`
   display: flex;
   justify-content: center;
