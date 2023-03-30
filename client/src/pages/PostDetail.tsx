@@ -25,7 +25,7 @@ import { FcLike } from 'react-icons/fc';
 import { AiOutlineEye } from 'react-icons/ai';
 import { AiOutlineComment } from 'react-icons/ai';
 import useUploadImage from '../hooks/useUploadImage';
-import { PageHeader } from '../components/destop/PageHeader';
+import { useWindowSize } from '../hooks/useWindowSize';
 
 function PostDetail() {
 
@@ -133,6 +133,7 @@ function ViewContent({
   isAlreadyLike,
   likeHandler,
 }: PostProps) {
+  const windowSize=useWindowSize();
   const isLogin = useAppSelector((state) => state.isLogin);
   const memberInfo = useAppSelector((state) => state.memberInfo);
   console.log(memberInfo)
@@ -141,7 +142,7 @@ function ViewContent({
       <h2>{post.title}</h2>
       <div>
         <div>
-          <img src={post.profileImg} alt='profile-img'></img>
+          <img src={post.profileImg} alt='profile-img' className='profile-img'></img>
           <div className='member-info-upper'>
             <span className='member-info-nickname'>{post.nickname}</span>
             <span className='member-created-at'>
@@ -170,7 +171,12 @@ function ViewContent({
           )}
         </div>
       </div>
-      <p>{post.content}</p>
+      
+      <p><img src={post.articleImg} alt='article' className='article-image' style={{maxWidth:windowSize.width}}></img>
+      <div>
+        {post.content}
+        </div>
+        </p>
       <div className='post-buttonbox'>
         {isLogin && memberInfo.id === post.memberId && (
           <ButtonBox setIsSubmit={setIsSubmit} setIsDelete={setIsDelete} />
@@ -295,7 +301,7 @@ function ViewComment({ comment }: CommentProps) {
     <CommentArticle>
       <div>
         <div>
-          <img src={comment.profileImg} alt='profile-img'></img>
+          <img src={comment.profileImg} alt='profile-img' className='profile-img'></img>
           <div className='member-info-upper'>
             <span className='member-info-nickname'>
               {comment.nickname}

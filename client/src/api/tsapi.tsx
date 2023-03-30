@@ -53,7 +53,7 @@ export const sendFormDataTs = async (
   imageKey: string
 ) => {
   let formData = new FormData();
-  formData.append(key, new Blob([JSON.stringify(data)]),"application/json");
+  formData.append(key, new Blob([JSON.stringify(data)],{ type: "application/json" }));
   let headers:any={
     Authorization: loadAccessToken(),
     Refresh: loadRefreshToken(),
@@ -63,7 +63,7 @@ export const sendFormDataTs = async (
   if (image) {
     let imgType=image[0].type;
     formData.append(imageKey, image[0],imgType);
-    headers={...headers, [imageKey]:image[0].type}
+    headers={...headers, [imageKey]:image[0].type.split('/')[1]}
   }
   console.log(headers);
   try{
