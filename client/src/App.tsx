@@ -17,6 +17,7 @@ import { login } from './store/isLoginSlice';
 import { useAppSelector } from './hooks/reduxTK';
 import Login from './components/Login';
 import { setMemberInfo } from './store/memberInfoSlice';
+import { loadRefreshToken } from './utils/token';
 
 function App() {
   const [isRefreshed, setIsRefreshed] = useState(false);
@@ -24,6 +25,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if(loadRefreshToken()){
     refreshTs()
       .then((data) => {
         dispatch(login());
@@ -31,9 +33,13 @@ function App() {
         setIsRefreshed(true);
       })
       .catch(err => {
-        setIsRefreshed(true);
         console.log(err);
+        localStorage.clearItem('refresh');
+        alert(`로그아웃 되었습니다. (${err.response.status})`);
+        
+        setIsRefreshed(true);
       });
+    }
   }, []);
 
   return (
