@@ -9,6 +9,8 @@ import { loginModal } from '../store/loginModal';
 import { setMemberInfo } from '../store/memberInfoSlice';
 import { KeyboardEvent } from 'react';
 import { getDataTs } from '../api/tsapi';
+import { GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export const Background = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
@@ -308,20 +310,26 @@ function Login({ setIsLoginModal }: LoginInfo) {
   };
 
   const socialRequestHandler = () => {
-    getDataTs('oauth2/authorization/google')
-      .then(data => {
-        console.log(data);
-        // members/login에서 회원정보를 넘겨주지 않음
-        // dispatch(setMemberInfo(data));
-        dispatch(login());
-        navigate('/');
-        dispatch(loginModal(false));
-      })
-      .catch(err => console.log(err));
-    setIsLoginModal && setIsLoginModal(false);
+    // const parsedHash = new URLSearchParams(window.location.hash.substring(1));
+    // const accessToken = parsedHash.get('access_token');
+    // window.location.href =
+    //   'https://accounts.google.com/o/oauth2/auth?' +
+    //   'client_id=800254385039-hahopjm6c43bquetv71t8mi4albrsb70.apps.googleusercontent.com&' +
+    //   'redirect_uri=http://chamongbucket.s3-website.ap-northeast-2.amazonaws.com&' +
+    //   'response_type=token&' +
+    //   'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
+
+    // if (accessToken) {
+    //   sessionStorage.setItem('authorization', accessToken);
+    //   getDataTs('oauth2/authorization/google', { accessToken }).then(res =>
+    //     console.log(res)
+    //   );
+    // }
+    getDataTs('oauth2/authorization/google').then(res => console.log(res));
   };
+
   return (
-    <Background onClick={() => dispatch(loginModal(false))}>
+    <Background>
       <Container onClick={e => e.stopPropagation()}>
         <div className="login_header">
           <div className="tab">
@@ -460,6 +468,17 @@ function Login({ setIsLoginModal }: LoginInfo) {
                 <button className="goggle" onClick={socialRequestHandler}>
                   구글로 로그인
                 </button>
+                {/* <GoogleOAuthProvider clientId="800254385039-hahopjm6c43bquetv71t8mi4albrsb70.apps.googleusercontent.com">
+                  <GoogleLogin
+                    // buttonText="google login"
+                    onSuccess={credenttialResponse => {
+                      console.log(credenttialResponse);
+                    }}
+                    onError={() => {
+                      console.log('login Failed');
+                    }}
+                  ></GoogleLogin>
+                </GoogleOAuthProvider> */}
               </div>
             ) : null}
           </div>
