@@ -50,7 +50,7 @@ export const sendFormDataTs = async (
   data: object,
   image: FileList | undefined,
   key: string,
-  imageKey:string,
+  imageKey: string
 ) => {
   let formData = new FormData();
   formData.append(key, JSON.stringify(data));
@@ -72,21 +72,18 @@ export const sendFormDataTs = async (
   }
 };
 
-export const loginTs = async (data: {}) => {
+export const loginTs = async (data: {}, endpoint: string) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${url}/members/login`,
+      url: `${url}/${endpoint}}`,
       data: data,
       headers: {
         Authorization: loadAccessToken(),
         Refresh: loadRefreshToken(),
       },
     });
-    sessionStorage.setItem(
-      'authorization',
-      response.headers.authorization
-    );
+    sessionStorage.setItem('authorization', response.headers.authorization);
     localStorage.setItem('refresh', response.headers.refresh);
     return Promise.resolve(response);
   } catch (err) {
@@ -94,7 +91,7 @@ export const loginTs = async (data: {}) => {
   }
 };
 
-export const refreshTs=async()=>{
+export const refreshTs = async () => {
   try {
     const response = await axios({
       method: 'get',
@@ -103,17 +100,14 @@ export const refreshTs=async()=>{
         Refresh: loadRefreshToken(),
       },
     });
-    sessionStorage.setItem(
-      'authorization',
-      response.headers.authorization
-    );
+    sessionStorage.setItem('authorization', response.headers.authorization);
     return Promise.resolve(response);
   } catch (err) {
     return Promise.reject(err);
   }
-}
+};
 
-export const logoutTs=async ()=>{
+export const logoutTs = async () => {
   sessionStorage.removeItem('authorization');
   localStorage.removeItem('refresh');
   try {
@@ -121,12 +115,11 @@ export const logoutTs=async ()=>{
       method: 'get',
       url: `${url}/members/logout`,
       headers: {
-        Authorization: loadAccessToken()
+        Authorization: loadAccessToken(),
       },
     });
     return Promise.resolve(response);
-  }
-  catch (err) {
+  } catch (err) {
     return Promise.reject(err);
   }
-}
+};
