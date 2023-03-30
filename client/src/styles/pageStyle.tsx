@@ -101,7 +101,7 @@ export const PageArticle = styled.article`
 
 export const MyPageMemberInfo = styled(PageArticle)`
   width: 100%;
-  img {
+  .profile-img {
     width: 60px;
     height: 60px;
     border-radius: 30px;
@@ -137,7 +137,7 @@ export const MyPageMemberInfo = styled(PageArticle)`
     font-size: var(--fs__mid);
   }
   @media screen and (min-width: 768px) {
-    img {
+    .profile-img {
       width: 100px;
       height: 100px;
       border-radius: 60px;
@@ -157,6 +157,9 @@ export const MyPageMemberInfo = styled(PageArticle)`
 `;
 
 export const PostArticle = styled(MyPageMemberInfo)`
+.article-image {
+  max-height: 500px;
+}
   @media screen and (min-width: 768px) {
     margin-top: 12px !important;
     border: none;
@@ -168,7 +171,7 @@ export const PostArticle = styled(MyPageMemberInfo)`
       margin-bottom: 12px;
     }
   }
-  img {
+  .profile-img {
     width: 35px;
     height: 35px;
   }
@@ -240,7 +243,7 @@ position: relative;
   @media screen and (min-width: 768px) {
     border: none;
   }
-  img {
+  .profile-img {
     width: 35px;
     height: 35px;
   }

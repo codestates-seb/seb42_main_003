@@ -195,7 +195,7 @@ function MyPage() {
             <h2>나의 프로필</h2>
             <div className="flex-div">
               <div>
-                <img src={memberInfo.profileImg} alt="profile-img"></img>
+                <img src={memberInfo.profileImg} alt="profile-img" className='profile-img'></img>
                 <div className="member-info-upper">
                   <span className="member-info-nickname">
                     {memberInfo.nickname}
@@ -390,6 +390,7 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
   // const [fileList, setFileList] = useState<FileList | null>(null);
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
 
+  //address 필드 추가가 필요함
   const postCampHandler = () => {
     if (!position || !memo || !address) return;
     const data = {
@@ -397,7 +398,7 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       keywords,
       mapY: position[0],
       mapX: position[1],
-      address,
+      // address,
     };
     sendFormDataTs(
       'pick-places',
