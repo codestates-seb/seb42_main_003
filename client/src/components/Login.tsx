@@ -155,6 +155,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
   const [nicknameErrorMessage, setNicknameErrorMessage] = useState('');
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [submitErrorMessage,setSubmitErrorMessage]=useState('');
 
   //로그인 데이터를 저장하는 redux hook 코드
   const dispatch = useAppDispatch();
@@ -168,6 +169,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
     setEmail('');
     setNickname('');
     setPassword('');
+    setSubmitErrorMessage('');
   }, [isUserState]);
 
   const nicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -218,7 +220,10 @@ function Login({ setIsLoginModal }: LoginInfo) {
           navigate('/');
           dispatch(loginModal(false));
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err)
+          setSubmitErrorMessage(`로그인에 실패했습니다.`)
+        });
       setIsLoginModal && setIsLoginModal(false);
     }
   };
@@ -238,8 +243,13 @@ function Login({ setIsLoginModal }: LoginInfo) {
     ) {
       console.log('signup error 없음');
       const data = { nickname, email, password };
-      sendDataTs('members', 'post', data);
-      window.location.reload();
+      sendDataTs('members', 'post', data).then(()=>{
+        alert('회원가입 되었습니다.')
+        window.location.reload();
+      }).catch((err)=>{
+        if(err.response.data) setSubmitErrorMessage(err.response.data.message);
+        else setSubmitErrorMessage('회원가입에 실패했습니다.')
+      })
     }
   };
 
@@ -403,6 +413,11 @@ function Login({ setIsLoginModal }: LoginInfo) {
                   회원가입
                 </button>
               )}
+              {submitErrorMessage ? (
+                    <div style={{padding:'12px'}} className="error">{submitErrorMessage}</div>
+                  ) : (
+                    ''
+                  )}
             </div>
             {isUserState ? (
               <div className="social">
