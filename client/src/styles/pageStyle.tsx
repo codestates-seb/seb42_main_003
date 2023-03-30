@@ -232,6 +232,8 @@ export const CommentCounter = styled.div`
 `;
 
 export const CommentArticle = styled(MyPageMemberInfo)`
+width: 100%;
+position: relative;
   p {
     padding-top: 12px;
   }
@@ -251,6 +253,17 @@ export const CommentArticle = styled(MyPageMemberInfo)`
     .member-created-at {
       color: var(--fontBlack__100);
       margin-left: 12px;
+    }
+  }
+  .comment-delete-button {
+    cursor:pointer;
+    position: absolute;
+    font-size: var(--fs__h2);
+    right:12px;
+    transition:0.2s;
+    &:hover {
+      transition:0.2s;
+      transform: scale(1.2);
     }
   }
   @media screen and (min-width: 768px) {
