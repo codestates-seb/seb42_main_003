@@ -222,7 +222,12 @@ function Login({ setIsLoginModal }: LoginInfo) {
         })
         .catch(err => {
           console.log(err)
-          setSubmitErrorMessage(`로그인에 실패했습니다.`)
+          if(err.response.status===401) {
+            setSubmitErrorMessage(`이메일과 비밀번호를 확인해주세요.`);
+          }
+          else {
+            setSubmitErrorMessage(`로그인에 실패했습니다.`);
+          }
         });
       setIsLoginModal && setIsLoginModal(false);
     }
