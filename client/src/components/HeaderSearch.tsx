@@ -6,6 +6,7 @@ import { remove, reset } from '../store/keywordSlice';
 import { click } from '../store/clickedSlice';
 import SearchModal from './SearchModal';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const Container = styled('div')<Info>`
   padding: 10px 10px 10px 10px;
@@ -94,13 +95,38 @@ function HeaderSearch({ setIsURL, view, input, place, size }: SearchState) {
   const dispatch = useAppDispatch();
   const isKeyword = useAppSelector(state => state.keyword);
   const isClicked = useAppSelector(state => state.clicked);
+  const [randomKeyword, setrandomKeyword] = useState('');
   // /main/search/{thema_id}/{place_id}?
   const removeKeyword = (index: number) => {
     dispatch(remove(index));
   };
   // console.log(isKeyword);
   // console.log(isClicked);
+  const randomKeywordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setrandomKeyword(e.target.value);
+  };
   const navigate = useNavigate();
+  const keywordPostHandler = () => {
+    let themaId;
+    let placeId;
+    let keyword;
+
+    if (isKeyword[0].id) themaId = isKeyword[0].id;
+    else themaId = 0;
+
+    if (isKeyword[1].id) placeId = isKeyword[0].id;
+    else placeId = 0;
+
+    if (randomKeyword) keyword = randomKeyword;
+    else keyword = '';
+
+    setIsURL &&
+      setIsURL(`main/search/${themaId}/${placeId}?page=1&keyword=${keyword}`);
+    // main/
+    // search/
+    // {themaId}/{placeId}?
+    // page=1&keyword=”충청”
+  };
   return (
     <Container view={view}>
       <Main input={input} place={place} size={size}>
@@ -127,12 +153,7 @@ function HeaderSearch({ setIsURL, view, input, place, size }: SearchState) {
               className="search_icon"
               onClick={e => {
                 e.stopPropagation();
-                setIsURL &&
-                  setIsURL(
-                    // main/search/{themaId}/{placeId}?page=1&keyword=”충청”
-
-                    `main/search/${isKeyword[0].id}/${isKeyword[1].id}?page=1`
-                  );
+                keywordPostHandler();
                 dispatch(click(false));
                 navigate('/');
               }}
@@ -154,7 +175,7 @@ function HeaderSearch({ setIsURL, view, input, place, size }: SearchState) {
                 })}
             </ul>
             {isKeyword.length === 0 ? (
-              <input placeholder="검색"></input>
+              <input onChange={randomKeywordHandler} placeholder="검색"></input>
             ) : (
               <input className="hidden"></input>
             )}
