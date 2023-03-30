@@ -34,7 +34,7 @@ function App() {
         })
         .catch(err => {
           console.log(err);
-          localStorage.clearItem('refresh');
+          localStorage.removeItem('refresh');
           alert(`로그아웃 되었습니다. (${err.response.status})`);
           setIsRefreshed(true);
         });
