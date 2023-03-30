@@ -25,10 +25,27 @@ import { getDataTs, sendDataTs, sendFormDataTs, logoutTs } from '../api/tsapi';
 import { Post } from '../components/Review';
 import { HistoryContainer } from '../components/HistoryContainer';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch,useAppSelector } from '../hooks/reduxTK';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { logout } from '../store/isLoginSlice';
 
-const themes=['화장실','산','강','섬','숲','호수','해변','와이파이','전기','운동시설','물놀이','마트','편의점','체험활동','낚시','반려동물']
+const themes = [
+  '화장실',
+  '산',
+  '강',
+  '섬',
+  '숲',
+  '호수',
+  '해변',
+  '와이파이',
+  '전기',
+  '운동시설',
+  '물놀이',
+  '마트',
+  '편의점',
+  '체험활동',
+  '낚시',
+  '반려동물',
+];
 
 //myPlaceInfos 내부 객체
 interface MyPlaceInfo {
@@ -61,9 +78,6 @@ interface VisitedPlaceInfo {
 /* 배열: [string, 함수, 함수]  */
 
 function MyPage() {
-
-  
-
   const [addCampModal, setAddCampModal] = useState<boolean>(false);
   const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
   //viewHistory state는 모바일에서만 사용
@@ -85,14 +99,13 @@ function MyPage() {
     ArticleType[] | null
   >(null);
 
-  const dispatch=useAppDispatch();
-  const navigate=useNavigate();
-  const isLogin=useAppSelector(state=>state.isLogin);
-  console.log(isLogin)
-  
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const isLogin = useAppSelector(state => state.isLogin);
+  // console.log(isLogin)
 
   useEffect(() => {
-    if(!isLogin) navigate('/error')
+    if (!isLogin) navigate('/error');
     //실제 서버 테스트때는 members/mypage로 바꿔야 합니다.
     getDataTs('members/mypage').then(data => {
       setMemberInfo(data.memberInfo);
@@ -135,17 +148,19 @@ function MyPage() {
     setViewHistoryModal(!viewHistoryModal);
   };
 
-  const logoutHandler=()=>{
-    logoutTs().then(()=>{
-      dispatch(logout());
-      alert('정상적으로 로그아웃 되었습니다.')
-      navigate('/')
-    }).catch((err)=>{
-      console.log(err);
-      dispatch(logout());
-      navigate('/')
-    })
-  }
+  const logoutHandler = () => {
+    logoutTs()
+      .then(() => {
+        dispatch(logout());
+        alert('정상적으로 로그아웃 되었습니다.');
+        navigate('/');
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch(logout());
+        navigate('/');
+      });
+  };
 
   useEffect(() => {
     if (memberInfo) console.log(memberInfo.about);
@@ -254,7 +269,7 @@ function MyPage() {
         <PageArticle>
           <h2>메뉴</h2>
           <Button
-          onClick={logoutHandler}
+            onClick={logoutHandler}
             border={'var(--chamong__color)'}
             color={'var(--chamong__color)'}
             hcolor={'white'}
@@ -373,11 +388,10 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
   const [isKeywordFocus, setIsKeywordFocus] = useState<boolean>(false);
   //이미지를 저장하는 state
   // const [fileList, setFileList] = useState<FileList | null>(null);
-  const {image, imageSrc, imageChange, imageDelete } =
-    useUploadImage();
+  const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
 
   const postCampHandler = () => {
-    if (!position||!memo||!address) return;
+    if (!position || !memo || !address) return;
     const data = {
       memo,
       keywords,
@@ -385,22 +399,30 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       mapX: position[1],
       address,
     };
-    sendFormDataTs('pick-places', 'post', data, image, 'postMyPlace','placeImg').then(() => navigate('/mypage'))
-    .catch(err=>console.log(err))
+    sendFormDataTs(
+      'pick-places',
+      'post',
+      data,
+      image,
+      'postMyPlace',
+      'placeImg'
+    )
+      .then(() => navigate('/mypage'))
+      .catch(err => console.log(err));
   };
   const keywordFocusHandler = () => {
     setIsKeywordFocus(true);
   };
 
   const addKeywordHandler = (theme: string) => {
-    const isRepeat = keywords.find(prevTheme => '#'+theme === prevTheme);
+    const isRepeat = keywords.find(prevTheme => '#' + theme === prevTheme);
     if (keywords.length <= 2 && !isRepeat)
-      setKeywords((prevState: string[]) => [...prevState,'#'+theme]);
+      setKeywords((prevState: string[]) => [...prevState, '#' + theme]);
   };
 
   const removeKeywordHandler = (theme: string) => {
     setKeywords((prevState: string[]) => {
-      return [...prevState.filter(prevTheme =>!prevTheme.includes(theme))];
+      return [...prevState.filter(prevTheme => !prevTheme.includes(theme))];
     });
   };
 
@@ -530,7 +552,14 @@ function EditProfileModal({
 
   const profileSubmitHandler = () => {
     const data = { nickname, about, carName, oilInfo };
-    sendFormDataTs('members', 'patch', data, image, 'memberUpdate','profileImg').then(editProfileHandler);
+    sendFormDataTs(
+      'members',
+      'patch',
+      data,
+      image,
+      'memberUpdate',
+      'profileImg'
+    ).then(editProfileHandler);
   };
 
   return (

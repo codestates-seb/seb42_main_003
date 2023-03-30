@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import Login from '../components/Login';
 
 export const Container = styled.div`
+  margin-bottom: 70px;
   @media (max-width: 768px) {
     .search_mobile {
       margin-top: 60px;
@@ -180,7 +181,7 @@ export function Community() {
               <input
                 onChange={keywordHandler}
                 style={{ width: '100%' }}
-                placeholder="??"
+                placeholder="검색"
               ></input>
             </SearchbarPlain>
             {isLogin && (

@@ -12,7 +12,7 @@ import { edit } from '../store/reviewSlice';
 import { Button } from '../styles/Button';
 import { Modal } from '../styles/Modal';
 import { ReviewSubmit } from './ReviewSubmit';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Container = styled.div`
   .post {
@@ -179,9 +179,9 @@ export function Review({ isContent, isReview, setIsModal }: ReviewType) {
   // const [isModal, setIsModal] = useState(false);
   const dispatch = useAppDispatch();
   const reviewDeleteHandler = () => {
-    console.log(
-      '각각의 캠핑장 상세페이지에 달린 리뷰를 삭제할 수 있는 API를 호출'
-    );
+    // console.log(
+    //   '각각의 캠핑장 상세페이지에 달린 리뷰를 삭제할 수 있는 API를 호출'
+    // );
   };
   // {
   //   createdAt: '2023-03-22T23:26:35',
@@ -190,6 +190,7 @@ export function Review({ isContent, isReview, setIsModal }: ReviewType) {
   //   content: '처음뵙겠습니다.',
   //   rating: 5,
   // },
+
   return (
     <Container className="post">
       <div key={isReview.id} className="top">
@@ -261,9 +262,9 @@ export function Post({ data }: Community) {
             </div>
             <div className="field heart">
               {data.islike ? (
-                <FcLike className="post_icon" />
-              ) : (
                 <FcLikePlaceholder className="post_icon" />
+              ) : (
+                <FcLike className="post_icon" />
               )}
               <span>{data.likeCnt}</span>
             </div>

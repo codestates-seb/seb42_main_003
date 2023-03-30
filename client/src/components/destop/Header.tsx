@@ -122,7 +122,7 @@ function Header({ width_M, setIsURL }: SearchState) {
     dispatch(navNumber(id));
   };
   useEffect(() => {
-    console.log('change');
+    // console.log('change');
   }, [pathname]);
   const loginHandler = () => {
     if (loginState) navigate('/mypage');
@@ -131,7 +131,7 @@ function Header({ width_M, setIsURL }: SearchState) {
   };
   const wishlistHandler = (event: CustomMouseEvent) => {
     const menu = event.target as HTMLLIElement;
-    console.log(menu);
+    // console.log(menu);
     if (menu.id === '2') {
       if (loginState) navigate(navMenu[+menu.id - 1].link);
       else dispatch(loginModal(true));
@@ -212,7 +212,7 @@ function Header({ width_M, setIsURL }: SearchState) {
                 height: '40px',
                 cursor: 'pointer',
               }}
-              src={memberInfo.profileImg}
+              src="https://cdn.pixabay.com/photo/2022/05/11/22/17/pink-hibiscus-7190314_1280.jpg"
               alt="profile-img"
               onClick={() => navigate('/mypage')}
             ></img>

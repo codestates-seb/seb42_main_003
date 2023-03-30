@@ -28,7 +28,7 @@ import useUploadImage from '../hooks/useUploadImage';
 import { PageHeader } from '../components/destop/PageHeader';
 
 function PostDetail() {
-  const isLogin = useAppSelector((state) => state.isLogin);
+  const isLogin = useAppSelector(state => state.isLogin);
   const { postId } = useParams();
   const [postData, setPostData] = useState<ArticleType | null>(null);
   const [commentData, setCommentData] = useState<any>(null);
@@ -37,7 +37,7 @@ function PostDetail() {
   const [isAlreadyLike, setIsAlreadyLike] = useState(false);
 
   useEffect(() => {
-    getDataTs(`articles/${postId}`).then((data) => {
+    getDataTs(`articles/${postId}`).then(data => {
       setPostData(data);
 
       setCommentData(data.comments);
@@ -52,7 +52,7 @@ function PostDetail() {
         console.log('removed');
         navigate('/community');
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   };
 
   const likeHandler = () => {
@@ -60,7 +60,7 @@ function PostDetail() {
       .then(() => {
         if (postData) postData.likeCnt += 1;
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         setIsAlreadyLike(true);
       });
@@ -73,10 +73,10 @@ function PostDetail() {
   return (
     <>
       <Header width_M={'1000px'}></Header>
-      
+
       <MobileHeader>
         <h1>커뮤니티</h1>
-        <button onClick={()=>navigate(-1)}>
+        <button onClick={() => navigate(-1)}>
           <HiArrowSmLeft />
         </button>
         {/* <button>삭제</button> */}
@@ -131,41 +131,45 @@ function ViewContent({
   isAlreadyLike,
   likeHandler,
 }: PostProps) {
-  const isLogin = useAppSelector((state) => state.isLogin);
-  const memberInfo = useAppSelector((state) => state.memberInfo);
+  const isLogin = useAppSelector(state => state.isLogin);
+  const memberInfo = useAppSelector(state => state.memberInfo);
 
   return (
     <PostArticle>
       <h2>{post.title}</h2>
       <div>
         <div>
-          <img src={post.profileImg} alt='profile-img'></img>
-          <div className='member-info-upper'>
-            <span className='member-info-nickname'>{post.nickname}</span>
-            <span className='member-created-at'>
+          <img src={post.profileImg} alt="profile-img"></img>
+          <div className="member-info-upper">
+            <span className="member-info-nickname">{post.nickname}</span>
+            <span className="member-created-at">
               {timeParser(post.createdAt)}
             </span>
           </div>
         </div>
-        <div className='post-info'>
+        <div className="post-info">
           <div>
-            <span className='post-info-span'>
+            <span className="post-info-span">
               <AiOutlineEye />
               <span>{post.memberId}</span>
             </span>
-            <span className='post-info-span'>
+            <span className="post-info-span">
               <button onClick={likeHandler}>
                 <FcLike />
               </button>
               <span>{post.likeCnt}</span>
             </span>
           </div>
-          {isAlreadyLike && <div style={{fontSize:'14px',color:'var(--chamong__color)'}}>이미 좋아요를 누른 게시글입니다.</div>}
+          {isAlreadyLike && (
+            <div style={{ fontSize: '14px', color: 'var(--chamong__color)' }}>
+              이미 좋아요를 누른 게시글입니다.
+            </div>
+          )}
         </div>
       </div>
       <p>{post.content}</p>
-      <div className='post-buttonbox'>
-        {isLogin&&memberInfo.id===post.memberId && (
+      <div className="post-buttonbox">
+        {isLogin && memberInfo.id === post.memberId && (
           <ButtonBox setIsSubmit={setIsSubmit} setIsDelete={setIsDelete} />
         )}
       </div>
@@ -181,34 +185,36 @@ interface ButtonBoxProps {
 function ButtonBox({ setIsSubmit, setIsDelete }: ButtonBoxProps) {
   return (
     <ButtonBoxStyle>
-      <span className='button-wrapper'>
+      <span className="button-wrapper">
         <Button
-          padding='8px'
+          padding="8px"
           border={'var(--chamong__color)'}
           color={'var(--chamong__color)'}
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          radius='12px'
-          width='100%'
-          onClick={() => setIsSubmit(true)}>
+          radius="12px"
+          width="100%"
+          onClick={() => setIsSubmit(true)}
+        >
           <BsPencilSquare />
-          <span className='button-desktop'> 수정하기</span>
+          <span className="button-desktop"> 수정하기</span>
         </Button>
       </span>
-      <span className='button-wrapper'>
+      <span className="button-wrapper">
         <Button
-          padding='8px'
+          padding="8px"
           border={'var(--chamong__color)'}
           color={'var(--chamong__color)'}
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          radius='12px'
-          width='100%'
-          onClick={() => setIsDelete(true)}>
+          radius="12px"
+          width="100%"
+          onClick={() => setIsDelete(true)}
+        >
           <HiOutlineX />
-          <span className='button-desktop'> 삭제하기</span>
+          <span className="button-desktop"> 삭제하기</span>
         </Button>
       </span>
     </ButtonBoxStyle>
@@ -225,10 +231,10 @@ function DeleteConfirmModal({
   setIsDelete,
 }: DeleteConfirmModalProps) {
   return (
-    <Modal maxWidth='200px'>
-      <div className='wrapper'>
-        <div className='modal-text'>정말로 삭제할까요?</div>
-        <div className='modal-text'>
+    <Modal maxWidth="200px">
+      <div className="wrapper">
+        <div className="modal-text">정말로 삭제할까요?</div>
+        <div className="modal-text">
           <Button
             onClick={removeArticleHandler}
             border={'var(--chamong__color)'}
@@ -237,19 +243,21 @@ function DeleteConfirmModal({
             hcolor={'var(--chamong__color)'}
             hover={'white'}
             hborder={'var(--chamong__color)'}
-            padding='14px 15px'
-            radius='12px'>
+            padding="14px 15px"
+            radius="12px"
+          >
             삭제
           </Button>
           <Button
             onClick={() => setIsDelete(false)}
-            radius='12px'
-            padding='14px 15px'
+            radius="12px"
+            padding="14px 15px"
             border={'var(--chamong__color)'}
             color={'var(--chamong__color)'}
             hcolor={'white'}
             hover={'var(--chamong__color)'}
-            hborder={'var(--chamong__color)'}>
+            hborder={'var(--chamong__color)'}
+          >
             취소
           </Button>
         </div>
@@ -274,12 +282,10 @@ function ViewComment({ comment }: CommentProps) {
     <CommentArticle>
       <div>
         <div>
-          <img src={comment.profileImg} alt='profile-img'></img>
-          <div className='member-info-upper'>
-            <span className='member-info-nickname'>
-              {comment.nickname}
-            </span>
-            <span className='member-created-at'>
+          <img src={comment.profileImg} alt="profile-img"></img>
+          <div className="member-info-upper">
+            <span className="member-info-nickname">{comment.nickname}</span>
+            <span className="member-created-at">
               {timeParser(comment.createdAt)}
             </span>
           </div>
@@ -306,16 +312,18 @@ function PostCommentMobile({ articleId }: PostCommentProps) {
 
   return (
     <PostCommentStyle>
-      <div className='post-comment-input'>
+      <div className="post-comment-input">
         <Input
-          placeholder='댓글을 남겨주세요!'
+          placeholder="댓글을 남겨주세요!"
           value={content}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setContent(e.target.value)
-          }></Input>
+          }
+        ></Input>
         <button
-          className='post-comment-mobile-button'
-          onClick={postCommentHandler}>
+          className="post-comment-mobile-button"
+          onClick={postCommentHandler}
+        >
           <BsPencilSquare />
         </button>
         <Button
@@ -325,9 +333,10 @@ function PostCommentMobile({ articleId }: PostCommentProps) {
           hcolor={'var(--chamong__color)'}
           hover={'white'}
           hborder={'var(--chamong__color)'}
-          padding='14px 15px'
-          radius='12px'
-          onClick={postCommentHandler}>
+          padding="14px 15px"
+          radius="12px"
+          onClick={postCommentHandler}
+        >
           작성
         </Button>
       </div>
@@ -354,15 +363,20 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
 
   const articleSubmitHandler = () => {
     const data = { title, content };
-    sendFormDataTs('articles', 'patch', data, image,'articleCreate','articleImg').then(() =>
-      navigate('/articles')
-    );
+    sendFormDataTs(
+      'articles',
+      'patch',
+      data,
+      image,
+      'articleCreate',
+      'articleImg'
+    ).then(() => navigate('/articles'));
   };
 
   return (
     <Modal>
-      <div className='wrapper'>
-        <div className='header'>
+      <div className="wrapper">
+        <div className="header">
           <h2>글 수정하기</h2>
           <button>
             <HiOutlineX onClick={() => setIsSubmit(false)} />
@@ -374,25 +388,26 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding='8px 14px'
-          radius='12px'>
+          padding="8px 14px"
+          radius="12px"
+        >
           {imageSrc.length >= 1 ? (
-            <div className='preview'>
-              <img alt='preview' src={imageSrc}></img>
+            <div className="preview">
+              <img alt="preview" src={imageSrc}></img>
               <button onClick={imageDelete}>
                 <HiOutlineX />
               </button>
             </div>
           ) : (
-            <label htmlFor='file'>이미지 첨부</label>
+            <label htmlFor="file">이미지 첨부</label>
           )}
-          <input type='file' id='file' onChange={imageChange}></input>
+          <input type="file" id="file" onChange={imageChange}></input>
         </ImageInput>
-        <Input placeholder='제목' onChange={titleHandler} value={title} />
+        <Input placeholder="제목" onChange={titleHandler} value={title} />
         <TextArea
           value={content}
           height={'200px'}
-          placeholder='내용'
+          placeholder="내용"
           onChange={contentHandler}
         />
         <Button
@@ -403,9 +418,10 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
           hcolor={'var(--chamong__color)'}
           hover={'white'}
           hborder={'var(--chamong__color)'}
-          padding='13px 15px'
-          radius='12px'
-          width='100%'>
+          padding="13px 15px"
+          radius="12px"
+          width="100%"
+        >
           수정 완료
         </Button>
       </div>

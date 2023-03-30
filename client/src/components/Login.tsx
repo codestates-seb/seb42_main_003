@@ -235,6 +235,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
       console.log('signup error 없음');
       const data = { nickname, email, password };
       sendDataTs('members', 'post', data);
+      window.location.reload();
     }
   };
 

@@ -53,5 +53,6 @@
   },
   "devDependencies": {
     "babel-plugin-transform-remove-console": "^6.9.4"
-  }
+  },
+  "build": "GENERATE_SOURCEMAP=false react-scripts build"
 }
