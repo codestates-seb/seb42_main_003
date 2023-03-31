@@ -4,8 +4,10 @@ import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { AiFillStar } from 'react-icons/ai';
 import { Button } from '../styles/Button';
 import { reset } from '../store/reviewSlice';
-import { getDataTs } from '../api/tsapi';
-import { useLocation } from 'react-router-dom';
+import { getDataTs, sendDataTs } from '../api/tsapi';
+// import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+
 export const Container = styled.div`
   @media (max-width: 768px) {
     .review_input_header {
@@ -86,7 +88,7 @@ export const Container = styled.div`
     font-size: var(--fs__big);
     padding-top: 8px;
   }
-`; //font-size: ${props => props.fs || var(--fs__mid)};
+`;
 export const RatingBox = styled.div`
   padding-left: 10px;
 
@@ -119,7 +121,7 @@ export function ReviewSubmit() {
     false,
     false,
   ]);
-  const { pathname } = useLocation();
+  const { contentId } = useParams();
 
   type ReviewType = {
     id: number;
@@ -129,6 +131,7 @@ export function ReviewSubmit() {
     grade: number;
     body: string;
   };
+
   const [isEdit, setIsEdit] = useState<ReviewType>(edit);
   const array = [0, 1, 2, 3, 4];
   const input = useRef(null);
@@ -142,8 +145,17 @@ export function ReviewSubmit() {
   };
   const memberInfo = useAppSelector(state => state.memberInfo);
   const score = clicked.filter(Boolean).length;
+
   const submitHandler = () => {
-    getDataTs(`main/${pathname}`).then(res => console.log(res));
+    const data = { content: isEdit.body, rating: score };
+    if (!data.content) alert('내용을 작성해주세요');
+    else if (!data.rating) alert('별점을 달아주세요');
+    else {
+      sendDataTs(`review/${contentId}`, 'post', data).then(res =>
+        console.log(res)
+      );
+      window.location.replace(`/content/${contentId}`);
+    }
   };
   return (
     <Container>

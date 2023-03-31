@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { BsFillPlusCircleFill } from 'react-icons/bs';
+import { useEffect, useState } from 'react';
+import { getDataTs } from '../../api/tsapi';
 interface CardList {
   data?: string[];
 }
@@ -79,25 +81,31 @@ const Container = styled.div`
     margin-left: 5px;
   }
 `;
-const content = [
-  {
-    id: 1,
-    title: '양양 차박지',
-    tag: ['낚시', '여름'],
-  },
-  {
-    id: 2,
-    title: '거제도 해변',
-    tag: ['반려동물', '섬'],
-  },
-  {
-    id: 3,
-    title: '부산 해운대 근처',
-    tag: ['해변', '전기'],
-  },
-];
+// const content = [
+//   {
+//     id: 1,
+//     title: '양양 차박지',
+//     tag: ['낚시', '여름'],
+//   },
+//   {
+//     id: 2,
+//     title: '거제도 해변',
+//     tag: ['반려동물', '섬'],
+//   },
+//   {
+//     id: 3,
+//     title: '부산 해운대 근처',
+//     tag: ['해변', '전기'],
+//   },
+// ];
+// const [content, setContent] = useState()
 
 function MyPick({}: CardList) {
+  useEffect(() => {
+    getDataTs('pick-places/member').then(res => {
+      // if(res) setContent(res)
+    });
+  });
   return (
     <Container>
       <h1>내가 찾은 차박지</h1>
@@ -108,11 +116,11 @@ function MyPick({}: CardList) {
           </div>
           <BsFillPlusCircleFill className="icon" />
         </div>
-        {content.map(data => {
+        {/* {content?.map(data => {
           return (
             <ul key={data.id} className="list_box">
               <div className="like_box">
-                <p>{data.title}</p>
+                <p>{data.adress}</p>
               </div>
               <li className="tag">
                 {data.tag.map(ele => {
@@ -121,7 +129,7 @@ function MyPick({}: CardList) {
               </li>
             </ul>
           );
-        })}
+        })} */}
       </div>
     </Container>
   );

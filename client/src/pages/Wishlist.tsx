@@ -15,24 +15,31 @@ import { useWindowSize } from '../hooks/useWindowSize';
 import { useNavigate } from 'react-router';
 import { loginModal } from '../store/loginModal';
 import { getDataTs } from '../api/tsapi';
-const Container = styled.div<MapHeightProps>`
-  /* @media (min-width: 768px) {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-    } */
 
+const Container = styled.div<MapHeightProps>`
   .container_flex {
     display: flex;
     flex-direction: column;
     align-items: center;
+    @media (max-width: 768px) {
+      margin-bottom: 50px;
+    }
   }
   .content_body {
     display: flex;
     flex-direction: row;
     justify-content: center;
     width: 100%;
-    max-width: 100vw;
+    /* max-width: 100vw; */
+    height: 760px;
+    overflow: hidden;
+  }
+  .card_wrap {
+    width: 100%;
+    max-width: 500px;
+    height: 760px;
+    margin-bottom: 50px;
+    overflow: scroll;
   }
   .content_list {
     @media (max-width: 768px) {
@@ -118,7 +125,7 @@ function Wishlist(map_height: MapHeightProps) {
     if (!isLogin) dispatch(loginModal(true));
     getDataTs('bookmark?page=1').then(res => {
       console.log(res);
-      if (res) setData(res);
+      if (res) setData(res.content);
     });
   }, []);
 
@@ -141,7 +148,7 @@ function Wishlist(map_height: MapHeightProps) {
       </MobileHeader>
       <div className="container_flex">
         <div className="content_body">
-          <div style={{ width: '100%', maxWidth: '500px' }}>
+          <div className="card_wrap">
             <PageHeader
               title={'위시리스트'}
               icon={<AiOutlineHeart />}

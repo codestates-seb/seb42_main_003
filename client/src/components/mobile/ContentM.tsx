@@ -18,7 +18,9 @@ import { MobileHeader } from '../../styles/mobileStyle';
 import { ReviewSubmit } from '../ReviewSubmit';
 import { Modal } from '../../styles/Modal';
 import MapContainer from '../map/MapContainer';
-
+import { sendDataTs } from '../../api/tsapi';
+import { MouseEvent } from 'react';
+type CustomMouseEvent = MouseEvent<HTMLElement>;
 interface ContentInfo {
   bg?: URL;
   height?: string;
@@ -153,8 +155,21 @@ export function ContentM({
   setIsModal,
 }: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
-  const [isLike, setIsLike] = useState(false);
+  const [isLike, setIsLike] = useState(isContent.bookmarked);
 
+  const addWishlist = (event: CustomMouseEvent) => {
+    if (isLike) {
+      sendDataTs(`bookmark/${contentId}`, 'delete', {}).then(res =>
+        console.log('delete')
+      );
+      setIsLike(false);
+    } else {
+      sendDataTs(`bookmark/${contentId}`, 'post', {}).then(res => {
+        console.log('add');
+      });
+      setIsLike(true);
+    }
+  };
   return (
     <Container
       isContent={isContent}
@@ -166,12 +181,11 @@ export function ContentM({
           <FiArrowLeft className="back" />
         </Link>
         <h1>{isContent.facltNm}</h1>
-        <button>
+        <button onClick={addWishlist}>
           <svg
             viewBox="0 0 24 24"
             className={!isLike ? 'heart' : 'active'}
             fill="none"
-            onClick={() => setIsLike(!isLike)}
           >
             <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z" />
           </svg>
