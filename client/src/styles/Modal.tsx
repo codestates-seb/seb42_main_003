@@ -18,6 +18,14 @@ export const Modal = styled.div<ModalStyleProps>`
   background-color: rgba(0, 0, 0, 0.5);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
+  span.error-message {
+    display: block;
+    color: var(--chamong__color);
+    font-weight: 500;
+    font-size: var(--fs__mid);
+    margin-top: 0px;
+  }
+
   @media screen {
    top:0px;
    padding-bottom : 0px;

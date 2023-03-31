@@ -2,7 +2,6 @@ import { MobileHeader } from '../styles/mobileStyle';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { HiArrowSmLeft } from 'react-icons/hi';
-import { GrFormView } from 'react-icons/gr';
 import { BsPencilSquare } from 'react-icons/bs';
 import Header from '../components/destop/Header';
 import Footer from '../components/destop/Footer';
@@ -23,49 +22,35 @@ import { Modal } from '../styles/Modal';
 import { HiOutlineX } from 'react-icons/hi';
 import { FcLike } from 'react-icons/fc';
 import { AiOutlineEye } from 'react-icons/ai';
-import { AiOutlineComment } from 'react-icons/ai';
 import useUploadImage from '../hooks/useUploadImage';
 import { useWindowSize } from '../hooks/useWindowSize';
+import { loginModal } from '../store/loginModal';
 
 function PostDetail() {
-
   const isLogin = useAppSelector((state) => state.isLogin);
   const { postId } = useParams();
   const [postData, setPostData] = useState<ArticleType | null>(null);
   const [commentData, setCommentData] = useState<any>(null);
   const [isSubmit, setIsSubmit] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [isAlreadyLike, setIsAlreadyLike] = useState(false);
   const navigate = useNavigate();
 
-
-
   useEffect(() => {
-    getDataTs(`articles/${postId}`).then((data) => {
-      setPostData(data);
-      setCommentData(data.comments);
-    }).catch(()=>navigate('/error'))
+    getDataTs(`articles/${postId}`)
+      .then((data) => {
+        setPostData(data);
+        setCommentData(data.comments);
+      })
+      .catch(() => navigate('/error'));
   }, []);
-
 
   const removeArticleHandler = () => {
     sendDataTs(`articles/${postId}`, 'delete', {})
       .then(() => {
-        console.log('removed');
+        alert('삭제되었습니다.');
         navigate('/community');
       })
       .catch((err) => console.log(err));
-  };
-
-  const likeHandler = () => {
-    sendDataTs(`articles/${postId}/like`, 'post', {})
-      .then(() => {
-        if (postData) postData.likeCnt += 1;
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsAlreadyLike(true);
-      });
   };
 
   useEffect(() => {
@@ -89,8 +74,6 @@ function PostDetail() {
             post={postData}
             setIsSubmit={setIsSubmit}
             setIsDelete={setIsDelete}
-            isAlreadyLike={isAlreadyLike}
-            likeHandler={likeHandler}
           />
           <CommentCounter>
             댓글 {postData.commentCnt ? postData.commentCnt : '0'}개
@@ -122,27 +105,42 @@ interface PostProps {
   post: ArticleType;
   setIsDelete: (T: boolean) => void;
   setIsSubmit: (T: boolean) => void;
-  isAlreadyLike: boolean;
-  likeHandler: () => void;
 }
 
-function ViewContent({
-  post,
-  setIsSubmit,
-  setIsDelete,
-  isAlreadyLike,
-  likeHandler,
-}: PostProps) {
-  const windowSize=useWindowSize();
+function ViewContent({ post, setIsSubmit, setIsDelete }: PostProps) {
+  const dispatch = useAppDispatch();
+  const windowSize = useWindowSize();
   const isLogin = useAppSelector((state) => state.isLogin);
   const memberInfo = useAppSelector((state) => state.memberInfo);
-  console.log(memberInfo)
+  const [nowLike, setNowLike] = useState(post.likeCnt);
+  const [isAlreadyLike, setIsAlreadyLike] = useState(false);
+
+  const likeHandler = () => {
+    if (!isLogin) {
+      dispatch(loginModal(true));
+      return;
+    }
+    sendDataTs(`articles/${post.id}/like`, 'post', {})
+      .then(() => {
+        setNowLike((prevState) => (prevState += 1));
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsAlreadyLike(true);
+      });
+  };
+
   return (
     <PostArticle>
       <h2>{post.title}</h2>
       <div>
         <div>
-          <img src={post.profileImg} alt='profile-img' className='profile-img'></img>
+          {post.articleImg && (
+            <img
+              src={post.profileImg}
+              alt='profile-img'
+              className='profile-img'></img>
+          )}
           <div className='member-info-upper'>
             <span className='member-info-nickname'>{post.nickname}</span>
             <span className='member-created-at'>
@@ -160,7 +158,7 @@ function ViewContent({
               <button onClick={likeHandler}>
                 <FcLike />
               </button>
-              <span>{post.likeCnt}</span>
+              <span>{nowLike}</span>
             </span>
           </div>
           {isAlreadyLike && (
@@ -171,12 +169,15 @@ function ViewContent({
           )}
         </div>
       </div>
-      
-      <p><img src={post.articleImg} alt='article' className='article-image' style={{maxWidth:windowSize.width}}></img>
-      <div>
-        {post.content}
-        </div>
-        </p>
+
+      <p>
+        <img
+          src={post.articleImg}
+          alt='article'
+          className='article-image'
+          style={{ maxWidth: windowSize.width }}></img>
+        <div>{post.content}</div>
+      </p>
       <div className='post-buttonbox'>
         {isLogin && memberInfo.id === post.memberId && (
           <ButtonBox setIsSubmit={setIsSubmit} setIsDelete={setIsDelete} />
@@ -272,14 +273,14 @@ function DeleteConfirmModal({
 }
 
 interface CommentType {
-  articleId:number,
+  articleId: number;
   nickname: string;
   createdAt: string;
-  updatedAt:string,
+  updatedAt: string;
   profileImg: string;
   content: string;
-  id:number,
-  memberId:number,
+  id: number;
+  memberId: number;
 }
 
 interface CommentProps {
@@ -289,32 +290,41 @@ interface CommentProps {
 function ViewComment({ comment }: CommentProps) {
   const memberInfo = useAppSelector((state) => state.memberInfo);
 
-  const commentDeleteHandler=()=>{
-    if(memberInfo.id===comment.memberId){
-    sendDataTs(`articles/${comment.articleId}/comments/${comment.id}`,'delete',{}).then(()=>{
-      window.location.reload();
-    }).catch(err=>console.log(err));
-  }
-  }
+  const commentDeleteHandler = () => {
+    if (memberInfo.id === comment.memberId) {
+      sendDataTs(
+        `articles/${comment.articleId}/comments/${comment.id}`,
+        'delete',
+        {}
+      )
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
   return (
     <CommentArticle>
       <div>
         <div>
-          <img src={comment.profileImg} alt='profile-img' className='profile-img'></img>
+          <img
+            src={comment.profileImg}
+            alt='profile-img'
+            className='profile-img'></img>
           <div className='member-info-upper'>
             <span className='member-info-nickname'>
               {comment.nickname}
             </span>
             <span className='member-created-at'>
               {timeParser(comment.createdAt)}
-              {memberInfo.id==comment.memberId&&
+              {memberInfo.id == comment.memberId && (
                 <button
-                onClick={commentDeleteHandler}
-                className='comment-delete-button'>
+                  onClick={commentDeleteHandler}
+                  className='comment-delete-button'>
                   <HiOutlineX />
                 </button>
-              }
+              )}
             </span>
           </div>
         </div>
@@ -332,6 +342,7 @@ function PostCommentMobile({ articleId }: PostCommentProps) {
   const [content, setContent] = useState('');
   const postCommentHandler = (e: any) => {
     e.preventDefault();
+    if (!content) return;
     const data = { content };
     sendDataTs(`articles/${articleId}/comments`, 'post', data).then(() =>
       window.location.reload()
@@ -378,6 +389,11 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
   const [title, setTitle] = useState(postData.title);
   const [content, setContent] = useState(postData.content);
+  const [errorMessage, setErrorMessage] = useState({
+    title: '',
+    content: '',
+    submit: '',
+  });
 
   const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -387,15 +403,48 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
   };
 
   const articleSubmitHandler = () => {
+    if (isInputEmpty()) return;
     const data = { title, content };
     sendFormDataTs(
-      'articles',
+      `articles/${postData.id}`,
       'patch',
       data,
       image,
       'articleCreate',
       'articleImg'
-    ).then(() => navigate('/articles'));
+    )
+      .then(() => navigate('/articles'))
+      .catch((err) =>
+        setErrorMessage((prevState) => {
+          return {
+            ...prevState,
+            submit: `글 수정이 실패했습니다. (${err.response.status})`,
+          };
+        })
+      );
+  };
+
+  const isInputEmpty = () => {
+    let pass = true;
+    if (!title) {
+      pass = false;
+      setErrorMessage((prevState) => {
+        return { ...prevState, title: '제목을 입력해주세요.' };
+      });
+    } else
+      setErrorMessage((prevState) => {
+        return { ...prevState, title: '' };
+      });
+    if (!content) {
+      pass = false;
+      setErrorMessage((prevState) => {
+        return { ...prevState, content: '내용을 입력해주세요.' };
+      });
+    } else
+      setErrorMessage((prevState) => {
+        return { ...prevState, content: '' };
+      });
+    return !pass;
   };
 
   return (
@@ -428,12 +477,18 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
           <input type='file' id='file' onChange={imageChange}></input>
         </ImageInput>
         <Input placeholder='제목' onChange={titleHandler} value={title} />
+        {errorMessage.title && (
+          <span className='error-message'>{errorMessage.title}</span>
+        )}
         <TextArea
           value={content}
           height={'200px'}
           placeholder='내용'
           onChange={contentHandler}
         />
+        {errorMessage.content && (
+          <span className='error-message'>{errorMessage.content}</span>
+        )}
         <Button
           onClick={articleSubmitHandler}
           border={'var(--chamong__color)'}
@@ -447,6 +502,9 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
           width='100%'>
           수정 완료
         </Button>
+        {errorMessage.submit && (
+          <span className='error-message'>{errorMessage.submit}</span>
+        )}
       </div>
     </Modal>
   );
