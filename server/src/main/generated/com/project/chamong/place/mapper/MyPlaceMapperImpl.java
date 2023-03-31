@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-03-28T17:27:30+0900",
+    date = "2023-03-30T23:09:40+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.18 (Azul Systems, Inc.)"
 )
 @Component
@@ -22,17 +22,17 @@ public class MyPlaceMapperImpl implements MyPlaceMapper {
             return null;
         }
 
-        MyPlace myPlace = new MyPlace();
+        MyPlace.MyPlaceBuilder myPlace = MyPlace.builder();
 
-        myPlace.setMemo( postDto.getMemo() );
+        myPlace.memo( postDto.getMemo() );
         List<String> list = postDto.getKeywords();
         if ( list != null ) {
-            myPlace.setKeywords( new ArrayList<String>( list ) );
+            myPlace.keywords( new ArrayList<String>( list ) );
         }
-        myPlace.setMapX( postDto.getMapX() );
-        myPlace.setMapY( postDto.getMapY() );
+        myPlace.mapX( postDto.getMapX() );
+        myPlace.mapY( postDto.getMapY() );
 
-        return myPlace;
+        return myPlace.build();
     }
 
     @Override
@@ -41,16 +41,16 @@ public class MyPlaceMapperImpl implements MyPlaceMapper {
             return null;
         }
 
-        MyPlace myPlace = new MyPlace();
+        MyPlace.MyPlaceBuilder myPlace = MyPlace.builder();
 
-        myPlace.setMemo( patchDto.getMemo() );
+        myPlace.memo( patchDto.getMemo() );
         List<String> list = patchDto.getKeywords();
         if ( list != null ) {
-            myPlace.setKeywords( new ArrayList<String>( list ) );
+            myPlace.keywords( new ArrayList<String>( list ) );
         }
-        myPlace.setIsShared( patchDto.getIsShared() );
+        myPlace.isShared( patchDto.getIsShared() );
 
-        return myPlace;
+        return myPlace.build();
     }
 
     @Override

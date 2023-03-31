@@ -1,7 +1,7 @@
 package com.project.chamong.article.entity;
 
 import com.project.chamong.article.dto.ArticleDto;
-import com.project.chamong.audit.Auditable;
+import com.project.chamong.audit.BaseTime;
 import com.project.chamong.member.entity.Member;
 import lombok.*;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Article extends Auditable {
+public class Article extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -33,37 +33,33 @@ public class Article extends Auditable {
     private Integer viewCnt;
     // 좋아요 수
     private Integer likeCnt;
-
+    
     // 댓글 수
     private Integer commentCnt;
-
+    
     // 댓글
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
     // 좋아요
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArticleLike> articleLikes = new ArrayList<>();
-
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Member member;
-
+    
     public void increaseLikeCnt() {
         this.likeCnt++;
     }
-
+    
     public void decreaseLikeCnt() {
         this.likeCnt--;
     }
-
-//    public void setMember(Member member) {
-//        if (this.member != null) {
-//            this.member.getArticles().remove(this);
-//        }
-//        this.member = member;
-//        member.getArticles().add(this);
-//    }
-
+    
+    public boolean isWriter(Member member){
+        return this.member.getId().equals(member.getId());
+    }
+    
     public void update(ArticleDto.Patch patchDto) {
         if (patchDto.getTitle() != null) {
             this.setTitle(patchDto.getTitle());
@@ -75,8 +71,8 @@ public class Article extends Auditable {
             this.setArticleImg(patchDto.getArticleImg());
         }
     }
-
-
+    
+    
     public static Article createArticle(ArticleDto.Post postDto, Member member) {
         Article article = new Article();
         article.setMember(member);
@@ -86,7 +82,7 @@ public class Article extends Auditable {
         article.commentCnt = 0;
         article.likeCnt = 0;
         article.articleImg = postDto.getArticleImg();
+
         return article;
     }
-
 }

@@ -5,16 +5,16 @@ import com.project.chamong.member.dto.MemberDto;
 import com.project.chamong.member.entity.Member;
 import com.project.chamong.member.mapper.MemberMapper;
 import com.project.chamong.member.service.MemberService;
-import com.project.chamong.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -24,41 +24,35 @@ import java.io.IOException;
 public class MemberController {
   private final MemberMapper mapper;
   private final MemberService memberService;
-  private final S3Service s3Service;
-
   @PostMapping
   public ResponseEntity<?> postMember(@Valid @RequestBody MemberDto.Post postDto) {
-    Member member = mapper.memberPostDtoToMember(postDto);
-    Member savedMember = memberService.saveMember(member);
-    MemberDto.Response response = mapper.memberToMemberResponseDto(savedMember);
+    MemberDto.Response response = memberService.saveMember(postDto);
+  
     return new ResponseEntity<>(response, HttpStatus.CREATED);
   }
   
   @GetMapping("/mypage")
   public ResponseEntity<?> getMyPage(@AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto){
-    Member findMember = memberService.findMyPage(authorizedMemberDto);
-    MemberDto.MyPageResponse response = mapper.memberToMemberMypageResponse(findMember);
+    MemberDto.MyPageResponse response = memberService.findMyPage(authorizedMemberDto);
+  
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
   
   @PatchMapping
   public ResponseEntity<?> patchMember(@Valid @RequestPart("memberUpdate") MemberDto.Patch patchDto,
-                                       @RequestPart MultipartFile profileImg,
+                                       @RequestPart @Nullable MultipartFile profileImg,
                                        @AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto) throws IOException {
-
-    Member savedMember = memberService.updateMember(mapper.memberPatchDtoToMember(patchDto), authorizedMemberDto.getEmail());
-    // 이미지 S3 저장
-    String fileName = s3Service.uploadFile(profileImg);
-    savedMember.setProfileImg(fileName);
-    MemberDto.Response response = mapper.memberToMemberResponseDto(savedMember);
+  
+    MemberDto.Response response = memberService.updateMember(patchDto, profileImg, authorizedMemberDto);
+    
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
-
-
+  
   @DeleteMapping
   public ResponseEntity<?> deleteMember(@AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto){
     memberService.deleteMember(authorizedMemberDto.getEmail());
     String message = "정상적으로 회원 탈퇴 되었습니다.";
+    
     return new ResponseEntity<>(message, HttpStatus.NO_CONTENT);
   }
   
@@ -69,5 +63,11 @@ public class MemberController {
     String message = "정상적으로 로그아웃 되었습니다.";
     return new ResponseEntity<>(message, HttpStatus.OK);
   }
-  
+  //실제 AccessToken 재발급 로직은 JwtVerificationFilter 에서 처리함
+  @GetMapping("/token")
+  public ResponseEntity<?> reissueAccessToken(@AuthenticationPrincipal AuthorizedMemberDto authorizedMemberDto){
+    MemberDto.Response response = memberService.reissueAccessToken(authorizedMemberDto);
+    
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
 }

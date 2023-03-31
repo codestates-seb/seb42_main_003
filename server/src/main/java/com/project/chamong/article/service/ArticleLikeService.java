@@ -25,9 +25,14 @@ public class ArticleLikeService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("Article not found ID:" + articleId));
 
+        // 해당 게시물에 로그인한 회원이 좋아요를 눌렀는지 확인
         var authorizedMemberArticleLike = article.getArticleLikes().stream()
                 .filter(articleLike -> articleLike.getMember().getId() == authorizedMemberDto.getId())
                 .findAny();
+
+        if(authorizedMemberArticleLike.isPresent()){
+            throw new IllegalArgumentException("Already liked the article ID: "+articleId);
+        }
 
         if (authorizedMemberArticleLike.isEmpty()) {
             article.increaseLikeCnt();
@@ -41,20 +46,21 @@ public class ArticleLikeService {
             articleLikeRepository.save(articleLike);
         }
     }
-
-
+    
+    
     @Transactional(readOnly = false)
     public void unlikeArticle(AuthorizedMemberDto authorizedMemberDto, Long articleId) {
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + articleId));
-
+          .orElseThrow(() -> new IllegalArgumentException("Article not found with ID: " + articleId));
+        
         var authorizedMemberArticleLike = article.getArticleLikes().stream()
-                .filter(articleLike -> articleLike.getMember().getId() == authorizedMemberDto.getId())
-                .findAny();
+          .filter(articleLike -> articleLike.getMember().getId() == authorizedMemberDto.getId())
+          .findAny();
         if (authorizedMemberArticleLike.isPresent()) {
             article.decreaseLikeCnt();
             article.getArticleLikes().removeIf(articleLike -> articleLike.getMember().getId() == authorizedMemberDto.getId());
         }
     }
-
+    
+    
 }

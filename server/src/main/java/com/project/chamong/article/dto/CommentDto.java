@@ -1,5 +1,6 @@
 package com.project.chamong.article.dto;
 
+import com.project.chamong.article.entity.Comment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ public class CommentDto {
     @Setter
     public static class Post {
         private String content;
-
+        
     }
     @Getter
     @Setter
@@ -28,12 +29,12 @@ public class CommentDto {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
     }
-
+    
     @Getter
     @Setter
     public static class Patch{
         private String content;
-
+        
     }
 
 }

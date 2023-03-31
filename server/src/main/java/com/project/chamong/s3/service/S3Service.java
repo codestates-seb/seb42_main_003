@@ -19,11 +19,10 @@ public class S3Service {
     @Autowired
     private AmazonS3 amazonS3;
 
-    String folderPath = "http://chamongbucket.s3-website.ap-northeast-2.amazonaws.com/images/member_image/"; // S3 내의 원하는 경로 설정가능하다.
+    String folderPath = "images/"; // S3 내의 원하는 경로 설정가능하다.
 
-    public String uploadFile(MultipartFile file) {
-        String fileName = folderPath + System.currentTimeMillis() + "_" + file.getOriginalFilename();
-
+    public String uploadFile(MultipartFile file, String dirName) {
+        String fileName = folderPath + dirName + '/' + System.currentTimeMillis() + "_" + file.getOriginalFilename();
         try {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(file.getSize());
@@ -31,7 +30,15 @@ public class S3Service {
         } catch (IOException e) {
             throw new RuntimeException("An error occurred while uploading the file of the ChaMong application.");
         }
-
+        fileName = "https://chamongbucket.s3.ap-northeast-2.amazonaws.com/" + fileName;
         return fileName;
+    }
+    
+    public String getDefaultProfileImg(){
+        return amazonS3.getUrl(bucketName, "images/default_image/member(default).jpg").toString();
+    }
+    
+    public String getDefaultCampingImg(){
+        return amazonS3.getUrl(bucketName, "images/default_image/camping(default).jpg").toString();
     }
 }
