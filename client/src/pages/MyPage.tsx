@@ -167,21 +167,6 @@ function MyPage() {
       });
   };
 
-  //테스트가 끝나면 아래의 코드를 지워주세요.
-  // useEffect(() => {
-  //   if (!memberInfo) {
-  //     axios({
-  //       method: 'get',
-  //       url: 'http://localhost:3001/member',
-  //     })
-  //       .then(res => {
-  //         setmemberInfo(res.data);
-  //       })
-  //       .catch(err => console.log(err));
-  //   }
-  // }, []);
-  //테스트가 끝나면 위의 코드를 지워주세요.
-
   return (
     <>
       <Header width_M={'1000px'}></Header>
@@ -406,7 +391,7 @@ function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
       keywords,
       mapY: Number(position[0]),
       mapX: Number(position[1]),
-      // address,
+      address
     };
     sendFormDataTs(
       'pick-places',
@@ -446,7 +431,7 @@ function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
       setErrorMessage(prevState=>{return {...prevState,position:'위치를 지정해주세요.'}});
     } else setErrorMessage(prevState=>{return {...prevState,position:''}});
     if(position&&!address){
-      console.log('위치 오류')
+      // console.log('위치 오류')
       pass=false;
       setErrorMessage(prevState=>{return {...prevState,position:'정상적인 위치가 아닙니다.'}});
     } else if(position) setErrorMessage(prevState=>{return {...prevState,position:''}});
@@ -458,7 +443,6 @@ function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
     maxWidth='600px'
       onClick={() => {
         setIsKeywordFocus(false);
-        console.log('wat');
       }}
     >
       <div className="wrapper">
@@ -585,7 +569,6 @@ function EditProfileModal({
   const profileSubmitHandler = () => {
     const data = { nickname, about, carName, oilInfo };
     if(isInputEmpty()) return;
-    console.log('start submit')
     sendFormDataTs(
       'members',
       'patch',
@@ -603,7 +586,6 @@ function EditProfileModal({
   const isInputEmpty=()=>{
     let pass=true;
     if(!nickname) {
-      console.log('닉네임 없음')
       pass=false;
       setErrorMessage(prevState=>{return {...prevState,nickname:'닉네임을 입력해주세요.'}});
     } else setErrorMessage(prevState=>{return {...prevState,nickname:''}});
