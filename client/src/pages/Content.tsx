@@ -138,17 +138,23 @@ function Content() {
     // window.scrollTo(0, 0);
   }, [contentId]);
   const login = useAppSelector(state => state.isLogin);
+  const params = useParams();
+  console.log(params.contentId);
+
   return (
     <Container onClick={() => dispatch(click(false))}>
       <Header width_M={'1000px'}></Header>
-      <ContentM
-        isContent={isContent}
-        contentId={contentId}
-        isModal={isModal}
-        setIsModal={setIsModal}
-      ></ContentM>
-      <ContentD isContent={isContent} contentId={contentId}></ContentD>
-
+      {isContent?.bookmarked ? (
+        <ContentM
+          isContent={isContent}
+          contentId={contentId}
+          isModal={isModal}
+          setIsModal={setIsModal}
+        ></ContentM>
+      ) : null}
+      {isContent?.bookmarked ? (
+        <ContentD isContent={isContent} contentId={contentId}></ContentD>
+      ) : null}
       {/* {모바일 리뷰 헤더} */}
       <div className="review_top_mobile">
         <div className="review_left">
@@ -176,7 +182,6 @@ function Content() {
           작성
         </Button>
       </div>
-
       {/* 데스크탑 & 모바일 리뷰 목록 */}
       <div className="review_wrap">
         <div className="desktop_wrap">
@@ -189,7 +194,6 @@ function Content() {
           ))}
         </div>
       </div>
-
       {/* 모바일 리뷰등록 모달 */}
       {isModal && login ? (
         <Modal

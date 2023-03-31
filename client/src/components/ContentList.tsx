@@ -2,9 +2,11 @@ import styled from 'styled-components';
 import { ContentCard } from './ContentCard';
 import { useState, useEffect } from 'react';
 import CommunityBestD from './destop/CommunityBestD';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import MyPick from './destop/MyPick';
 import { getDataTs } from '../api/tsapi';
 import useIntersectionObserver from '../hooks/useIO';
+import { setCampingList } from '../store/campingSlice';
 
 interface CardList {
   content?: any;
@@ -95,9 +97,10 @@ const Spinner = styled.div`
   }
 `;
 function ContentList({ data, setData }: CardList) {
-  type Info = any | null;
+  // const data = useAppSelector(state => state.campingList)
   const [isLoaded, setIsLoaded] = useState(false);
   const [pageNum, setpageNum] = useState(2);
+  const dispatch = useAppDispatch();
 
   const testFetch = (delay = 500) => new Promise(res => setTimeout(res, delay));
 
@@ -107,6 +110,7 @@ function ContentList({ data, setData }: CardList) {
       await testFetch();
       getDataTs(`main?page=${pageNum}`).then(res => {
         setData(data.concat(res.content));
+        // dispatch(setCampingList(res.content))
       });
       setIsLoaded(false);
       setpageNum(pageNum + 1);
