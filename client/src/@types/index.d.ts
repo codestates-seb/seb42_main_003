@@ -13,6 +13,7 @@ interface ArticleType {
   likeCnt:number;
   createdAt:string;
   updatedAt:string;
+  isLiked:boolean;
 }
 
 interface MemberInfo {
