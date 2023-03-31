@@ -16,6 +16,11 @@ import { Button } from '../../styles/Button';
 import { ReviewSubmit } from '../ReviewSubmit';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxTK';
 import { login } from '../../store/isLoginSlice';
+import { MouseEvent } from 'react';
+import { sendDataTs } from '../../api/tsapi';
+import { useParams } from 'react-router-dom';
+
+type CustomMouseEvent = MouseEvent<HTMLElement>;
 
 interface ContentInfo {
   bg?: URL;
@@ -223,20 +228,29 @@ const Container = styled('div')<ContentInfo>`
   }
 `;
 
-export function ContentD({ isContent, contentId }: ContentInfo) {
+export function ContentD({ isContent }: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
   // const [isContent, setIsContent] = useState<any>({});
-  const [isLike, setIsLike] = useState(false);
+
+  const [isLike, setIsLike] = useState(isContent.bookmarked);
   const login = useAppSelector(state => state.isLogin);
-  // useEffect(() => {
-  //   getData('content').then(res => {
-  //     const content = res.filter((ele: any) => {
-  //       return ele.contentId === contentId;
-  //     });
-  //     setIsContent(content[0]);
-  //   });
-  // }, [contentId]);
-  // window.scrollTo(0, 0);
+  const { contentId } = useParams();
+
+  const addWishlist = (event: CustomMouseEvent) => {
+    // const contentId = (event.target as HTMLLIElement).id;
+    // console.log(event);
+    if (isLike) {
+      sendDataTs(`bookmark/${contentId}`, 'delete', {}).then(res =>
+        console.log('delete')
+      );
+    } else {
+      sendDataTs(`bookmark/${contentId}`, 'post', {}).then(res => {
+        // alert('위시리스트에 추가되었습니다!');
+        // window.location.replace('/');
+        console.log('add');
+      });
+    }
+  };
 
   return (
     <Container isContent={isContent} bg={isContent.firstImageUrl}>
@@ -247,14 +261,14 @@ export function ContentD({ isContent, contentId }: ContentInfo) {
           <hr className="title_line"></hr>
           <div className="header_review">
             <div className="review_grade">
-              <p className="average">리뷰 4 </p>
+              <p className="average">리뷰 {isContent.reviews?.length}</p>
             </div>
             <div className="review_grade">
               <AiFillStar
                 size="15px"
                 style={{ color: 'var(--chamong__color)' }}
               />
-              <p className="average">4.5</p>
+              <p className="average">{isContent.totalRating}</p>
             </div>
             <div>
               <div
@@ -268,7 +282,9 @@ export function ContentD({ isContent, contentId }: ContentInfo) {
                 >
                   <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z" />
                 </svg>
-                <p className="average">저장</p>
+                <p onClick={addWishlist} className="average">
+                  저장
+                </p>
               </div>
             </div>
           </div>
@@ -293,46 +309,66 @@ export function ContentD({ isContent, contentId }: ContentInfo) {
               <h1>주소</h1>
               <p>{isContent.addr1}</p>
             </div>
-
+            sbrsCl
             <div className="info">
               <h1>키워드</h1>
               <div className="keyword_icon">
-                <div className="icon_box">
-                  <FaRestroom className="icon" />
-                  <p className="icon_name">화장실</p>
-                </div>
-                <div className="icon_box">
-                  <SiForestry className="icon" />
-                  <p className="icon_name">숲뷰</p>
-                </div>
-                <div className="icon_box">
-                  <BiWater className="icon" />
-                  <p className="icon_name">물멍</p>
-                </div>
-                <div className="icon_box">
-                  <BsWifi className="icon" />
-                  <p className="icon_name">와이파이</p>
-                </div>
-                <div className="icon_box">
-                  <MdElectricBolt className="icon" />
-                  <p className="icon_name">전기</p>
-                </div>
-                <div className="icon_box">
-                  <BiStore className="icon" />
-                  <p className="icon_name">마트</p>
-                </div>
-                <div className="icon_box">
-                  <TbDog className="icon" />
-                  <p className="icon_name">애견동반</p>
-                </div>
-                <div className="icon_box">
-                  <FaFish className="icon" />
-                  <p className="icon_name">낚시</p>
-                </div>
-                <div className="icon_box">
-                  <GiIsland className="icon" />
-                  <p className="icon_name">섬</p>
-                </div>
+                {isContent.sbrcCl?.includes('화장실') ? (
+                  <div className="icon_box">
+                    <FaRestroom className="icon" />
+                    <p className="icon_name">화장실</p>
+                  </div>
+                ) : null}
+                {isContent.lctCl?.includes('산' || '숲') ? (
+                  <div className="icon_box">
+                    <SiForestry className="icon" />
+                    <p className="icon_name">숲뷰</p>
+                  </div>
+                ) : null}
+                {isContent.lctCl?.includes(
+                  '계곡' || '강' || '해변' || '호수'
+                ) ? (
+                  <div className="icon_box">
+                    <BiWater className="icon" />
+                    <p className="icon_name">물멍</p>
+                  </div>
+                ) : null}
+                {isContent.sbrcCl?.includes('와이파이') ? (
+                  <div className="icon_box">
+                    <BsWifi className="icon" />
+                    <p className="icon_name">와이파이</p>
+                  </div>
+                ) : null}
+                {isContent.sbrcCl?.includes('전기') ? (
+                  <div className="icon_box">
+                    <MdElectricBolt className="icon" />
+                    <p className="icon_name">전기</p>
+                  </div>
+                ) : null}
+                {isContent.sbrcCl?.includes('마트') ? (
+                  <div className="icon_box">
+                    <BiStore className="icon" />
+                    <p className="icon_name">마트</p>
+                  </div>
+                ) : null}
+                {isContent.animalCmgCl?.includes('가능') ? (
+                  <div className="icon_box">
+                    <TbDog className="icon" />
+                    <p className="icon_name">애견동반</p>
+                  </div>
+                ) : null}
+                {isContent.posblFcltyCl?.includes('낚시') ? (
+                  <div className="icon_box">
+                    <FaFish className="icon" />
+                    <p className="icon_name">낚시</p>
+                  </div>
+                ) : null}
+                {isContent.lctCl?.includes('섬') ? (
+                  <div className="icon_box">
+                    <GiIsland className="icon" />
+                    <p className="icon_name">섬</p>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

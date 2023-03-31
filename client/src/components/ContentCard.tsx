@@ -12,8 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { MouseEvent } from 'react';
 import { sendDataTs } from '../api/tsapi';
+import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 type CustomMouseEvent = MouseEvent<HTMLElement>;
-
 interface CardView {
   //
   fs_h1?: string;
@@ -165,12 +165,30 @@ const Container = styled('div')<CardView>`
 `;
 export function ContentCard({ data, remove, setIsMap }: CardView) {
   const navigate = useNavigate();
-  const [isLike, setIsLike] = useState(false);
-
+  const [isLike, setIsLike] = useState(data.bookmarked);
+  const login = useAppSelector(state => state.isLogin);
+  console.log(isLike);
   const likeHandler = (event: CustomMouseEvent) => {
-    setIsLike(!isLike);
-    console.log(event);
-    sendDataTs(`bookmark/${event}`, 'post', {}).then(res => console.log(res));
+    if (login) {
+      if (isLike) {
+        sendDataTs(`bookmark/${event}`, 'delete', {}).then(res =>
+          console.log('delete')
+        );
+        setIsLike(false);
+      } else {
+        sendDataTs(`bookmark/${event}`, 'post', {}).then(
+          res => {
+            console.log(res);
+            // alert('위시리스트에 추가되었습니다!');
+            // window.location.replace('/');
+          }
+          // console.log('add')
+        );
+        setIsLike(true);
+      }
+    } else {
+      alert('로그인을 해주세요');
+    }
   };
   return (
     // <Link to={`/content/${data.contentId}`} style={{ width: '100%' }}>
@@ -194,7 +212,6 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
             onClick={e => {
               e.stopPropagation();
               // likeHandler;
-              setIsLike(!isLike);
               likeHandler(data.contentId);
             }}
           >
@@ -234,13 +251,13 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
                 <div className="icon">
                   <AiFillStar size="20px" style={{ color: 'FF9F1C' }} />
                 </div>
-                <div className="text mg12">4.5</div>
+                <div className="text mg12">{data.totalRating}</div>
               </div>
               <div className="box">
                 <div className="icon">
                   <MdOutlineRateReview size="20px" />
                 </div>
-                <div className="text">{data.contendId}</div>
+                <div className="text">{data.reviews?.length}</div>
               </div>
             </div>
           ) : (
@@ -457,17 +474,31 @@ export function ContentCardRow({
   setIsMap,
 }: CardView) {
   const navigate = useNavigate();
-  const [isLike, setIsLike] = useState(false);
+  const [isLike, setIsLike] = useState(data.bookmarked);
   const [isShare, setIsShare] = useState(false);
   let { pathname } = useLocation();
 
-  const visitedPlaceDeleteHandler = () => {
+  const deleteHandler = (event: CustomMouseEvent) => {
+    //* 위시리스트 삭제 API
+    sendDataTs(`bookmark/${event}`, 'delete', {}).then(res =>
+      console.log('delete')
+    );
     //*FIXME 여행의 흔적 삭제하는 API 호출
-    // console.log('방문한 캠핑장 목록, members_visitedPlaceInfo에서 삭제');
   };
 
-  const sharedAddHandler = () => {
-    //*FIXME 유저픽_유저의 차박지에 등록하는 API 호출
+  const sharedAddHandler = (event: CustomMouseEvent) => {
+    //*유저픽_유저의 차박지에 등록하는 API 호출
+    // “patchMyPlace” : {
+    //   “memo”: “조용하고 사진찍으면 잘나옴”,
+
+    //   “keywords”: [“#물놀이”, “#애견동반”],
+
+    //   “isShared”: true
+    //   },
+
+    sendDataTs(`pick-places/${event}`, 'delete', {}).then(res =>
+      console.log('delete')
+    );
     // console.log('유저픽_유저의 차박지에 등록');
     navigate('/userpick');
   };
@@ -488,7 +519,7 @@ export function ContentCardRow({
         remove={remove}
         like={like}
         edit={edit}
-        bg={data.placeImg ? data.placeImg : data.placeImg}
+        bg={data.placeImg ? data.placeImg : data.firstImageUrl}
       >
         <div key={data.contentId} className="img_box">
           <svg
@@ -509,7 +540,7 @@ export function ContentCardRow({
             className="delete remove"
             onClick={e => {
               e.stopPropagation();
-              visitedPlaceDeleteHandler();
+              deleteHandler(data.contentId);
             }}
           />
           <h1>
@@ -579,7 +610,7 @@ export function ContentCardRow({
                       padding={'10px 16px'}
                       onClick={(e: any) => {
                         e.stopPropagation();
-                        sharedAddHandler();
+                        sharedAddHandler(data.contentId);
                       }}
                     >
                       확인

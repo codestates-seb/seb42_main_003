@@ -13,6 +13,7 @@ import { MapViewButton } from '../components/MapViewButton';
 import MapContainer from '../components/map/MapContainer';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { getDataTs } from '../api/tsapi';
+import { setCampingList } from '../store/campingSlice';
 
 const Container = styled.div`
   display: flex;
@@ -71,8 +72,10 @@ function Main() {
   useEffect(() => {
     getDataTs(isURL).then(res => {
       if (res) {
-        if (isURL === 'main?page=1') setData(res.content);
-        else setData(res);
+        if (isURL === 'main?page=1') {
+          dispatch(setCampingList(res.content));
+          setData(res.content);
+        } else setData(res);
       }
     });
   }, [isURL]);
