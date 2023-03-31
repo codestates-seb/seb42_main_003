@@ -207,9 +207,9 @@ function Header({ width_M, setIsURL }: SearchState) {
           ) : (
             <img
               style={{
-                width: '40px',
+                width: '35px',
                 borderRadius: '100px',
-                height: '40px',
+                height: '35px',
                 cursor: 'pointer',
               }}
               src={memberInfo.profileImg}
