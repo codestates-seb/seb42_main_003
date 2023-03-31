@@ -28,6 +28,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { logout } from '../store/isLoginSlice';
 import DeleteMemberModal from '../components/DeleteMemberModal';
+import { useWindowSize } from '../hooks/useWindowSize';
 
 const themes = [
   '화장실',
@@ -79,13 +80,12 @@ interface VisitedPlaceInfo {
 /* 배열: [string, 함수, 함수]  */
 
 function MyPage() {
+  const {width}=useWindowSize();
   const [addCampModal, setAddCampModal] = useState<boolean>(false);
   const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
   //viewHistory state는 모바일에서만 사용
   const [viewHistoryModal, setViewHistoryModal] = useState<boolean>(false);
   const [deleteMemberModal,setDeleteMemberModal]=useState(false);
-  //내부width를 기록하기 위한 state와 이벤트리스너
-  const [innerWidth, setInnerWidth] = useState(window.innerWidth);
   const [memberInfo, setMemberInfo] = useState<MemberInfo>();
   const [myPlaceInfos, setMyPlaceInfos] = useState<MyPlaceInfo[] | null>(null);
   const [visitedPlaceInfos, setVisitedPlaceInfos] = useState<
@@ -120,17 +120,11 @@ function MyPage() {
       setCommentedArticleInfos(data.commentedArticleInfos);
       setLikedArticleInfos(data.likedArticleInfos);
     });
-
-    //브라우저 width 변경을 감지하는 이벤트 리스너
-    const resizeListener = () => {
-      setInnerWidth(window.innerWidth);
-    };
-    window.addEventListener('resize', resizeListener);
   }, [reloadData]);
   //width가 768px 이상이 될 경우 커뮤니티 활동기록을 자동으로 false로 바꾸는 useEffect
   useEffect(() => {
-    if (innerWidth >= 768) setViewHistoryModal(false);
-  }, [innerWidth]);
+    if (width >= 768) setViewHistoryModal(false);
+  }, [width]);
 
   const floatButtonHandler = () => {
     setEditProfileModal(false);
