@@ -1,0 +1,8 @@
+{
+  "presets": [
+    "react-app"
+  ],
+  "plugins": [
+    ["transform-remove-console", { "exclude": ["error", "warn"] }]
+  ]
+}

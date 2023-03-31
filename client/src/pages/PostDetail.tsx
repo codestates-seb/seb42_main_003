@@ -135,12 +135,10 @@ function ViewContent({ post, setIsSubmit, setIsDelete }: PostProps) {
       <h2>{post.title}</h2>
       <div>
         <div>
-          {post.articleImg && (
-            <img
+          <img
               src={post.profileImg}
               alt='profile-img'
               className='profile-img'></img>
-          )}
           <div className='member-info-upper'>
             <span className='member-info-nickname'>{post.nickname}</span>
             <span className='member-created-at'>
@@ -171,11 +169,12 @@ function ViewContent({ post, setIsSubmit, setIsDelete }: PostProps) {
       </div>
 
       <p>
-        <img
+      {post.articleImg &&
+            <img
           src={post.articleImg}
           alt='article'
           className='article-image'
-          style={{ maxWidth: windowSize.width }}></img>
+          style={{ maxWidth: windowSize.width }}></img>}
         <div>{post.content}</div>
       </p>
       <div className='post-buttonbox'>
