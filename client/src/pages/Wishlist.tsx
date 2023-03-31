@@ -14,6 +14,7 @@ import { AiOutlineHeart } from 'react-icons/ai';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { useNavigate } from 'react-router';
 import { loginModal } from '../store/loginModal';
+import { getDataTs } from '../api/tsapi';
 const Container = styled.div<MapHeightProps>`
   /* @media (min-width: 768px) {
       display: flex;
@@ -115,7 +116,8 @@ function Wishlist(map_height: MapHeightProps) {
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!isLogin) dispatch(loginModal(true));
-    getData('wishlist').then(res => {
+    getDataTs('bookmark?page=1').then(res => {
+      console.log(res);
       if (res) setData(res);
     });
   }, []);

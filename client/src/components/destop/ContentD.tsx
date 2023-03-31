@@ -14,6 +14,8 @@ import { AiFillStar } from 'react-icons/ai';
 import MapContainer from '../map/MapContainer';
 import { Button } from '../../styles/Button';
 import { ReviewSubmit } from '../ReviewSubmit';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxTK';
+import { login } from '../../store/isLoginSlice';
 
 interface ContentInfo {
   bg?: URL;
@@ -225,7 +227,7 @@ export function ContentD({ isContent, contentId }: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
   // const [isContent, setIsContent] = useState<any>({});
   const [isLike, setIsLike] = useState(false);
-
+  const login = useAppSelector(state => state.isLogin);
   // useEffect(() => {
   //   getData('content').then(res => {
   //     const content = res.filter((ele: any) => {
@@ -239,6 +241,7 @@ export function ContentD({ isContent, contentId }: ContentInfo) {
   return (
     <Container isContent={isContent} bg={isContent.firstImageUrl}>
       <main>
+        {/* 데스크탑 컨텐츠 위~에 헤더 */}
         <div className="header">
           <div className="title">{isContent.facltNm}</div>
           <hr className="title_line"></hr>
@@ -369,25 +372,28 @@ export function ContentD({ isContent, contentId }: ContentInfo) {
           </div>
         </div>
 
+        {/* 데스크탑 리뷰 헤더 */}
         <div className="bottom_field">
           <div className="info line">
             <div className="review_box">
               <div className="review_top">
                 <div className="review_title">
-                  <h1>리뷰 {isContent.contentId}</h1>
+                  <h1>리뷰 {isContent.review && isContent.review.length}</h1>
                   <div className="bar">|</div>
                   <div className="review_grade_bottom">
                     <AiFillStar
                       size="20px"
                       style={{ color: 'var(--chamong__color)' }}
                     />
-                    <h1 className="mg_left">4.5</h1>
+                    <h1 className="mg_left">{isContent.totalRating}</h1>
                   </div>
                 </div>
 
-                <div className="review_input">
-                  <ReviewSubmit></ReviewSubmit>
-                </div>
+                {login ? (
+                  <div className="review_input">
+                    <ReviewSubmit></ReviewSubmit>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
