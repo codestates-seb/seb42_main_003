@@ -234,7 +234,6 @@ type Community = {
 }
 export function Post({ data }: Community) {
 
-  console.log(data);
   return (
     <Container className="post">
       {/* {isCommunity.map((ele: any) => { */}
