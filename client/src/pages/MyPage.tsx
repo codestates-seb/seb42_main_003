@@ -27,6 +27,7 @@ import { HistoryContainer } from '../components/HistoryContainer';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { logout } from '../store/isLoginSlice';
+import DeleteMemberModal from '../components/DeleteMemberModal';
 
 const themes = [
   '화장실',
@@ -82,6 +83,7 @@ function MyPage() {
   const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
   //viewHistory state는 모바일에서만 사용
   const [viewHistoryModal, setViewHistoryModal] = useState<boolean>(false);
+  const [deleteMemberModal,setDeleteMemberModal]=useState(false);
   //내부width를 기록하기 위한 state와 이벤트리스너
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
   const [memberInfo, setMemberInfo] = useState<MemberInfo>();
@@ -98,6 +100,9 @@ function MyPage() {
   const [likedArticleInfos, setLikedArticleInfos] = useState<
     ArticleType[] | null
   >(null);
+
+  const [reloadData,setReloadData]=useState(false);
+  const reloadHandler=()=>setReloadData(!reloadData);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -121,31 +126,38 @@ function MyPage() {
       setInnerWidth(window.innerWidth);
     };
     window.addEventListener('resize', resizeListener);
-  }, []);
+  }, [reloadData]);
   //width가 768px 이상이 될 경우 커뮤니티 활동기록을 자동으로 false로 바꾸는 useEffect
   useEffect(() => {
     if (innerWidth >= 768) setViewHistoryModal(false);
   }, [innerWidth]);
 
   const floatButtonHandler = () => {
-    console.log('addCampModal true');
     setEditProfileModal(false);
     setViewHistoryModal(false);
+    setDeleteMemberModal(false);
     setAddCampModal(!addCampModal);
   };
 
   const editProfileHandler = () => {
-    console.log('editProfileModal true');
     setAddCampModal(false);
     setViewHistoryModal(false);
+    setDeleteMemberModal(false);
     setEditProfileModal(!editProfileModal);
   };
 
   const viewHistoryHandler = () => {
-    console.log('viewHistoryModal true');
     setAddCampModal(false);
     setEditProfileModal(false);
+    setDeleteMemberModal(false);
     setViewHistoryModal(!viewHistoryModal);
+  };
+
+  const deleteMemberHandler = () => {
+    setAddCampModal(false);
+    setEditProfileModal(false);
+    setViewHistoryModal(false);
+    setDeleteMemberModal(!deleteMemberModal);
   };
 
   const logoutHandler = () => {
@@ -156,15 +168,10 @@ function MyPage() {
         navigate('/');
       })
       .catch(err => {
-        console.log(err);
         dispatch(logout());
         navigate('/');
       });
   };
-
-  useEffect(() => {
-    if (memberInfo) console.log(memberInfo.about);
-  }, [memberInfo]);
 
   //테스트가 끝나면 아래의 코드를 지워주세요.
   // useEffect(() => {
@@ -281,7 +288,11 @@ function MyPage() {
           >
             로그아웃
           </Button>
+        </PageArticle>
+          <PageArticle>
+            <h2>회원관리</h2>
           <Button
+          onClick={deleteMemberHandler}
             border={'var(--chamong__color)'}
             color={'var(--chamong__color)'}
             hcolor={'white'}
@@ -293,9 +304,9 @@ function MyPage() {
           >
             회원탈퇴
           </Button>
-        </PageArticle>
+          </PageArticle>
       </PageMain>
-      {addCampModal && <AddCampModal floatButtonHandler={floatButtonHandler} />}
+      {addCampModal && <AddCampModal floatButtonHandler={floatButtonHandler} reloadHandler={reloadHandler} />}
       {editProfileModal && memberInfo && (
         <EditProfileModal
           editProfileHandler={editProfileHandler}
@@ -310,6 +321,7 @@ function MyPage() {
           likedArticleInfos={likedArticleInfos}
         ></ViewHistoryModal>
       )}
+      {deleteMemberModal&&<DeleteMemberModal deleteMemberHandler={deleteMemberHandler}></DeleteMemberModal>}
       {/* <Nav></Nav> */}
       <Footer></Footer>
     </>
@@ -370,10 +382,10 @@ function MyPageMapContainer({
 
 interface AddCampModalProps {
   floatButtonHandler: () => void;
+  reloadHandler:()=>void;
 }
 
-function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
-  const navigate = useNavigate();
+function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
   //내용을 저장합니다.
   const [memo, setMemo] = useState<string>('');
   //키워드 객체를 저장합니다.
@@ -389,15 +401,17 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
   //이미지를 저장하는 state
   // const [fileList, setFileList] = useState<FileList | null>(null);
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
+  const [errorMessage,setErrorMessage]=useState({memo:'',position:'',submit:''});
 
   //address 필드 추가가 필요함
   const postCampHandler = () => {
-    if (!position || !memo || !address) return;
+    if (isInputEmpty()) return;
+    if(!position) return;
     const data = {
       memo,
       keywords,
-      mapY: position[0],
-      mapX: position[1],
+      mapY: Number(position[0]),
+      mapX: Number(position[1]),
       // address,
     };
     sendFormDataTs(
@@ -408,11 +422,11 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       'postMyPlace',
       'placeImg'
     )
-      .then(() => navigate('/mypage'))
-      .catch(err => console.log(err));
-  };
-  const keywordFocusHandler = () => {
-    setIsKeywordFocus(true);
+      .then(() => {   
+        reloadHandler();
+        floatButtonHandler();
+      })
+      .catch(err => setErrorMessage(prevState=>{return {...prevState,submit:`등록에 실패했습니다. (${err.response.status})`}}));
   };
 
   const addKeywordHandler = (theme: string) => {
@@ -426,6 +440,24 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
       return [...prevState.filter(prevTheme => !prevTheme.includes(theme))];
     });
   };
+
+  const isInputEmpty=()=>{
+    let pass=true
+    if(!memo) {
+      pass=false;
+      setErrorMessage(prevState=>{return {...prevState,memo:'이름을 지정해주세요.'}});
+    } else setErrorMessage(prevState=>{return {...prevState,memo:''}});
+    if(!position) {
+      pass=false;
+      setErrorMessage(prevState=>{return {...prevState,position:'위치를 지정해주세요.'}});
+    } else setErrorMessage(prevState=>{return {...prevState,position:''}});
+    if(position&&!address){
+      console.log('위치 오류')
+      pass=false;
+      setErrorMessage(prevState=>{return {...prevState,position:'정상적인 위치가 아닙니다.'}});
+    } else if(position) setErrorMessage(prevState=>{return {...prevState,position:''}});
+    return !pass;
+  }
 
   return (
     <Modal
@@ -468,8 +500,9 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setMemo(e.target.value)
           }
-          placeholder="내용"
+          placeholder="이름"
         />
+        {errorMessage.memo&&!memo&&<span className='error-message'>{errorMessage.memo}</span>}
         <KeywordInput
           isFocus={isKeywordFocus}
           onClick={e => {
@@ -516,6 +549,7 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
         <div className="map">
           <MapGetPosition setAddress={setAddress} setPosition={setPosition} />
         </div>
+        {errorMessage.position&&!address&&<span className='error-message'>{errorMessage.position}</span>}
         <Button
           onClick={postCampHandler}
           border={'var(--chamong__color)'}
@@ -530,6 +564,7 @@ function AddCampModal({ floatButtonHandler }: AddCampModalProps) {
         >
           작성 완료
         </Button>
+        {errorMessage.submit&&<span className='error-message'>{errorMessage.submit}</span>}
       </div>
     </Modal>
   );
@@ -550,9 +585,12 @@ function EditProfileModal({
   const [about, setAbout] = useState(memberInfo.about);
   const [carName, setCarName] = useState(memberInfo.carName);
   const [oilInfo, setOilInfo] = useState(memberInfo.oilInfo);
+  const [errorMessage,setErrorMessage]=useState({nickname:'',carName:'',about:'',submit:''});
 
   const profileSubmitHandler = () => {
     const data = { nickname, about, carName, oilInfo };
+    if(isInputEmpty()) return;
+    console.log('start submit')
     sendFormDataTs(
       'members',
       'patch',
@@ -560,8 +598,30 @@ function EditProfileModal({
       image,
       'memberUpdate',
       'profileImg'
-    ).then(editProfileHandler);
+    ).then(()=>{
+      window.location.reload();
+    }).catch(()=>{
+      setErrorMessage(prevState=>{return {...prevState,submit:'프로필 수정이 실패했습니다.'}});
+    })
   };
+
+  const isInputEmpty=()=>{
+    let pass=true;
+    if(!nickname) {
+      console.log('닉네임 없음')
+      pass=false;
+      setErrorMessage(prevState=>{return {...prevState,nickname:'닉네임을 입력해주세요.'}});
+    } else setErrorMessage(prevState=>{return {...prevState,nickname:''}});
+    if(!about) {
+      pass=false;
+      setErrorMessage(prevState=>{return {...prevState,about:'자기소개를 입력해주세요.'}});
+    } else setErrorMessage(prevState=>{return {...prevState,about:''}});
+    if(!carName) {
+      pass=false;
+      setErrorMessage(prevState=>{return {...prevState,carName:'차량 정보를 입력해주세요.'}});
+    } else setErrorMessage(prevState=>{return {...prevState,carName:''}});
+    return !pass;
+  }
 
   return (
     <Modal>
@@ -593,6 +653,7 @@ function EditProfileModal({
           )}
           <input type="file" id="file" onChange={imageChange}></input>
         </ImageInput>
+        
         <Input
           placeholder="이름"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -600,6 +661,7 @@ function EditProfileModal({
           }
           value={nickname}
         />
+        {errorMessage.nickname&&<span className='error-message'>{errorMessage.nickname}</span>}
         <TextArea
           placeholder="자기소개"
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -607,6 +669,7 @@ function EditProfileModal({
           }
           value={about}
         />
+        {errorMessage.about&&<span className='error-message'>{errorMessage.about}</span>}
         <div style={{ display: 'flex' }}>
           <Input
             placeholder="내 차량"
@@ -615,6 +678,7 @@ function EditProfileModal({
             }
             value={carName}
           />
+          
           <Select
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
               setOilInfo(e.target.value)
@@ -628,6 +692,7 @@ function EditProfileModal({
             <option value="수소">수소</option>
           </Select>
         </div>
+        {errorMessage.carName&&<span className='error-message'>{errorMessage.carName}</span>}
         <Button
           border={'var(--chamong__color)'}
           color={'white'}
@@ -642,6 +707,7 @@ function EditProfileModal({
         >
           수정 완료
         </Button>
+        {errorMessage.submit&&<span className='error-message'>{errorMessage.submit}</span>}
       </div>
     </Modal>
   );
