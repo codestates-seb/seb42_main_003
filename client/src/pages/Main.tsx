@@ -13,7 +13,6 @@ import { MapViewButton } from '../components/MapViewButton';
 import MapContainer from '../components/map/MapContainer';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { getDataTs } from '../api/tsapi';
-import ContentList_copy from '../components/ContentList_copy';
 
 const Container = styled.div`
   display: flex;
