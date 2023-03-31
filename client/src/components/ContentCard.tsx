@@ -167,7 +167,7 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
   const navigate = useNavigate();
   const [isLike, setIsLike] = useState(data.bookmarked);
   const login = useAppSelector(state => state.isLogin);
-  console.log(isLike);
+
   const likeHandler = (event: CustomMouseEvent) => {
     if (login) {
       if (isLike) {
