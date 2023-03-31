@@ -2,6 +2,7 @@ export const timeParser = (date:string) => {
   if (!date) return "";
   let result = "";
   const dateObj = new Date(date);
+  dateObj.setHours(dateObj.getHours() + 9);
   const today = new Date();
   let hours:number|string=dateObj.getHours();
   if(hours<10) hours='0'+hours;

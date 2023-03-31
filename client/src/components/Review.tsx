@@ -13,6 +13,7 @@ import { Button } from '../styles/Button';
 import { Modal } from '../styles/Modal';
 import { ReviewSubmit } from './ReviewSubmit';
 import { useState, useEffect } from 'react';
+import { timeParser } from '../utils/timeParser';
 
 const Container = styled.div`
   .post {
@@ -207,7 +208,7 @@ export function Review({ isReview, setIsModal }: ReviewType) {
           <img src={isReview.member?.profileImg} alt="img"></img>
           <div className="top_mid">
             <div>{isReview.member?.nickname}</div>
-            <div className="date">{isReview.createdAt}</div>
+            <div className="date">{timeParser(isReview.createdAt)}</div>
           </div>
           <div className="top_right">
             <AiFillStar className="star" />
@@ -229,21 +230,11 @@ export function Review({ isReview, setIsModal }: ReviewType) {
   );
 }
 
-type Community =
-  | {
-      id?: number;
-      image?: string;
-      user?: string;
-      createdAt?: string;
-      views?: number;
-      comment?: number;
-      islike?: boolean;
-      like?: number;
-      title?: string;
-      body?: string;
-    }
-  | any;
+type Community = {
+  data:ArticleType
+}
 export function Post({ data }: Community) {
+
   return (
     <Container className="post">
       {/* {isCommunity.map((ele: any) => { */}
@@ -254,7 +245,7 @@ export function Post({ data }: Community) {
               <img src={data.profileImg} alt="img"></img>
               <div className="top_mid">
                 <div>{data.nickname}</div>
-                <div className="date">{data.createdAt}</div>
+                <div className="date">{timeParser(data.createdAt)}</div>
               </div>
             </div>
             <p className="post_body">
@@ -271,7 +262,7 @@ export function Post({ data }: Community) {
               <span>{data.commentCnt}</span>
             </div>
             <div className="field heart">
-              {data.islike ? (
+              {!data.isLiked ? (
                 <FcLikePlaceholder className="post_icon" />
               ) : (
                 <FcLike className="post_icon" />

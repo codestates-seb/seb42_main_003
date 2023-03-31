@@ -461,6 +461,7 @@ function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
 
   return (
     <Modal
+    maxWidth='600px'
       onClick={() => {
         setIsKeywordFocus(false);
         console.log('wat');
@@ -580,7 +581,7 @@ function EditProfileModal({
   memberInfo,
 }: editProfileModalProps) {
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
-
+  const [isPhotoEdit,setIsPhotoEdit]=useState(false);
   const [nickname, setNickname] = useState(memberInfo.nickname);
   const [about, setAbout] = useState(memberInfo.about);
   const [carName, setCarName] = useState(memberInfo.carName);
@@ -624,7 +625,7 @@ function EditProfileModal({
   }
 
   return (
-    <Modal>
+    <Modal maxWidth='600px'>
       <div className="wrapper">
         <div className="header">
           <h2>프로필 수정</h2>
@@ -641,10 +642,15 @@ function EditProfileModal({
           padding="8px 14px"
           radius="12px"
         >
-          {imageSrc.length >= 1 ? (
+          {imageSrc.length >= 1 || !isPhotoEdit ? (
             <div className="preview">
-              <img alt="preview" src={imageSrc}></img>
-              <button onClick={imageDelete}>
+              <img alt="preview" src={isPhotoEdit?imageSrc:memberInfo.profileImg}></img>
+              <button onClick={()=>{
+                if(isPhotoEdit) imageDelete();
+                else {
+                  setIsPhotoEdit(true);
+                }
+                }}>       
                 <HiOutlineX />
               </button>
             </div>
