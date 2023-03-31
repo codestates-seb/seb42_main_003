@@ -49,6 +49,7 @@ public class MemberDto {
   
   @Setter
   @Getter
+  @AllArgsConstructor
   public static class Response{
     private Long id;
     private String email;
