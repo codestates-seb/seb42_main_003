@@ -6,6 +6,8 @@ import memberInfoSlice from './memberInfoSlice';
 import isLoginSlice from './isLoginSlice';
 import navSlice from './navSlice';
 import LoginModal from './loginModal';
+import campingSlice from './campingSlice';
+
 export const store = configureStore({
   reducer: {
     keyword: keywordSlice.reducer,
@@ -15,6 +17,7 @@ export const store = configureStore({
     isLogin: isLoginSlice.reducer,
     navmenu: navSlice.reducer,
     loginmodal: LoginModal.reducer,
+    campingList: campingSlice.reducer,
   },
 });
 
