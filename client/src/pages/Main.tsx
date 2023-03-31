@@ -13,6 +13,8 @@ import { MapViewButton } from '../components/MapViewButton';
 import MapContainer from '../components/map/MapContainer';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { getDataTs } from '../api/tsapi';
+import ContentList_copy from '../components/ContentList_copy';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -108,12 +110,7 @@ function Main() {
           <div className={isMap ? 'community' : ''}>
             <CommunityBestM></CommunityBestM>
           </div>
-          <ContentList
-            setContent={setContent}
-            content={content && content}
-            data={data}
-            setData={setData}
-          ></ContentList>
+          <ContentList data={data} setData={setData}></ContentList>
         </>
       ) : clicked ? null : (
         <>

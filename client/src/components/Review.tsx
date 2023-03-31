@@ -175,7 +175,7 @@ type ReviewType =
       isContent?: any;
     }
   | any;
-export function Review({ isContent, isReview, setIsModal }: ReviewType) {
+export function Review({ isReview, setIsModal }: ReviewType) {
   // const [isModal, setIsModal] = useState(false);
   const dispatch = useAppDispatch();
   const reviewDeleteHandler = () => {
@@ -183,21 +183,30 @@ export function Review({ isContent, isReview, setIsModal }: ReviewType) {
     //   '각각의 캠핑장 상세페이지에 달린 리뷰를 삭제할 수 있는 API를 호출'
     // );
   };
-  // {
-  //   createdAt: '2023-03-22T23:26:35',
-  //   updatedat: '2023-03-22T23:26:35',
-  //   reviewId: 6,
-  //   content: '처음뵙겠습니다.',
-  //   rating: 5,
-  // },
-
+  // let isReview: {};
+  // if (isContent) isReview = isContent.reviews;
+  const review = {
+    reviewId: 6,
+    rating: 5,
+    content: '좋았어요',
+    member: {
+      createdAt: '2023-03-22T23:26:35',
+      updatedat: '2023-03-22T23:26:35',
+      id: 1,
+      email: 'yoonae@gmail.com',
+      password: '',
+      profileImg:
+        'https://pixabay.com/photos/flowers-twig-tree-white-petals-7665747',
+      about: '자기소개',
+    },
+  };
   return (
     <Container className="post">
       <div key={isReview.id} className="top">
         <div className="left">
-          <img src={isReview.image} alt="img"></img>
+          <img src={isReview.member?.profileImg} alt="img"></img>
           <div className="top_mid">
-            <div>{isReview.user}</div>
+            <div>{isReview.member?.nickname}</div>
             <div className="date">{isReview.createdAt}</div>
           </div>
           <div className="top_right">
@@ -219,6 +228,7 @@ export function Review({ isContent, isReview, setIsModal }: ReviewType) {
     </Container>
   );
 }
+
 type Community =
   | {
       id?: number;

@@ -15,6 +15,7 @@ import { Modal } from '../styles/Modal';
 import { ReviewSubmit } from '../components/ReviewSubmit';
 import { reset } from '../store/reviewSlice';
 import { getDataTs } from '../api/tsapi';
+
 const Container = styled.div`
   .review_wrap {
     @media (max-width: 768px) {
@@ -119,11 +120,6 @@ function Content() {
     },
   ];
   useEffect(() => {
-    // getData('main?page=1').then(res => {
-    //   const content = res.filter((ele: any) => {
-    //     return ele.contentId === contentId;
-    //   });
-    //   setIsContent(content[0]);
     getDataTs(`main/${contentId}`).then(res => {
       setIsContent(res);
     });
@@ -141,7 +137,7 @@ function Content() {
     };
     // window.scrollTo(0, 0);
   }, [contentId]);
-
+  const login = useAppSelector(state => state.isLogin);
   return (
     <Container onClick={() => dispatch(click(false))}>
       <Header width_M={'1000px'}></Header>
@@ -153,15 +149,18 @@ function Content() {
       ></ContentM>
       <ContentD isContent={isContent} contentId={contentId}></ContentD>
 
+      {/* {모바일 리뷰 헤더} */}
       <div className="review_top_mobile">
         <div className="review_left">
-          <h1 className="h1_title">리뷰 4</h1>
+          <h1 className="h1_title">
+            리뷰 {isContent.review && isContent.review.length}
+          </h1>
           <div className="grade_title">
             <AiFillStar
               size="20px"
               style={{ color: 'var(--chamong__color)' }}
             />
-            <h1 className="mg_left h1_title">4.5</h1>
+            <h1 className="mg_left h1_title">{isContent.totalRating}</h1>
           </div>
         </div>
         <Button
@@ -178,19 +177,21 @@ function Content() {
         </Button>
       </div>
 
+      {/* 데스크탑 & 모바일 리뷰 목록 */}
       <div className="review_wrap">
         <div className="desktop_wrap">
-          {isReview.map((ele: any) => (
+          {isContent.reviews?.map((ele: any) => (
             <Review
               key={ele.id}
               isReview={ele}
               setIsModal={setIsModal}
-              isContent={isContent}
             ></Review>
           ))}
         </div>
       </div>
-      {isModal ? (
+
+      {/* 모바일 리뷰등록 모달 */}
+      {isModal && login ? (
         <Modal
           className="mobile_view_modal"
           onClick={() => {
@@ -230,7 +231,8 @@ function Content() {
             <ReviewSubmit></ReviewSubmit>
           </div>
         </Modal>
-      ) : null}
+      ) : //* 로그인 안 했을 때 이벤트 걸기
+      null}
       <Footer width_page={'1000px'}></Footer>
     </Container>
   );
