@@ -5,15 +5,17 @@ const url = process.env.REACT_APP_API_URL;
 
 //데이터를 받아올 때 사용하는 함수, params매개변수에 파라미터를 객체로 전달
 export const getDataTs = async (endpoint: string, params: {} = {}) => {
+  let headers={};
+  //액세스 토큰이 있을 경우에만 같이 보냅니다.
+  if(loadAccessToken()) {
+    headers={Authorization:loadAccessToken()}
+  }
   try {
     const res = await axios({
       method: 'get',
       url: `${url}/${endpoint}`,
-      params: params,
-      headers: {
-        Authorization: loadAccessToken(),
-        Refresh: loadRefreshToken(),
-      },
+      params,
+      headers
     });
     return Promise.resolve(res.data);
   } catch (err) {
@@ -64,6 +66,10 @@ export const sendFormDataTs = async (
     let imgType=image[0].type;
     formData.append(imageKey, image[0],imgType);
     headers={...headers, [imageKey]:image[0].type.split('/')[1]}
+  }
+  else {
+    formData.append(imageKey,new Blob(undefined));
+    headers={...headers, [imageKey]:null}
   }
   console.log(headers);
   try{
