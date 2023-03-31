@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { Modal } from '../styles/Modal';
 import { HiOutlineX } from 'react-icons/hi';
 import { FcLike } from 'react-icons/fc';
-import { AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineEye,AiOutlineHeart } from 'react-icons/ai';
 import useUploadImage from '../hooks/useUploadImage';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { loginModal } from '../store/loginModal';
@@ -113,23 +113,32 @@ function ViewContent({ post, setIsSubmit, setIsDelete }: PostProps) {
   const isLogin = useAppSelector((state) => state.isLogin);
   const memberInfo = useAppSelector((state) => state.memberInfo);
   const [nowLike, setNowLike] = useState(post.likeCnt);
-  const [isAlreadyLike, setIsAlreadyLike] = useState(false);
-
+  const [isAlreadyLike, setIsAlreadyLike] = useState(post.isLiked);
+  console.log(post);
   const likeHandler = () => {
     if (!isLogin) {
       dispatch(loginModal(true));
       return;
     }
+
+if(isAlreadyLike) {
+  sendDataTs(`articles/${post.id}/like`,'delete',{})
+  .then(()=>{
+    setNowLike((prevState) => (prevState -= 1));
+    setIsAlreadyLike(false);
+  })
+} 
+else {
     sendDataTs(`articles/${post.id}/like`, 'post', {})
       .then(() => {
         setNowLike((prevState) => (prevState += 1));
+        setIsAlreadyLike(true);
       })
       .catch((err) => {
         console.log(err);
-        setIsAlreadyLike(true);
       });
   };
-
+};
   return (
     <PostArticle>
       <h2>{post.title}</h2>
@@ -150,21 +159,21 @@ function ViewContent({ post, setIsSubmit, setIsDelete }: PostProps) {
           <div>
             <span className='post-info-span'>
               <AiOutlineEye />
-              <span>{post.memberId}</span>
+              <span>{post.viewCnt}</span>
             </span>
             <span className='post-info-span'>
-              <button onClick={likeHandler}>
-                <FcLike />
+              <button onClick={likeHandler} className='post-info-like-button'>
+                {isAlreadyLike?<FcLike/>:<AiOutlineHeart/>}
               </button>
               <span>{nowLike}</span>
             </span>
           </div>
-          {isAlreadyLike && (
+          {/* {isAlreadyLike && (
             <div
               style={{ fontSize: '14px', color: 'var(--chamong__color)' }}>
               이미 좋아요를 누른 게시글입니다.
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
@@ -386,6 +395,7 @@ type PostType = {
 function PostEditModal({ postData, setIsSubmit }: PostType) {
   const navigate = useNavigate();
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
+  const [isPhotoEdit,setIsPhotoEdit]=useState(false);
   const [title, setTitle] = useState(postData.title);
   const [content, setContent] = useState(postData.content);
   const [errorMessage, setErrorMessage] = useState({
@@ -409,10 +419,10 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
       'patch',
       data,
       image,
-      'articleCreate',
+      'articleUpdate',
       'articleImg'
     )
-      .then(() => navigate('/articles'))
+      .then(() => window.location.reload())
       .catch((err) =>
         setErrorMessage((prevState) => {
           return {
@@ -447,7 +457,7 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
   };
 
   return (
-    <Modal>
+    <Modal maxWidth='600px'>
       <div className='wrapper'>
         <div className='header'>
           <h2>글 수정하기</h2>
@@ -463,10 +473,15 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
           hborder={'var(--chamong__color)'}
           padding='8px 14px'
           radius='12px'>
-          {imageSrc.length >= 1 ? (
+          {imageSrc.length >= 1||!isPhotoEdit ? (
             <div className='preview'>
-              <img alt='preview' src={imageSrc}></img>
-              <button onClick={imageDelete}>
+              <img alt='preview' src={isPhotoEdit?imageSrc:postData.articleImg}></img>
+              <button onClick={()=>{
+                if(isPhotoEdit) imageDelete();
+                else {
+                  setIsPhotoEdit(true);
+                }
+                }}>       
                 <HiOutlineX />
               </button>
             </div>
