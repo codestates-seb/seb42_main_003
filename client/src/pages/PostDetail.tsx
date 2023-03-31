@@ -386,6 +386,7 @@ type PostType = {
 function PostEditModal({ postData, setIsSubmit }: PostType) {
   const navigate = useNavigate();
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
+  const [isPhotoEdit,setIsPhotoEdit]=useState(false);
   const [title, setTitle] = useState(postData.title);
   const [content, setContent] = useState(postData.content);
   const [errorMessage, setErrorMessage] = useState({
@@ -447,7 +448,7 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
   };
 
   return (
-    <Modal>
+    <Modal maxWidth='600px'>
       <div className='wrapper'>
         <div className='header'>
           <h2>글 수정하기</h2>
@@ -463,10 +464,15 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
           hborder={'var(--chamong__color)'}
           padding='8px 14px'
           radius='12px'>
-          {imageSrc.length >= 1 ? (
+          {imageSrc.length >= 1||!isPhotoEdit ? (
             <div className='preview'>
-              <img alt='preview' src={imageSrc}></img>
-              <button onClick={imageDelete}>
+              <img alt='preview' src={isPhotoEdit?imageSrc:postData.articleImg}></img>
+              <button onClick={()=>{
+                if(isPhotoEdit) imageDelete();
+                else {
+                  setIsPhotoEdit(true);
+                }
+                }}>       
                 <HiOutlineX />
               </button>
             </div>
