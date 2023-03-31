@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { Modal } from '../styles/Modal';
 import { HiOutlineX } from 'react-icons/hi';
 import { FcLike } from 'react-icons/fc';
-import { AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineEye,AiOutlineHeart } from 'react-icons/ai';
 import useUploadImage from '../hooks/useUploadImage';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { loginModal } from '../store/loginModal';
@@ -113,23 +113,32 @@ function ViewContent({ post, setIsSubmit, setIsDelete }: PostProps) {
   const isLogin = useAppSelector((state) => state.isLogin);
   const memberInfo = useAppSelector((state) => state.memberInfo);
   const [nowLike, setNowLike] = useState(post.likeCnt);
-  const [isAlreadyLike, setIsAlreadyLike] = useState(false);
-
+  const [isAlreadyLike, setIsAlreadyLike] = useState(post.isLiked);
+  console.log(post);
   const likeHandler = () => {
     if (!isLogin) {
       dispatch(loginModal(true));
       return;
     }
+
+if(isAlreadyLike) {
+  sendDataTs(`articles/${post.id}/like`,'delete',{})
+  .then(()=>{
+    setNowLike((prevState) => (prevState -= 1));
+    setIsAlreadyLike(false);
+  })
+} 
+else {
     sendDataTs(`articles/${post.id}/like`, 'post', {})
       .then(() => {
         setNowLike((prevState) => (prevState += 1));
+        setIsAlreadyLike(true);
       })
       .catch((err) => {
         console.log(err);
-        setIsAlreadyLike(true);
       });
   };
-
+};
   return (
     <PostArticle>
       <h2>{post.title}</h2>
@@ -150,21 +159,21 @@ function ViewContent({ post, setIsSubmit, setIsDelete }: PostProps) {
           <div>
             <span className='post-info-span'>
               <AiOutlineEye />
-              <span>{post.memberId}</span>
+              <span>{post.viewCnt}</span>
             </span>
             <span className='post-info-span'>
-              <button onClick={likeHandler}>
-                <FcLike />
+              <button onClick={likeHandler} className='post-info-like-button'>
+                {isAlreadyLike?<FcLike/>:<AiOutlineHeart/>}
               </button>
               <span>{nowLike}</span>
             </span>
           </div>
-          {isAlreadyLike && (
+          {/* {isAlreadyLike && (
             <div
               style={{ fontSize: '14px', color: 'var(--chamong__color)' }}>
               이미 좋아요를 누른 게시글입니다.
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
@@ -410,10 +419,10 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
       'patch',
       data,
       image,
-      'articleCreate',
+      'articleUpdate',
       'articleImg'
     )
-      .then(() => navigate('/articles'))
+      .then(() => window.location.reload())
       .catch((err) =>
         setErrorMessage((prevState) => {
           return {

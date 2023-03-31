@@ -229,21 +229,12 @@ export function Review({ isReview, setIsModal }: ReviewType) {
   );
 }
 
-type Community =
-  | {
-      id?: number;
-      image?: string;
-      user?: string;
-      createdAt?: string;
-      views?: number;
-      comment?: number;
-      islike?: boolean;
-      like?: number;
-      title?: string;
-      body?: string;
-    }
-  | any;
+type Community = {
+  data:ArticleType
+}
 export function Post({ data }: Community) {
+
+  console.log(data);
   return (
     <Container className="post">
       {/* {isCommunity.map((ele: any) => { */}
@@ -271,7 +262,7 @@ export function Post({ data }: Community) {
               <span>{data.commentCnt}</span>
             </div>
             <div className="field heart">
-              {data.islike ? (
+              {!data.isLiked ? (
                 <FcLikePlaceholder className="post_icon" />
               ) : (
                 <FcLike className="post_icon" />
