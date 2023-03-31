@@ -201,7 +201,7 @@ export function Community() {
             )}
           </div>
           {isSubmit ? (
-            <div className="modal_submit">
+            <div>
               <PostModal setIsSubmit={setIsSubmit}></PostModal>
             </div>
           ) : null}
