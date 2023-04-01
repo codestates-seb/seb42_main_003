@@ -16,6 +16,8 @@ import { MobileHeader } from '../../styles/mobileStyle';
 import MapContainer from '../map/MapContainer';
 import { sendDataTs } from '../../api/tsapi';
 import { MouseEvent } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxTK';
+
 type CustomMouseEvent = MouseEvent<HTMLElement>;
 interface ContentInfo {
   bg?: URL;
@@ -152,25 +154,27 @@ export function ContentM({
 }: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
   const [isLike, setIsLike] = useState(isContent.bookmarked);
-
+  const login = useAppSelector(state => state.isLogin);
   useEffect(() => {
     setIsLike(isContent.bookmarked);
   }, [isContent.bookmarked]);
 
   const addWishlist = (event: CustomMouseEvent) => {
-    if (isLike) {
-      sendDataTs(`bookmark/${contentId}`, 'delete', {}).then(res =>
-        console.log('delete')
-      );
-      setIsLike(false);
-    } else {
-      sendDataTs(`bookmark/${contentId}`, 'post', {}).then(res => {
-        console.log('add');
-      });
-      setIsLike(true);
-    }
+    if (login) {
+      if (isLike) {
+        sendDataTs(`bookmark/${contentId}`, 'delete', {}).then(res =>
+          console.log('delete')
+        );
+        setIsLike(false);
+      } else {
+        sendDataTs(`bookmark/${contentId}`, 'post', {}).then(res => {
+          console.log('add');
+        });
+        setIsLike(true);
+      }
+    } else alert('로그인을 해주세요');
   };
-  console.log(isContent);
+
   return (
     <Container
       isContent={isContent}

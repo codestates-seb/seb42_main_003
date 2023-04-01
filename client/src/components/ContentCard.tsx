@@ -64,12 +64,15 @@ const Container = styled('div')<CardView>`
       }
     }
   }
+
   .img_box {
     position: relative;
     height: 120px;
     background-image: ${props =>
-      `url(${props.bg})` ||
-      'https://chamongbucket.s3.ap-northeast-2.amazonaws.com/images/default_image/camping(default).jpg'};
+      props
+        ? `url(${props.bg})`
+        : `url('https://chamongbucket.s3.ap-northeast-2.amazonaws.com/images/default_image/camping(default).jpg')`};
+    /* 'url(https://chamongbucket.s3.ap-northeast-2.amazonaws.com/images/default_image/camping(default).jpg)'}; */
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 25px 25px 0px 0px;
@@ -184,13 +187,16 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
         );
         setIsLike(false);
       } else {
-        sendDataTs(`bookmark/${event}`, 'post', {}).then(res => {});
+        sendDataTs(`bookmark/${event}`, 'post', {}).then(res => {
+          console.log(res);
+        });
         setIsLike(true);
       }
     } else {
       alert('로그인을 해주세요');
     }
   };
+
   return (
     <div
       style={{ width: '100%', maxWidth: '420px' }}
@@ -202,7 +208,13 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
     >
       <Container
         remove={remove}
-        bg={data.placeImg ? data.placeImg : data.firstImageUrl}
+        bg={
+          data.placeImg
+            ? data.placeImg
+            : data.firstImageUrl
+            ? data.firstImageUrl
+            : 'https://user-images.githubusercontent.com/116159684/229258665-6f5e3195-5073-4fc0-b290-833ef0c00754.jpeg'
+        }
       >
         <div key={data.contentId} className="img_box">
           <svg
@@ -454,20 +466,6 @@ const ContainerRow = styled('div')<CardView>`
     } */
   }
 `;
-// type MycampType = {
-//   //* id -> contentId로 수정함
-//   contentId: number;
-//   memo: string;
-//   keyword: string[];
-//   placeImg: string;
-//   shared: true;
-//   mapX: string;
-//   mapY: string;
-//   createdAt: string;
-//   updatedAt: string;
-//   address: string;
-//   memberId: number;
-// };
 export function ContentCardRow({
   data,
   remove,
@@ -527,7 +525,9 @@ export function ContentCardRow({
         );
         setIsLike(false);
       } else {
-        sendDataTs(`bookmark/${event}`, 'post', {}).then(res => {});
+        sendDataTs(`bookmark/${event}`, 'post', {}).then(res => {
+          console.log(res);
+        });
         setIsLike(true);
       }
     } else {

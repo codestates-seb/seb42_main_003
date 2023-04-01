@@ -139,7 +139,6 @@ function Content() {
   }, [contentId]);
   const login = useAppSelector(state => state.isLogin);
   const params = useParams();
-  console.log(params.contentId);
 
   return (
     <Container onClick={() => dispatch(click(false))}>
@@ -177,7 +176,9 @@ function Content() {
           hover="white"
           hcolor="var(--chamong__color)"
           hborder="var(--chamong__color)"
-          onClick={() => setIsModal(!isModal)}
+          onClick={() => {
+            login ? setIsModal(!isModal) : alert('로그인을 해주세요');
+          }}
         >
           작성
         </Button>
@@ -195,7 +196,7 @@ function Content() {
         </div>
       </div>
       {/* 모바일 리뷰등록 모달 */}
-      {isModal && login ? (
+      {isModal ? (
         <Modal
           className="mobile_view_modal"
           onClick={() => {

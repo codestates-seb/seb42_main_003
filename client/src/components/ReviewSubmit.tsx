@@ -109,11 +109,6 @@ export const RatingBox = styled.div`
 export function ReviewSubmit() {
   const dispatch = useAppDispatch();
   const edit = useAppSelector(state => state.review);
-  useEffect(() => {
-    setIsEdit(edit);
-    handleStarClick(edit.grade - 1);
-  }, [edit]);
-
   const [clicked, setClicked] = useState<boolean[] | any>([
     false,
     false,
@@ -121,20 +116,31 @@ export function ReviewSubmit() {
     false,
     false,
   ]);
-  const { contentId } = useParams();
-
-  type ReviewType = {
-    id: number;
-    image: string;
-    user: string;
-    createdAt: string;
-    grade: number;
-    body: string;
-  };
-
   const [isEdit, setIsEdit] = useState<ReviewType>(edit);
+  const { contentId } = useParams();
+  const memberInfo = useAppSelector(state => state.memberInfo);
+  const score = clicked.filter(Boolean).length;
   const array = [0, 1, 2, 3, 4];
   const input = useRef(null);
+
+  useEffect(() => {
+    setIsEdit(edit);
+    handleStarClick(+edit.rating - 1);
+  }, [edit]);
+
+  type ReviewType = {
+    reviewId: number;
+    rating: string;
+    content: string;
+    member: {
+      id: number;
+      email: string;
+      nickname: string;
+      profileImg: string;
+    };
+  };
+
+  console.log(isEdit);
 
   const handleStarClick = (index: number) => {
     let clickStates = [...clicked];
@@ -143,11 +149,9 @@ export function ReviewSubmit() {
     }
     setClicked(clickStates);
   };
-  const memberInfo = useAppSelector(state => state.memberInfo);
-  const score = clicked.filter(Boolean).length;
 
   const submitHandler = () => {
-    const data = { content: isEdit.body, rating: score };
+    const data = { content: isEdit.content, rating: score };
     if (!data.content) alert('내용을 작성해주세요');
     else if (!data.rating) alert('별점을 달아주세요');
     else {
@@ -186,8 +190,8 @@ export function ReviewSubmit() {
           <textarea
             placeholder="내용을 작성해주세요"
             ref={input}
-            value={isEdit.body}
-            onChange={e => setIsEdit({ ...isEdit, body: e.target.value })}
+            value={isEdit.content}
+            onChange={e => setIsEdit({ ...isEdit, content: e.target.value })}
           ></textarea>
         </div>
       </div>
@@ -205,7 +209,7 @@ export function ReviewSubmit() {
             font="12px"
             onClick={submitHandler}
           >
-            {isEdit.id ? '수정' : '등록'}
+            {isEdit.reviewId ? '수정' : '등록'}
           </Button>
         </div>
       </div>
