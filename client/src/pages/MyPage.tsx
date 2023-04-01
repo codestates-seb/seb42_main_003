@@ -478,23 +478,6 @@ function AddCampModal({
       setErrorMessage(prevState => {
         return { ...prevState, position: '' };
       });
-  const isInputEmpty=()=>{
-    let pass=true
-    if(!memo) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,memo:'이름을 지정해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,memo:''}});
-    if(!position) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,position:'위치를 지정해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,position:''}});
-    if(position&&!address){
-      // console.log('위치 오류')
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,position:'정상적인 위치가 아닙니다.'}});
-    } else if(position) setErrorMessage(prevState=>{return {...prevState,position:''}});
-    return !pass;
-  };
 
   return (
     <Modal
@@ -686,22 +669,6 @@ function EditProfileModal({
       setErrorMessage(prevState => {
         return { ...prevState, carName: '' };
       });
-  const isInputEmpty=()=>{
-    let pass=true;
-    if(!nickname) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,nickname:'닉네임을 입력해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,nickname:''}});
-    if(!about) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,about:'자기소개를 입력해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,about:''}});
-    if(!carName) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,carName:'차량 정보를 입력해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,carName:''}});
-    return !pass;
-  };
 
   return (
     <Modal maxWidth='600px'>
@@ -806,4 +773,4 @@ function EditProfileModal({
   );
 }
 
-export default MyPage;
+export default MyPage
