@@ -251,7 +251,9 @@ export function ContentD({ isContent }: ContentInfo) {
       });
     }
   };
-
+  useEffect(() => {
+    setIsLike(isContent.bookmarked);
+  }, [isLike]);
   return (
     <Container isContent={isContent} bg={isContent.firstImageUrl}>
       <main>

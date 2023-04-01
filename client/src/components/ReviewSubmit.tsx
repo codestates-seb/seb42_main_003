@@ -154,8 +154,11 @@ export function ReviewSubmit() {
       sendDataTs(`review/${contentId}`, 'post', data).then(res =>
         console.log(res)
       );
-      window.location.replace(`/content/${contentId}`);
+      sendDataTs(`visited-places/${contentId}`, 'post', {}).then(res => {
+        console.log(res);
+      });
     }
+    window.location.replace(`/content/${contentId}`);
   };
   return (
     <Container>

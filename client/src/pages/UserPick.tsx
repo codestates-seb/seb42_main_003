@@ -141,7 +141,7 @@ function UserPick({ map_height }: MapHeightProps) {
       }
     }
   }, [isTab]);
-
+  // console.log(data);
   return (
     <Container
       onClick={() => dispatch(click(false))}

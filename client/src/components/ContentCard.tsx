@@ -11,8 +11,10 @@ import { Modal } from '../styles/Modal';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { MouseEvent } from 'react';
-import { sendDataTs } from '../api/tsapi';
+import { getDataTs, sendDataTs, sendFormDataTs } from '../api/tsapi';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
+import useUploadImage from '../hooks/useUploadImage';
+
 type CustomMouseEvent = MouseEvent<HTMLElement>;
 interface CardView {
   //
@@ -34,10 +36,11 @@ const Container = styled('div')<CardView>`
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   height: auto;
   border-radius: 25px;
-  background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg');
+  /* background-image: url('https://chamongbucket.s3.ap-northeast-2.amazonaws.com/images/default_image/camping(default).jpg'); */
   background-size: cover;
   max-width: 330px;
   cursor: pointer;
+  background-color: var(--searchbar__color);
 
   .content {
     width: auto;
@@ -64,7 +67,9 @@ const Container = styled('div')<CardView>`
   .img_box {
     position: relative;
     height: 120px;
-    background-image: ${props => `url(${props.bg})`};
+    background-image: ${props =>
+      `url(${props.bg})` ||
+      'https://chamongbucket.s3.ap-northeast-2.amazonaws.com/images/default_image/camping(default).jpg'};
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 25px 25px 0px 0px;
@@ -167,7 +172,10 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
   const navigate = useNavigate();
   const [isLike, setIsLike] = useState(data.bookmarked);
   const login = useAppSelector(state => state.isLogin);
-  console.log(isLike);
+  useEffect(() => {
+    setIsLike(data.bookmarked);
+  }, [data]);
+
   const likeHandler = (event: CustomMouseEvent) => {
     if (login) {
       if (isLike) {
@@ -176,14 +184,7 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
         );
         setIsLike(false);
       } else {
-        sendDataTs(`bookmark/${event}`, 'post', {}).then(
-          res => {
-            console.log(res);
-            // alert('위시리스트에 추가되었습니다!');
-            // window.location.replace('/');
-          }
-          // console.log('add')
-        );
+        sendDataTs(`bookmark/${event}`, 'post', {}).then(res => {});
         setIsLike(true);
       }
     } else {
@@ -191,7 +192,6 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
     }
   };
   return (
-    // <Link to={`/content/${data.contentId}`} style={{ width: '100%' }}>
     <div
       style={{ width: '100%', maxWidth: '420px' }}
       onClick={() => {
@@ -211,8 +211,7 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
             fill="none"
             onClick={e => {
               e.stopPropagation();
-              // likeHandler;
-              likeHandler(data.contentId);
+              likeHandler(data.contentId ? data.contentId : data.id);
             }}
           >
             <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z" />
@@ -279,8 +278,9 @@ const ContainerRow = styled('div')<CardView>`
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   height: auto;
   border-radius: 25px;
-  background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg');
-  background-size: cover;
+  /* background-image: url('https://chamongbucket.s3.ap-northeast-2.amazonaws.com/images/default_image/camping(default).jpg'); */
+  background-size: contain;
+  background-color: var(--searchbar__color);
   cursor: pointer;
   .content {
     width: 50%;
@@ -317,7 +317,9 @@ const ContainerRow = styled('div')<CardView>`
     position: relative;
     height: auto;
     width: auto;
-    background-image: ${props => `url(${props.bg})`};
+    background-image: ${props =>
+      `url(${props.bg})` ||
+      'https://chamongbucket.s3.ap-northeast-2.amazonaws.com/images/default_image/camping(default).jpg'};
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 25px 0px 0px 25px;
@@ -477,35 +479,61 @@ export function ContentCardRow({
   const [isLike, setIsLike] = useState(data.bookmarked);
   const [isShare, setIsShare] = useState(false);
   let { pathname } = useLocation();
+  useEffect(() => {
+    // getDataTs('bookmark?page=1').then(res => setIsLike(res.content.bookmarked));
+    setIsLike(data.bookmarked);
+  }, [data]);
 
   const deleteHandler = (event: CustomMouseEvent) => {
     //* 위시리스트 삭제 API
     sendDataTs(`bookmark/${event}`, 'delete', {}).then(res =>
       console.log('delete')
     );
-    //*FIXME 여행의 흔적 삭제하는 API 호출
-  };
 
+    //* 여행의 흔적 삭제하는 API 호출
+  };
+  // console.log(data);
+  const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
   const sharedAddHandler = (event: CustomMouseEvent) => {
     //*유저픽_유저의 차박지에 등록하는 API 호출
-    // “patchMyPlace” : {
-    //   “memo”: “조용하고 사진찍으면 잘나옴”,
 
-    //   “keywords”: [“#물놀이”, “#애견동반”],
-
-    //   “isShared”: true
-    //   },
-
-    sendDataTs(`pick-places/${event}`, 'delete', {}).then(res =>
-      console.log('delete')
-    );
+    const patchData = {
+      memo: data.memo,
+      keywords: data.keywords,
+      isShared: true,
+    };
+    console.log(patchData);
+    sendFormDataTs(
+      `pick-places/${event}`,
+      'patch',
+      patchData,
+      image,
+      'patchMyPlace',
+      'placeImg'
+    ).then(res => console.log('patch'));
     // console.log('유저픽_유저의 차박지에 등록');
     navigate('/userpick');
   };
 
-  //*FIXME 공유확인 모달창
-  //TODO index.d.ts_MyPlaceInfo타입(MyPage에서 API 호출)
-  //TODO 유저인포에 담긴 내가찾은 차박지 contentID와 동일하면 하트표시 없애기
+  const login = useAppSelector(state => state.isLogin);
+  //* 공유확인 모달창
+  // index.d.ts_MyPlaceInfo타입(MyPage에서 API 호출)
+  // 유저인포에 담긴 내가찾은 차박지 contentID와 동일하면 하트표시 없애기
+  const likeHandler = (event: CustomMouseEvent) => {
+    if (login) {
+      if (isLike) {
+        sendDataTs(`bookmark/${event}`, 'delete', {}).then(res =>
+          console.log('delete')
+        );
+        setIsLike(false);
+      } else {
+        sendDataTs(`bookmark/${event}`, 'post', {}).then(res => {});
+        setIsLike(true);
+      }
+    } else {
+      alert('로그인을 해주세요');
+    }
+  };
   return (
     <div
       style={{ width: '100%', maxWidth: '420px' }}
@@ -528,7 +556,7 @@ export function ContentCardRow({
             fill="none"
             onClick={e => {
               e.stopPropagation();
-              setIsLike(!isLike);
+              likeHandler(data.contentId ? data.contentId : data.id);
             }}
           >
             <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z" />
@@ -540,7 +568,7 @@ export function ContentCardRow({
             className="delete remove"
             onClick={e => {
               e.stopPropagation();
-              deleteHandler(data.contentId);
+              deleteHandler(data.bookmarkId);
             }}
           />
           <h1>
@@ -610,7 +638,7 @@ export function ContentCardRow({
                       padding={'10px 16px'}
                       onClick={(e: any) => {
                         e.stopPropagation();
-                        sharedAddHandler(data.contentId);
+                        sharedAddHandler(data.id);
                       }}
                     >
                       확인

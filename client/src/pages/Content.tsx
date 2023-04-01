@@ -144,7 +144,7 @@ function Content() {
   return (
     <Container onClick={() => dispatch(click(false))}>
       <Header width_M={'1000px'}></Header>
-      {isContent?.bookmarked ? (
+      {isContent ? (
         <ContentM
           isContent={isContent}
           contentId={contentId}
@@ -152,7 +152,7 @@ function Content() {
           setIsModal={setIsModal}
         ></ContentM>
       ) : null}
-      {isContent?.bookmarked ? (
+      {isContent ? (
         <ContentD isContent={isContent} contentId={contentId}></ContentD>
       ) : null}
       {/* {모바일 리뷰 헤더} */}

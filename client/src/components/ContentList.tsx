@@ -153,25 +153,27 @@ function ContentList({ data, setData }: CardList) {
           </div>
         </div>
       </Container>
-      <Spinner>
-        <div className="layerPopup">
-          {data && data.length < 60 ? (
-            <div className="spinner" ref={setTarget}></div>
-          ) : (
-            <div
-              style={{
-                fontSize: '18px',
-                display: 'flex',
-                justifyContent: 'center',
-                maxWidth: '600px',
-                zIndex: '100',
-              }}
-            >
-              {/* 마지막 데이터입니다 */}
-            </div>
-          )}
-        </div>
-      </Spinner>
+      {data ? (
+        <Spinner>
+          <div className="layerPopup">
+            {data && data.length < 60 ? (
+              <div className="spinner" ref={setTarget}></div>
+            ) : (
+              <div
+                style={{
+                  fontSize: '18px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  maxWidth: '600px',
+                  zIndex: '100',
+                }}
+              >
+                {/* 마지막 데이터입니다 */}
+              </div>
+            )}
+          </div>
+        </Spinner>
+      ) : null}
       <div style={{ height: '60px' }}></div>
     </div>
   );
