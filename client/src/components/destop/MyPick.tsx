@@ -111,7 +111,7 @@ function MyPick({}: CardList) {
         if (res) setContent(res);
       });
     }
-  });
+  }, []);
   const navigate = useNavigate();
   return (
     <Container>
