@@ -14,6 +14,7 @@ import { Modal } from '../styles/Modal';
 import { ReviewSubmit } from './ReviewSubmit';
 import { useState, useEffect } from 'react';
 import { timeParser } from '../utils/timeParser';
+import { sendDataTs } from '../api/tsapi';
 
 const Container = styled.div`
   .post {
@@ -180,27 +181,12 @@ export function Review({ isReview, setIsModal }: ReviewType) {
   // const [isModal, setIsModal] = useState(false);
   const dispatch = useAppDispatch();
   const reviewDeleteHandler = () => {
-    // console.log(
-    //   '각각의 캠핑장 상세페이지에 달린 리뷰를 삭제할 수 있는 API를 호출'
-    // );
+    sendDataTs(`review/${isReview.id}`, 'delete', {}).then(res =>
+      console.log(res)
+    );
   };
   // let isReview: {};
   // if (isContent) isReview = isContent.reviews;
-  const review = {
-    reviewId: 6,
-    rating: 5,
-    content: '좋았어요',
-    member: {
-      createdAt: '2023-03-22T23:26:35',
-      updatedat: '2023-03-22T23:26:35',
-      id: 1,
-      email: 'yoonae@gmail.com',
-      password: '',
-      profileImg:
-        'https://pixabay.com/photos/flowers-twig-tree-white-petals-7665747',
-      about: '자기소개',
-    },
-  };
   return (
     <Container className="post">
       <div key={isReview.id} className="top">
@@ -231,10 +217,9 @@ export function Review({ isReview, setIsModal }: ReviewType) {
 }
 
 type Community = {
-  data:ArticleType
-}
+  data: ArticleType;
+};
 export function Post({ data }: Community) {
-
   return (
     <Container className="post">
       {/* {isCommunity.map((ele: any) => { */}

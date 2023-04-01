@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getData } from '../../api/api';
 import { FiArrowLeft } from 'react-icons/fi';
 import { FaRestroom } from 'react-icons/fa';
 import { SiForestry } from 'react-icons/si';
@@ -13,10 +12,7 @@ import { FaFish } from 'react-icons/fa';
 import { GiIsland } from 'react-icons/gi';
 import { Button } from '../../styles/Button';
 import { Link } from 'react-router-dom';
-import { AiFillStar } from 'react-icons/ai';
 import { MobileHeader } from '../../styles/mobileStyle';
-import { ReviewSubmit } from '../ReviewSubmit';
-import { Modal } from '../../styles/Modal';
 import MapContainer from '../map/MapContainer';
 import { sendDataTs } from '../../api/tsapi';
 import { MouseEvent } from 'react';
@@ -157,6 +153,10 @@ export function ContentM({
   const [isContinue, setIsContinue] = useState(false);
   const [isLike, setIsLike] = useState(isContent.bookmarked);
 
+  useEffect(() => {
+    setIsLike(isContent.bookmarked);
+  }, [isContent.bookmarked]);
+
   const addWishlist = (event: CustomMouseEvent) => {
     if (isLike) {
       sendDataTs(`bookmark/${contentId}`, 'delete', {}).then(res =>
@@ -170,6 +170,7 @@ export function ContentM({
       setIsLike(true);
     }
   };
+  console.log(isContent);
   return (
     <Container
       isContent={isContent}
