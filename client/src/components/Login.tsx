@@ -313,14 +313,15 @@ function Login({ setIsLoginModal }: LoginInfo) {
     if (!email) setEmailErrorMessage('');
     if (!password) setPasswordErrorMessage('');
   };
-
+  const clientId = process.env.REACT_APP_CLIENTID;
+  const url = process.env.REACT_APP_GOOGLE_URL;
   const socialRequestHandler = () => {
     const parsedHash = new URLSearchParams(window.location.hash.substring(1));
     const accessToken = parsedHash.get('access_token');
     window.location.href =
       'https://accounts.google.com/o/oauth2/auth?' +
-      'client_id=800254385039-hahopjm6c43bquetv71t8mi4albrsb70.apps.googleusercontent.com&' +
-      'redirect_uri=http://chamongbucket.s3-website.ap-northeast-2.amazonaws.com&' +
+      `client_id=${clientId}&` +
+      `redirect_uri=${url}&` +
       'response_type=token&' +
       'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
 
@@ -330,6 +331,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
         console.log(res)
       );
     }
+
     // getDataTs('oauth2/authorization/google').then(res => console.log(res));
   };
 

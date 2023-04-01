@@ -230,33 +230,32 @@ const Container = styled('div')<ContentInfo>`
 
 export function ContentD({ isContent }: ContentInfo) {
   const [isContinue, setIsContinue] = useState(false);
-  // const [isContent, setIsContent] = useState<any>({});
-
+  // const [isContent, setIsContent] = useState<any>({})
+  useEffect(() => {
+    setIsLike(isContent.bookmarked);
+  }, [isContent]);
   const [isLike, setIsLike] = useState(isContent.bookmarked);
   const login = useAppSelector(state => state.isLogin);
   const { contentId } = useParams();
 
   const addWishlist = (event: CustomMouseEvent) => {
-    // const contentId = (event.target as HTMLLIElement).id;
-    // console.log(event);
     if (login) {
       if (isLike) {
         sendDataTs(`bookmark/${contentId}`, 'delete', {}).then(res =>
           console.log('delete')
         );
+        setIsLike(false);
       } else {
         sendDataTs(`bookmark/${contentId}`, 'post', {}).then(res => {
           // alert('위시리스트에 추가되었습니다!');
           // window.location.replace('/');
           console.log('add');
         });
+        setIsLike(true);
       }
     } else alert('로그인을 해주세요');
   };
-  useEffect(() => {
-    setIsLike(isContent.bookmarked);
-  }, [isLike]);
-
+  console.log(isLike);
   return (
     <Container isContent={isContent} bg={isContent.firstImageUrl}>
       <main>

@@ -6,7 +6,7 @@ import { FcLikePlaceholder } from 'react-icons/fc';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { AiFillDelete } from 'react-icons/ai';
 import { FcLike } from 'react-icons/fc';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { edit } from '../store/reviewSlice';
 import { Button } from '../styles/Button';
@@ -180,13 +180,16 @@ type ReviewType =
 export function Review({ isReview, setIsModal }: ReviewType) {
   // const [isModal, setIsModal] = useState(false);
   const dispatch = useAppDispatch();
+  const { contentId } = useParams();
   const [memberId, setMemberId] = useState();
   const login = useAppSelector(state => state.isLogin);
   const reviewDeleteHandler = () => {
-    sendDataTs(`review/${isReview.id}`, 'delete', {}).then(res =>
-      console.log(res)
+    sendDataTs(`review/${isReview.reviewId}`, 'delete', {}).then(res =>
+      alert('리뷰가 삭제되었습니다')
     );
+    window.location.replace(`/content/${contentId}`);
   };
+
   useEffect(() => {
     if (login)
       getDataTs(`members/token`).then(res => {

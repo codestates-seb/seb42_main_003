@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import MyPick from './destop/MyPick';
 import { getDataTs } from '../api/tsapi';
 import useIntersectionObserver from '../hooks/useIO';
-import { setCampingList } from '../store/campingSlice';
+import { setCampingList, addCampingList } from '../store/campingSlice';
 
 interface CardList {
   content?: any;
@@ -110,7 +110,7 @@ function ContentList({ setData }: CardList) {
       await testFetch();
       getDataTs(`main?page=${pageNum}`).then(res => {
         // setData(data.concat(res.content));
-        dispatch(setCampingList(res.content));
+        dispatch(addCampingList(res.content));
       });
       setIsLoaded(false);
       setpageNum(pageNum + 1);

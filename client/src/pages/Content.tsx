@@ -74,53 +74,54 @@ function Content() {
   const [isContent, setIsContent] = useState<any>({});
   const dispatch = useAppDispatch();
   const { contentId } = useParams();
-  const isReview = [
-    {
-      createdAt: '2023-03-24',
-      image:
-        'https://cdn.pixabay.com/photo/2023/03/25/10/59/hedgehog-fly-7875687_1280.jpg',
-      user: '땡구리',
-      updatedat: '2023-03-24',
-      reviewId: 1,
-      content:
-        '이번 주말 캠핑을 가서 힐링하고 왔는데 정말 좋았어요. 조용하고 한적해서 마음이 편해졌고, 산책로에서 산책하면서 몸도 좀 움직이고 좋았어요. 다음에 또 방문할 계획이에요.',
-      rating: 5,
-    },
-    {
-      createdAt: '2023-03-22',
-      image:
-        'https://cdn.pixabay.com/photo/2022/12/19/13/51/flowers-7665747_1280.jpg',
-      user: '차몽',
-      updatedat: '2023-03-22',
-      reviewId: 2,
-      content:
-        '처음뵙겠습니다. 이번 주말 캠핑을 다녀왔는데, 너무 좋았습니다. 청결한 시설과 친절한 직원들, 그리고 마음에 드는 캠핑장 분위기가 모두 좋았어요. 덕분에 집에서 힘들게 지내던 일상을 잊고 푹 쉴 수 있었습니다. 추천합니다!',
-      rating: 5,
-    },
-    {
-      createdAt: '2023-03-26',
-      image:
-        'https://cdn.pixabay.com/photo/2022/10/23/02/26/hotel-7540353_1280.jpg',
-      user: '옥수수',
-      updatedat: '2023-03-26',
-      reviewId: 3,
-      content:
-        '이번 주말에 가족과 함께 캠핑을 다녀왔는데, 정말 좋았습니다. 아이들이 즐길 수 있는 다양한 시설이 있어서 아이들도 즐거웠고, 저도 한가지 일만 하면 느긋하게 쉴 수 있어서 좋았어요. 다음에 또 방문할 계획입니다!',
-      rating: 4,
-    },
-    {
-      createdAt: '2023-03-26',
-      image:
-        'https://cdn.pixabay.com/photo/2022/12/19/17/37/bee-7666216_1280.jpg',
-      user: '감자',
-      updatedat: '2023-03-26',
-      reviewId: 3,
-      content: '좋았어요 굳굳',
-      rating: 4,
-    },
-  ];
+  // const isReview = [
+  //   {
+  //     createdAt: '2023-03-24',
+  //     image:
+  //       'https://cdn.pixabay.com/photo/2023/03/25/10/59/hedgehog-fly-7875687_1280.jpg',
+  //     user: '땡구리',
+  //     updatedat: '2023-03-24',
+  //     reviewId: 1,
+  //     content:
+  //       '이번 주말 캠핑을 가서 힐링하고 왔는데 정말 좋았어요. 조용하고 한적해서 마음이 편해졌고, 산책로에서 산책하면서 몸도 좀 움직이고 좋았어요. 다음에 또 방문할 계획이에요.',
+  //     rating: 5,
+  //   },
+  //   {
+  //     createdAt: '2023-03-22',
+  //     image:
+  //       'https://cdn.pixabay.com/photo/2022/12/19/13/51/flowers-7665747_1280.jpg',
+  //     user: '차몽',
+  //     updatedat: '2023-03-22',
+  //     reviewId: 2,
+  //     content:
+  //       '처음뵙겠습니다. 이번 주말 캠핑을 다녀왔는데, 너무 좋았습니다. 청결한 시설과 친절한 직원들, 그리고 마음에 드는 캠핑장 분위기가 모두 좋았어요. 덕분에 집에서 힘들게 지내던 일상을 잊고 푹 쉴 수 있었습니다. 추천합니다!',
+  //     rating: 5,
+  //   },
+  //   {
+  //     createdAt: '2023-03-26',
+  //     image:
+  //       'https://cdn.pixabay.com/photo/2022/10/23/02/26/hotel-7540353_1280.jpg',
+  //     user: '옥수수',
+  //     updatedat: '2023-03-26',
+  //     reviewId: 3,
+  //     content:
+  //       '이번 주말에 가족과 함께 캠핑을 다녀왔는데, 정말 좋았습니다. 아이들이 즐길 수 있는 다양한 시설이 있어서 아이들도 즐거웠고, 저도 한가지 일만 하면 느긋하게 쉴 수 있어서 좋았어요. 다음에 또 방문할 계획입니다!',
+  //     rating: 4,
+  //   },
+  //   {
+  //     createdAt: '2023-03-26',
+  //     image:
+  //       'https://cdn.pixabay.com/photo/2022/12/19/17/37/bee-7666216_1280.jpg',
+  //     user: '감자',
+  //     updatedat: '2023-03-26',
+  //     reviewId: 3,
+  //     content: '좋았어요 굳굳',
+  //     rating: 4,
+  //   },
+  // ];
   useEffect(() => {
     getDataTs(`main/${contentId}`).then(res => {
+      console.log(res);
       setIsContent(res);
     });
     return () => {
@@ -188,7 +189,7 @@ function Content() {
         <div className="desktop_wrap">
           {isContent.reviews?.map((ele: any) => (
             <Review
-              key={ele.id}
+              key={ele.reviewId}
               isReview={ele}
               setIsModal={setIsModal}
             ></Review>

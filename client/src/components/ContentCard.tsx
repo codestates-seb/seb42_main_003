@@ -178,11 +178,11 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
   useEffect(() => {
     setIsLike(data.bookmarked);
   }, [data]);
-
+  // console.log(data.bookmarkId);
   const likeHandler = (event: CustomMouseEvent) => {
     if (login) {
       if (isLike) {
-        sendDataTs(`bookmark/${event}`, 'delete', {}).then(res =>
+        sendDataTs(`bookmark/${data.bookmarkId}`, 'delete', {}).then(res =>
           console.log('delete')
         );
         setIsLike(false);
@@ -481,16 +481,26 @@ export function ContentCardRow({
     // getDataTs('bookmark?page=1').then(res => setIsLike(res.content.bookmarked));
     setIsLike(data.bookmarked);
   }, [data]);
-
   const deleteHandler = (event: CustomMouseEvent) => {
     //* 위시리스트 삭제 API
-    sendDataTs(`bookmark/${event}`, 'delete', {}).then(res =>
-      console.log('delete')
-    );
+
+    if (pathname === '/mypage') {
+      // getDataTs('members/mypage').then(res => {
+      //   console.log(res);
+      sendDataTs(`visited-places/${data.id}`, 'delete', {}).then(res => {
+        alert('여행의 흔적에서 해당 캠핑장이 삭제되었습니다.');
+        window.location.replace('/mypage');
+      });
+    } else {
+      sendDataTs(`bookmark/${data.bookmarkId}`, 'delete', {}).then(res => {
+        alert('위시리스트에서 해당 캠핑장이 삭제되었습니다.');
+        window.location.replace('/wishlist');
+      });
+    }
 
     //* 여행의 흔적 삭제하는 API 호출
   };
-  // console.log(data);
+
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
   const sharedAddHandler = (event: CustomMouseEvent) => {
     //*유저픽_유저의 차박지에 등록하는 API 호출
@@ -547,7 +557,13 @@ export function ContentCardRow({
         remove={remove}
         like={like}
         edit={edit}
-        bg={data.placeImg ? data.placeImg : data.firstImageUrl}
+        bg={
+          data.placeImg
+            ? data.placeImg
+            : data.firstImageUrl
+            ? data.firstImageUrl
+            : 'https://user-images.githubusercontent.com/116159684/229258665-6f5e3195-5073-4fc0-b290-833ef0c00754.jpeg'
+        }
       >
         <div key={data.contentId} className="img_box">
           <svg

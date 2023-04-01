@@ -67,22 +67,29 @@ function Main() {
   // const [isClicked, setIsClicked] = useState<boolean>(false);
   const size = useWindowSize();
   const clicked = useAppSelector(state => state.clicked);
-  const [content, setContent] = useState<Info>();
-  const [data, setData] = useState<Info>();
+  // const [content, setContent] = useState<Info>();
+  // const [data, setData] = useState<Info>();
   const [isMap, setIsMap] = useState<boolean>(false);
   const [isURL, setIsURL] = useState<string>('main?page=1');
   const dispatch = useAppDispatch();
+  const data = useAppSelector(state => state.campingList);
   useEffect(() => {
+    // getDataTs(isURL).then(res => {
+    //   if (res) {
+    //     if (isURL === 'main?page=1') {
+    //       setData(res.content);
+    //     } else setData(res);
+    //   }
+    // });
     getDataTs(isURL).then(res => {
       if (res) {
         if (isURL === 'main?page=1') {
           dispatch(setCampingList(res.content));
-          setData(res.content);
-        } else setData(res);
+        } else dispatch(setCampingList(res));
       }
     });
   }, [isURL]);
-
+  // console.log(data);
   return (
     <Container onClick={() => dispatch(click(false))}>
       {clicked ? null : (
@@ -113,9 +120,9 @@ function Main() {
         <>
           <Category setIsURL={setIsURL}></Category>
           <div className={isMap ? 'community' : ''}>
-            {/* <CommunityBestM></CommunityBestM> */}
+            <CommunityBestM></CommunityBestM>
           </div>
-          <ContentList data={data} setData={setData}></ContentList>
+          <ContentList data={data}></ContentList>
         </>
       ) : clicked || isMap ? null : (
         <>
@@ -123,7 +130,7 @@ function Main() {
           <div className={isMap ? 'community' : ''}>
             <CommunityBestM></CommunityBestM>
           </div>
-          <ContentList data={data} setData={setData}></ContentList>
+          <ContentList data={data}></ContentList>
         </>
       )}
       {/* <Footer></Footer> */}
