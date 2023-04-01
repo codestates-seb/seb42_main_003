@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { BsFillPlusCircleFill } from 'react-icons/bs';
 import { useEffect, useState } from 'react';
+import { useAppSelector } from '../../hooks/reduxTK';
 import { getDataTs } from '../../api/tsapi';
+import { Link, useNavigate } from 'react-router-dom';
+
 interface CardList {
   data?: string[];
 }
@@ -98,14 +101,18 @@ const Container = styled.div`
 //     tag: ['해변', '전기'],
 //   },
 // ];
-// const [content, setContent] = useState()
 
 function MyPick({}: CardList) {
+  const [content, setContent] = useState<MyPlaceInfo[]>();
+  const login = useAppSelector(state => state.isLogin);
   useEffect(() => {
-    getDataTs('pick-places/member').then(res => {
-      // if(res) setContent(res)
-    });
+    if (login) {
+      getDataTs('pick-places/member').then(res => {
+        if (res) setContent(res);
+      });
+    }
   });
+  const navigate = useNavigate();
   return (
     <Container>
       <h1>내가 찾은 차박지</h1>
@@ -114,22 +121,27 @@ function MyPick({}: CardList) {
           <div className="body">
             내가 찾은 차박지를 등록하고<br></br> 사람들과 공유해보세요
           </div>
-          <BsFillPlusCircleFill className="icon" />
+          <Link to="/mypage">
+            <BsFillPlusCircleFill
+              onClick={() =>
+                login ? navigate('/mypage') : alert('로그인을 해주세요')
+              }
+              className="icon"
+            />
+          </Link>
         </div>
-        {/* {content?.map(data => {
+        {content?.map(data => {
           return (
             <ul key={data.id} className="list_box">
               <div className="like_box">
-                <p>{data.adress}</p>
+                <p>{data.address}</p>
               </div>
               <li className="tag">
-                {data.tag.map(ele => {
-                  return <span key={ele}>{`#${ele}`}</span>;
-                })}
+                <div className="tag">{data.keyword?.join(', ')}</div>
               </li>
             </ul>
           );
-        })} */}
+        })}
       </div>
     </Container>
   );

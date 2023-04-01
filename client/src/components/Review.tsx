@@ -14,7 +14,7 @@ import { Modal } from '../styles/Modal';
 import { ReviewSubmit } from './ReviewSubmit';
 import { useState, useEffect } from 'react';
 import { timeParser } from '../utils/timeParser';
-import { sendDataTs } from '../api/tsapi';
+import { getDataTs, sendDataTs } from '../api/tsapi';
 
 const Container = styled.div`
   .post {
@@ -180,13 +180,20 @@ type ReviewType =
 export function Review({ isReview, setIsModal }: ReviewType) {
   // const [isModal, setIsModal] = useState(false);
   const dispatch = useAppDispatch();
+  const [memberId, setMemberId] = useState();
+  const login = useAppSelector(state => state.isLogin);
   const reviewDeleteHandler = () => {
     sendDataTs(`review/${isReview.id}`, 'delete', {}).then(res =>
       console.log(res)
     );
   };
-  // let isReview: {};
-  // if (isContent) isReview = isContent.reviews;
+  useEffect(() => {
+    if (login)
+      getDataTs(`members/token`).then(res => {
+        if (res) setMemberId(res.id);
+      });
+  });
+
   return (
     <Container className="post">
       <div key={isReview.id} className="top">
@@ -201,15 +208,17 @@ export function Review({ isReview, setIsModal }: ReviewType) {
             <div className="grade">{isReview.rating}</div>
           </div>
         </div>
-        <div className="right">
-          <BsFillPencilFill
-            onClick={() => {
-              dispatch(edit(isReview));
-              setIsModal(true);
-            }}
-          />
-          <AiFillDelete className="delete" onClick={reviewDeleteHandler} />
-        </div>
+        {isReview.member.id === memberId ? (
+          <div className="right">
+            <BsFillPencilFill
+              onClick={() => {
+                dispatch(edit(isReview));
+                setIsModal(true);
+              }}
+            />
+            <AiFillDelete className="delete" onClick={reviewDeleteHandler} />
+          </div>
+        ) : null}
       </div>
       <p className="bottom">{isReview.content}</p>
     </Container>

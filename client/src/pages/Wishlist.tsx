@@ -122,7 +122,7 @@ function Wishlist(map_height: MapHeightProps) {
   const [isMap, setIsMap] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (!isLogin) dispatch(loginModal(true));
+    // if (!isLogin) dispatch(loginModal(true));
     getDataTs('bookmark?page=1').then(res => {
       console.log(res);
       if (res) setData(res.content);

@@ -1,21 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
-
 type InitialState = {
-  id: number;
-  image: string;
-  user: string;
-  createdAt: string;
-  grade: number;
-  body: string;
+  reviewId: number;
+  rating: string;
+  content: string;
+  member: {
+    id: number;
+    email: string;
+    nickname: string;
+    profileImg: string;
+  };
 };
 
 const initialState: InitialState = {
-  id: 0,
-  image: '',
-  user: '',
-  createdAt: '',
-  grade: 0,
-  body: '',
+  reviewId: 0,
+  rating: '',
+  content: '',
+  member: {
+    id: 0,
+    email: '',
+    nickname: '',
+    profileImg: '',
+  },
 };
 const reviewSlice = createSlice({
   name: 'review',

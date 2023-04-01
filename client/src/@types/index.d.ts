@@ -26,11 +26,12 @@ interface MemberInfo {
   oilInfo:string
 }
 
-//* id -> contentId로 수정함
+
 interface MyPlaceInfo {
-  contentId: number;
+  id: number;
+  address: string;
   memo: string;
-  keyword: string[];
+  keyword: [];
   placeImg: string;
   shared: true;
   mapX: string;

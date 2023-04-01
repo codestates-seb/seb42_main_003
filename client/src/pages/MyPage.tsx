@@ -80,12 +80,12 @@ interface VisitedPlaceInfo {
 /* 배열: [string, 함수, 함수]  */
 
 function MyPage() {
-  const {width}=useWindowSize();
+  const { width } = useWindowSize();
   const [addCampModal, setAddCampModal] = useState<boolean>(false);
   const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
   //viewHistory state는 모바일에서만 사용
   const [viewHistoryModal, setViewHistoryModal] = useState<boolean>(false);
-  const [deleteMemberModal,setDeleteMemberModal]=useState(false);
+  const [deleteMemberModal, setDeleteMemberModal] = useState(false);
   const [memberInfo, setMemberInfo] = useState<MemberInfo>();
   const [myPlaceInfos, setMyPlaceInfos] = useState<MyPlaceInfo[] | null>(null);
   const [visitedPlaceInfos, setVisitedPlaceInfos] = useState<
@@ -101,8 +101,8 @@ function MyPage() {
     ArticleType[] | null
   >(null);
 
-  const [reloadData,setReloadData]=useState(false);
-  const reloadHandler=()=>setReloadData(!reloadData);
+  const [reloadData, setReloadData] = useState(false);
+  const reloadHandler = () => setReloadData(!reloadData);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -181,7 +181,11 @@ function MyPage() {
             <h2>나의 프로필</h2>
             <div className="flex-div">
               <div>
-                <img src={memberInfo.profileImg} alt="profile-img" className='profile-img'></img>
+                <img
+                  src={memberInfo.profileImg}
+                  alt="profile-img"
+                  className="profile-img"
+                ></img>
                 <div className="member-info-upper">
                   <span className="member-info-nickname">
                     {memberInfo.nickname}
@@ -268,10 +272,10 @@ function MyPage() {
             로그아웃
           </Button>
         </PageArticle>
-          <PageArticle>
-            <h2>회원관리</h2>
+        <PageArticle>
+          <h2>회원관리</h2>
           <Button
-          onClick={deleteMemberHandler}
+            onClick={deleteMemberHandler}
             border={'var(--chamong__color)'}
             color={'var(--chamong__color)'}
             hcolor={'white'}
@@ -283,9 +287,14 @@ function MyPage() {
           >
             회원탈퇴
           </Button>
-          </PageArticle>
+        </PageArticle>
       </PageMain>
-      {addCampModal && <AddCampModal floatButtonHandler={floatButtonHandler} reloadHandler={reloadHandler} />}
+      {addCampModal && (
+        <AddCampModal
+          floatButtonHandler={floatButtonHandler}
+          reloadHandler={reloadHandler}
+        />
+      )}
       {editProfileModal && memberInfo && (
         <EditProfileModal
           editProfileHandler={editProfileHandler}
@@ -300,7 +309,11 @@ function MyPage() {
           likedArticleInfos={likedArticleInfos}
         ></ViewHistoryModal>
       )}
-      {deleteMemberModal&&<DeleteMemberModal deleteMemberHandler={deleteMemberHandler}></DeleteMemberModal>}
+      {deleteMemberModal && (
+        <DeleteMemberModal
+          deleteMemberHandler={deleteMemberHandler}
+        ></DeleteMemberModal>
+      )}
       {/* <Nav></Nav> */}
       <Footer></Footer>
     </>
@@ -361,10 +374,13 @@ function MyPageMapContainer({
 
 interface AddCampModalProps {
   floatButtonHandler: () => void;
-  reloadHandler:()=>void;
+  reloadHandler: () => void;
 }
 
-function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
+function AddCampModal({
+  floatButtonHandler,
+  reloadHandler,
+}: AddCampModalProps) {
   //내용을 저장합니다.
   const [memo, setMemo] = useState<string>('');
   //키워드 객체를 저장합니다.
@@ -380,18 +396,22 @@ function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
   //이미지를 저장하는 state
   // const [fileList, setFileList] = useState<FileList | null>(null);
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
-  const [errorMessage,setErrorMessage]=useState({memo:'',position:'',submit:''});
+  const [errorMessage, setErrorMessage] = useState({
+    memo: '',
+    position: '',
+    submit: '',
+  });
 
   //address 필드 추가가 필요함
   const postCampHandler = () => {
     if (isInputEmpty()) return;
-    if(!position) return;
+    if (!position) return;
     const data = {
       memo,
       keywords,
       mapY: Number(position[0]),
       mapX: Number(position[1]),
-      address
+      address,
     };
     sendFormDataTs(
       'pick-places',
@@ -401,11 +421,18 @@ function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
       'postMyPlace',
       'placeImg'
     )
-      .then(() => {   
+      .then(() => {
         reloadHandler();
         floatButtonHandler();
       })
-      .catch(err => setErrorMessage(prevState=>{return {...prevState,submit:`등록에 실패했습니다. (${err.response.status})`}}));
+      .catch(err =>
+        setErrorMessage(prevState => {
+          return {
+            ...prevState,
+            submit: `등록에 실패했습니다. (${err.response.status})`,
+          };
+        })
+      );
   };
 
   const addKeywordHandler = (theme: string) => {
@@ -420,27 +447,42 @@ function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
     });
   };
 
-  const isInputEmpty=()=>{
-    let pass=true
-    if(!memo) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,memo:'이름을 지정해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,memo:''}});
-    if(!position) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,position:'위치를 지정해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,position:''}});
-    if(position&&!address){
+  const isInputEmpty = () => {
+    let pass = true;
+    if (!memo) {
+      pass = false;
+      setErrorMessage(prevState => {
+        return { ...prevState, memo: '이름을 지정해주세요.' };
+      });
+    } else
+      setErrorMessage(prevState => {
+        return { ...prevState, memo: '' };
+      });
+    if (!position) {
+      pass = false;
+      setErrorMessage(prevState => {
+        return { ...prevState, position: '위치를 지정해주세요.' };
+      });
+    } else
+      setErrorMessage(prevState => {
+        return { ...prevState, position: '' };
+      });
+    if (position && !address) {
       // console.log('위치 오류')
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,position:'정상적인 위치가 아닙니다.'}});
-    } else if(position) setErrorMessage(prevState=>{return {...prevState,position:''}});
+      pass = false;
+      setErrorMessage(prevState => {
+        return { ...prevState, position: '정상적인 위치가 아닙니다.' };
+      });
+    } else if (position)
+      setErrorMessage(prevState => {
+        return { ...prevState, position: '' };
+      });
     return !pass;
-  }
+  };
 
   return (
     <Modal
-    maxWidth='600px'
+      maxWidth="600px"
       onClick={() => {
         setIsKeywordFocus(false);
       }}
@@ -481,7 +523,9 @@ function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
           }
           placeholder="이름"
         />
-        {errorMessage.memo&&!memo&&<span className='error-message'>{errorMessage.memo}</span>}
+        {errorMessage.memo && !memo && (
+          <span className="error-message">{errorMessage.memo}</span>
+        )}
         <KeywordInput
           isFocus={isKeywordFocus}
           onClick={e => {
@@ -528,7 +572,9 @@ function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
         <div className="map">
           <MapGetPosition setAddress={setAddress} setPosition={setPosition} />
         </div>
-        {errorMessage.position&&!address&&<span className='error-message'>{errorMessage.position}</span>}
+        {errorMessage.position && !address && (
+          <span className="error-message">{errorMessage.position}</span>
+        )}
         <Button
           onClick={postCampHandler}
           border={'var(--chamong__color)'}
@@ -543,7 +589,9 @@ function AddCampModal({ floatButtonHandler,reloadHandler }: AddCampModalProps) {
         >
           작성 완료
         </Button>
-        {errorMessage.submit&&<span className='error-message'>{errorMessage.submit}</span>}
+        {errorMessage.submit && (
+          <span className="error-message">{errorMessage.submit}</span>
+        )}
       </div>
     </Modal>
   );
@@ -559,16 +607,21 @@ function EditProfileModal({
   memberInfo,
 }: editProfileModalProps) {
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
-  const [isPhotoEdit,setIsPhotoEdit]=useState(false);
+  const [isPhotoEdit, setIsPhotoEdit] = useState(false);
   const [nickname, setNickname] = useState(memberInfo.nickname);
   const [about, setAbout] = useState(memberInfo.about);
   const [carName, setCarName] = useState(memberInfo.carName);
   const [oilInfo, setOilInfo] = useState(memberInfo.oilInfo);
-  const [errorMessage,setErrorMessage]=useState({nickname:'',carName:'',about:'',submit:''});
+  const [errorMessage, setErrorMessage] = useState({
+    nickname: '',
+    carName: '',
+    about: '',
+    submit: '',
+  });
 
   const profileSubmitHandler = () => {
     const data = { nickname, about, carName, oilInfo };
-    if(isInputEmpty()) return;
+    if (isInputEmpty()) return;
     sendFormDataTs(
       'members',
       'patch',
@@ -576,32 +629,51 @@ function EditProfileModal({
       image,
       'memberUpdate',
       'profileImg'
-    ).then(()=>{
-      window.location.reload();
-    }).catch(()=>{
-      setErrorMessage(prevState=>{return {...prevState,submit:'프로필 수정이 실패했습니다.'}});
-    })
+    )
+      .then(() => {
+        window.location.reload();
+      })
+      .catch(() => {
+        setErrorMessage(prevState => {
+          return { ...prevState, submit: '프로필 수정이 실패했습니다.' };
+        });
+      });
   };
 
-  const isInputEmpty=()=>{
-    let pass=true;
-    if(!nickname) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,nickname:'닉네임을 입력해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,nickname:''}});
-    if(!about) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,about:'자기소개를 입력해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,about:''}});
-    if(!carName) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,carName:'차량 정보를 입력해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,carName:''}});
+  const isInputEmpty = () => {
+    let pass = true;
+    if (!nickname) {
+      pass = false;
+      setErrorMessage(prevState => {
+        return { ...prevState, nickname: '닉네임을 입력해주세요.' };
+      });
+    } else
+      setErrorMessage(prevState => {
+        return { ...prevState, nickname: '' };
+      });
+    if (!about) {
+      pass = false;
+      setErrorMessage(prevState => {
+        return { ...prevState, about: '자기소개를 입력해주세요.' };
+      });
+    } else
+      setErrorMessage(prevState => {
+        return { ...prevState, about: '' };
+      });
+    if (!carName) {
+      pass = false;
+      setErrorMessage(prevState => {
+        return { ...prevState, carName: '차량 정보를 입력해주세요.' };
+      });
+    } else
+      setErrorMessage(prevState => {
+        return { ...prevState, carName: '' };
+      });
     return !pass;
-  }
+  };
 
   return (
-    <Modal maxWidth='600px'>
+    <Modal maxWidth="600px">
       <div className="wrapper">
         <div className="header">
           <h2>프로필 수정</h2>
@@ -620,13 +692,18 @@ function EditProfileModal({
         >
           {imageSrc.length >= 1 || !isPhotoEdit ? (
             <div className="preview">
-              <img alt="preview" src={isPhotoEdit?imageSrc:memberInfo.profileImg}></img>
-              <button onClick={()=>{
-                if(isPhotoEdit) imageDelete();
-                else {
-                  setIsPhotoEdit(true);
-                }
-                }}>       
+              <img
+                alt="preview"
+                src={isPhotoEdit ? imageSrc : memberInfo.profileImg}
+              ></img>
+              <button
+                onClick={() => {
+                  if (isPhotoEdit) imageDelete();
+                  else {
+                    setIsPhotoEdit(true);
+                  }
+                }}
+              >
                 <HiOutlineX />
               </button>
             </div>
@@ -635,7 +712,7 @@ function EditProfileModal({
           )}
           <input type="file" id="file" onChange={imageChange}></input>
         </ImageInput>
-        
+
         <Input
           placeholder="이름"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -643,7 +720,9 @@ function EditProfileModal({
           }
           value={nickname}
         />
-        {errorMessage.nickname&&<span className='error-message'>{errorMessage.nickname}</span>}
+        {errorMessage.nickname && (
+          <span className="error-message">{errorMessage.nickname}</span>
+        )}
         <TextArea
           placeholder="자기소개"
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -651,7 +730,9 @@ function EditProfileModal({
           }
           value={about}
         />
-        {errorMessage.about&&<span className='error-message'>{errorMessage.about}</span>}
+        {errorMessage.about && (
+          <span className="error-message">{errorMessage.about}</span>
+        )}
         <div style={{ display: 'flex' }}>
           <Input
             placeholder="내 차량"
@@ -660,7 +741,7 @@ function EditProfileModal({
             }
             value={carName}
           />
-          
+
           <Select
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
               setOilInfo(e.target.value)
@@ -674,7 +755,9 @@ function EditProfileModal({
             <option value="수소">수소</option>
           </Select>
         </div>
-        {errorMessage.carName&&<span className='error-message'>{errorMessage.carName}</span>}
+        {errorMessage.carName && (
+          <span className="error-message">{errorMessage.carName}</span>
+        )}
         <Button
           border={'var(--chamong__color)'}
           color={'white'}
@@ -689,7 +772,9 @@ function EditProfileModal({
         >
           수정 완료
         </Button>
-        {errorMessage.submit&&<span className='error-message'>{errorMessage.submit}</span>}
+        {errorMessage.submit && (
+          <span className="error-message">{errorMessage.submit}</span>
+        )}
       </div>
     </Modal>
   );

@@ -96,21 +96,21 @@ const Spinner = styled.div`
     flex-direction: column;
   }
 `;
-function ContentList({ data, setData }: CardList) {
-  // const data = useAppSelector(state => state.campingList)
+function ContentList({ setData }: CardList) {
+  const data = useAppSelector(state => state.campingList);
   const [isLoaded, setIsLoaded] = useState(false);
   const [pageNum, setpageNum] = useState(2);
   const dispatch = useAppDispatch();
 
   const testFetch = (delay = 500) => new Promise(res => setTimeout(res, delay));
-
+  // console.log(data);
   const getMoreItem = async () => {
     if (data) {
       setIsLoaded(true);
       await testFetch();
       getDataTs(`main?page=${pageNum}`).then(res => {
-        setData(data.concat(res.content));
-        // dispatch(setCampingList(res.content))
+        // setData(data.concat(res.content));
+        dispatch(setCampingList(res.content));
       });
       setIsLoaded(false);
       setpageNum(pageNum + 1);

@@ -239,21 +239,24 @@ export function ContentD({ isContent }: ContentInfo) {
   const addWishlist = (event: CustomMouseEvent) => {
     // const contentId = (event.target as HTMLLIElement).id;
     // console.log(event);
-    if (isLike) {
-      sendDataTs(`bookmark/${contentId}`, 'delete', {}).then(res =>
-        console.log('delete')
-      );
-    } else {
-      sendDataTs(`bookmark/${contentId}`, 'post', {}).then(res => {
-        // alert('위시리스트에 추가되었습니다!');
-        // window.location.replace('/');
-        console.log('add');
-      });
-    }
+    if (login) {
+      if (isLike) {
+        sendDataTs(`bookmark/${contentId}`, 'delete', {}).then(res =>
+          console.log('delete')
+        );
+      } else {
+        sendDataTs(`bookmark/${contentId}`, 'post', {}).then(res => {
+          // alert('위시리스트에 추가되었습니다!');
+          // window.location.replace('/');
+          console.log('add');
+        });
+      }
+    } else alert('로그인을 해주세요');
   };
   useEffect(() => {
     setIsLike(isContent.bookmarked);
   }, [isLike]);
+
   return (
     <Container isContent={isContent} bg={isContent.firstImageUrl}>
       <main>
@@ -263,7 +266,7 @@ export function ContentD({ isContent }: ContentInfo) {
           <hr className="title_line"></hr>
           <div className="header_review">
             <div className="review_grade">
-              <p className="average">리뷰 {isContent.reviews?.length}</p>
+              <p className="average">리뷰 {isContent?.reviews?.length}</p>
             </div>
             <div className="review_grade">
               <AiFillStar
@@ -311,7 +314,6 @@ export function ContentD({ isContent }: ContentInfo) {
               <h1>주소</h1>
               <p>{isContent.addr1}</p>
             </div>
-            sbrsCl
             <div className="info">
               <h1>키워드</h1>
               <div className="keyword_icon">
@@ -416,7 +418,7 @@ export function ContentD({ isContent }: ContentInfo) {
             <div className="review_box">
               <div className="review_top">
                 <div className="review_title">
-                  <h1>리뷰 {isContent.review && isContent.review.length}</h1>
+                  <h1>리뷰 {isContent?.reviews?.length}</h1>
                   <div className="bar">|</div>
                   <div className="review_grade_bottom">
                     <AiFillStar

@@ -38,13 +38,16 @@ const Container = styled.div`
   }
   .map {
     @media (min-width: 768px) {
+      /* overflow-y: hidden */
       top: 76px;
     }
+    overflow-y: hidden
     z-index: 900;
     position: absolute;
-    top: 130px;
+    top: 80px;
     width: 100%;
-    height: 100vh;
+    /* height: 100%; */
+    /* height: 100vh; */
   }
   .off {
     position: absolute;
@@ -106,15 +109,15 @@ function Main() {
         </div>
       ) : null}
       <Banner></Banner>
-      {size.width > 768 ? (
+      {size.width > 768 && !isMap ? (
         <>
           <Category setIsURL={setIsURL}></Category>
           <div className={isMap ? 'community' : ''}>
-            <CommunityBestM></CommunityBestM>
+            {/* <CommunityBestM></CommunityBestM> */}
           </div>
           <ContentList data={data} setData={setData}></ContentList>
         </>
-      ) : clicked ? null : (
+      ) : clicked || isMap ? null : (
         <>
           <Category setIsURL={setIsURL}></Category>
           <div className={isMap ? 'community' : ''}>
@@ -123,7 +126,7 @@ function Main() {
           <ContentList data={data} setData={setData}></ContentList>
         </>
       )}
-      <Footer></Footer>
+      {/* <Footer></Footer> */}
     </Container>
   );
 }
