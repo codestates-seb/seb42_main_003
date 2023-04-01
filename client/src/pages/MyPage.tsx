@@ -28,6 +28,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { logout } from '../store/isLoginSlice';
 import DeleteMemberModal from '../components/DeleteMemberModal';
+import { useWindowSize } from '../hooks/useWindowSize';
 
 const themes = [
   '화장실',
@@ -79,13 +80,12 @@ interface VisitedPlaceInfo {
 /* 배열: [string, 함수, 함수]  */
 
 function MyPage() {
+  const {width}=useWindowSize();
   const [addCampModal, setAddCampModal] = useState<boolean>(false);
   const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
   //viewHistory state는 모바일에서만 사용
   const [viewHistoryModal, setViewHistoryModal] = useState<boolean>(false);
-  const [deleteMemberModal, setDeleteMemberModal] = useState(false);
-  //내부width를 기록하기 위한 state와 이벤트리스너
-  const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+  const [deleteMemberModal,setDeleteMemberModal]=useState(false);
   const [memberInfo, setMemberInfo] = useState<MemberInfo>();
   const [myPlaceInfos, setMyPlaceInfos] = useState<MyPlaceInfo[] | null>(null);
   const [visitedPlaceInfos, setVisitedPlaceInfos] = useState<
@@ -120,17 +120,11 @@ function MyPage() {
       setCommentedArticleInfos(data.commentedArticleInfos);
       setLikedArticleInfos(data.likedArticleInfos);
     });
-
-    //브라우저 width 변경을 감지하는 이벤트 리스너
-    const resizeListener = () => {
-      setInnerWidth(window.innerWidth);
-    };
-    window.addEventListener('resize', resizeListener);
   }, [reloadData]);
   //width가 768px 이상이 될 경우 커뮤니티 활동기록을 자동으로 false로 바꾸는 useEffect
   useEffect(() => {
-    if (innerWidth >= 768) setViewHistoryModal(false);
-  }, [innerWidth]);
+    if (width >= 768) setViewHistoryModal(false);
+  }, [width]);
 
   const floatButtonHandler = () => {
     setEditProfileModal(false);
@@ -172,21 +166,6 @@ function MyPage() {
         navigate('/');
       });
   };
-
-  //테스트가 끝나면 아래의 코드를 지워주세요.
-  // useEffect(() => {
-  //   if (!memberInfo) {
-  //     axios({
-  //       method: 'get',
-  //       url: 'http://localhost:3001/member',
-  //     })
-  //       .then(res => {
-  //         setmemberInfo(res.data);
-  //       })
-  //       .catch(err => console.log(err));
-  //   }
-  // }, []);
-  //테스트가 끝나면 위의 코드를 지워주세요.
 
   return (
     <>
@@ -433,7 +412,7 @@ function AddCampModal({
       keywords,
       mapY: Number(position[0]),
       mapX: Number(position[1]),
-      // address,
+      address
     };
     sendFormDataTs(
       'pick-places',
@@ -499,15 +478,12 @@ function AddCampModal({
       setErrorMessage(prevState => {
         return { ...prevState, position: '' };
       });
-    return !pass;
-  };
 
   return (
     <Modal
     maxWidth='600px'
       onClick={() => {
         setIsKeywordFocus(false);
-        console.log('wat');
       }}
     >
       <div className="wrapper">
@@ -644,8 +620,7 @@ function EditProfileModal({
 
   const profileSubmitHandler = () => {
     const data = { nickname, about, carName, oilInfo };
-    if (isInputEmpty()) return;
-    console.log('start submit');
+    if(isInputEmpty()) return;
     sendFormDataTs(
       'members',
       'patch',
@@ -694,8 +669,6 @@ function EditProfileModal({
       setErrorMessage(prevState => {
         return { ...prevState, carName: '' };
       });
-    return !pass;
-  };
 
   return (
     <Modal maxWidth='600px'>
@@ -800,4 +773,4 @@ function EditProfileModal({
   );
 }
 
-export default MyPage;
+export default MyPage

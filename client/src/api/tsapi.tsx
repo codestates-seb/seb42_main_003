@@ -121,8 +121,6 @@ export const refreshTs = async () => {
 };
 
 export const logoutTs = async () => {
-  sessionStorage.removeItem('authorization');
-  localStorage.removeItem('refresh');
   try {
     const response = await axios({
       method: 'get',
@@ -134,5 +132,9 @@ export const logoutTs = async () => {
     return Promise.resolve(response);
   } catch (err) {
     return Promise.reject(err);
+  } finally {
+    console.log('finally')
+    sessionStorage.removeItem('authorization');
+    localStorage.removeItem('refresh');
   }
 };
