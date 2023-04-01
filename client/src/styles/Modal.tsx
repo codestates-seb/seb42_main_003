@@ -43,6 +43,7 @@ export const Modal = styled.div<ModalStyleProps>`
       margin: 8px 0px;
     }
     .header {
+      margin-top:0px;
       position: relative;
       width: 100%;
       display: flex;
@@ -50,7 +51,7 @@ export const Modal = styled.div<ModalStyleProps>`
       align-items: center;
       h2 {
         position: absolute;
-        font-size: var(--fs__h1);
+        font-size: var(--fs__xl);
         width: 100%;
         text-align: center;
       }
