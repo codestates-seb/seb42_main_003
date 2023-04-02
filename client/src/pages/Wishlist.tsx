@@ -123,7 +123,6 @@ function Wishlist(map_height: MapHeightProps) {
   const dispatch = useAppDispatch();
   useEffect(() => {
     getDataTs('bookmark?page=1').then(res => {
-      console.log(res);
       if (res) setData(res.content);
     });
   }, []);

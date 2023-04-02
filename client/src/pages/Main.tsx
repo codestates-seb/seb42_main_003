@@ -84,17 +84,9 @@ function Main() {
   }, [isURL]);
 
   useEffect(() => {
-    console.log('a');
     window.scrollTo(0, 0);
   }, []);
 
-  // useEffect(() => {
-  //   getDataTs('page1').then(res => {
-  //     dispatch(setCampingList(res));
-  //   });
-  // }, [isURL]);
-  // console.log(isURL);
-  console.log(data);
   return (
     <Container onClick={() => dispatch(click(false))}>
       {clicked ? null : (
@@ -127,7 +119,7 @@ function Main() {
           <div className={isMap ? 'community' : ''}>
             <CommunityBestM></CommunityBestM>
           </div>
-          <ContentList isURL={isURL} data={data}></ContentList>
+          {isURL ? <ContentList isURL={isURL} data={data}></ContentList> : null}
         </>
       ) : clicked || isMap ? null : (
         <>

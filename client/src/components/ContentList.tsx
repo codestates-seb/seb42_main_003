@@ -119,6 +119,9 @@ const StyleScrollUp = styled.div`
     height: 60px;
   }
   .div_box {
+    @media (max-width: 768px) {
+      display: none;
+    }
     max-width: 303.33px;
     /* min-width: 260.32px; */
     width: 100%;
@@ -136,46 +139,40 @@ const StyleScrollUp = styled.div`
 function ContentList({ isURL }: CardList) {
   const data = useAppSelector(state => state.campingList);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [pageNum, setpageNum] = useState(1);
+  const [pageNum, setpageNum] = useState(0);
+  const [apiController, setApiController] = useState(true);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    console.log('a');
     setpageNum(1);
-    // testHandler();
   }, [isURL]);
-  const testFetch = (delay = 800) => new Promise(res => setTimeout(res, delay));
 
+  const testFetch = (delay = 800) => new Promise(res => setTimeout(res, delay));
   const getMoreItem = async () => {
     if (data && pageNum > 1) {
       setIsLoaded(true);
       await testFetch();
-      getDataTs(`main?page=${pageNum}`).then(res => {
-        dispatch(addCampingList(res.content));
-      });
+      if (apiController) {
+        setApiController(false);
+        getDataTs(`main?page=${pageNum}`).then(res => {
+          dispatch(addCampingList(res.content));
+        });
+      }
       setIsLoaded(false);
     }
     setpageNum(pageNum + 1);
   };
-  // const getMoreItem = async () => {
-  //   if (data && pageNum > 1) {
-  //     setIsLoaded(true);
-  //     await testFetch();
-  //     getDataTs(`page${pageNum}`).then(res => {
-  //       dispatch(addCampingList(res));
-  //       console.log('api 호출');
-  //     });
 
-  //     setIsLoaded(false);
-  //   }
-  //   setpageNum(pageNum + 1);
-  // };
+  useEffect(() => {
+    setTimeout(function () {
+      setApiController(true);
+    }, 3000);
+  }, [apiController]);
 
   const onIntersect: IntersectionObserverCallback = async (
     [entry],
     observer
   ) => {
     if (entry.isIntersecting && !isLoaded && pageNum < 5) {
-      console.log('함수호출');
       observer.unobserve(entry.target);
       await getMoreItem();
       observer.observe(entry.target);
@@ -188,14 +185,12 @@ function ContentList({ isURL }: CardList) {
     rootMargin: '0px',
     threshold: 1,
     onIntersect,
-    pageNum,
   });
 
   const scrollUpHandler = () => {
     window.scrollTo(0, 0);
     getDataTs(`main?page=1`).then(res => {
       dispatch(setCampingList(res.content));
-      console.log('api 호출');
     });
     setpageNum(1);
   };

@@ -96,9 +96,7 @@ const ContainerColumn = styled('div')<CardList>`
 
 export function ContentListOnlyRow({ data, setIsMap, setData }: CardList) {
   let { pathname } = useLocation();
-  useEffect(() => {
-    console.log('a');
-  }, [data]);
+
   return (
     <ContainerColumn>
       <div className="wrapper">
