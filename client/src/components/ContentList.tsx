@@ -140,34 +140,33 @@ function ContentList({ isURL }: CardList) {
   const data = useAppSelector(state => state.campingList);
   const [isLoaded, setIsLoaded] = useState(false);
   const [pageNum, setpageNum] = useState(0);
-  const [apiController, setApiController] = useState(true);
+
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     setpageNum(1);
   }, [isURL]);
 
+  let url = isURL?.slice(0, isURL.length - 1);
   const testFetch = (delay = 800) => new Promise(res => setTimeout(res, delay));
   const getMoreItem = async () => {
     if (data && pageNum > 1) {
       setIsLoaded(true);
       await testFetch();
-      if (apiController) {
-        setApiController(false);
-        getDataTs(`main?page=${pageNum}`).then(res => {
-          dispatch(addCampingList(res.content));
-        });
+      if (isURL) {
+        let url = isURL.slice(0, isURL.length - 1);
+        if (url) {
+          getDataTs(`${url}${pageNum}`).then(res => {
+            if (url === 'main?page=') dispatch(addCampingList(res.content));
+            else dispatch(addCampingList(res));
+          });
+        }
       }
       setIsLoaded(false);
     }
     setpageNum(pageNum + 1);
   };
-
-  useEffect(() => {
-    setTimeout(function () {
-      setApiController(true);
-    }, 3000);
-  }, [apiController]);
-
+  console.log(pageNum);
   const onIntersect: IntersectionObserverCallback = async (
     [entry],
     observer
@@ -189,7 +188,7 @@ function ContentList({ isURL }: CardList) {
 
   const scrollUpHandler = () => {
     window.scrollTo(0, 0);
-    getDataTs(`main?page=1`).then(res => {
+    getDataTs(`${url}1`).then(res => {
       dispatch(setCampingList(res.content));
     });
     setpageNum(1);
@@ -213,27 +212,6 @@ function ContentList({ isURL }: CardList) {
           </div>
         </div>
       </Container>
-      {/* {isLoaded ? (
-        <Spinner>
-          <div className="layerPopup">
-            {data && data.length < 60 ? (
-              <div className="spinner" ref={setTarget}></div>
-            ) : (
-              <div
-                style={{
-                  fontSize: '18px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  maxWidth: '600px',
-                  zIndex: '100',
-                }}
-              >
-                마지막 데이터입니다
-              </div>
-            )}
-          </div>
-        </Spinner>
-      ) : null} */}
       {pageNum < 4 ? (
         <div className="spinner" ref={setTarget}>
           {isLoaded && (

@@ -293,6 +293,7 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
     setIsLike(data.bookmarked);
   }, [data]);
   // console.log(data.bookmarkId);
+  // console.log(data);
   const likeHandler = (event: CustomMouseEvent) => {
     if (login) {
       if (isLike) {
@@ -343,14 +344,14 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
         </div>
         <div className="content">
           <AiFillDelete className="delete remove" />
-          <h1>{data?.facltNm}</h1>
+          <h1>{data.facltNm ? data.facltNm : null}</h1>
 
           <div className="body">
-            {data.lineIntro
+            {data?.lineIntro
               ? data.lineIntro
-              : data.themaEnvrnCl
+              : data?.themaEnvrnCl
               ? data.themaEnvrnCl
-              : data.featureNm
+              : data?.featureNm
               ? data.featureNm
               : `${data.facltNm}입니다.`}
           </div>
