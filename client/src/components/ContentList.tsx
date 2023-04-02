@@ -140,33 +140,33 @@ function ContentList({ isURL }: CardList) {
   const data = useAppSelector(state => state.campingList);
   const [isLoaded, setIsLoaded] = useState(false);
   const [pageNum, setpageNum] = useState(0);
+  const [url, setUrl] = useState(isURL?.slice(0, isURL.length - 1));
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     setpageNum(1);
+    if (isURL) setUrl(isURL.slice(0, isURL.length - 1));
+    console.log('a');
   }, [isURL]);
 
-  let url = isURL?.slice(0, isURL.length - 1);
   const testFetch = (delay = 800) => new Promise(res => setTimeout(res, delay));
   const getMoreItem = async () => {
     if (data && pageNum > 1) {
       setIsLoaded(true);
       await testFetch();
-      if (isURL) {
-        let url = isURL.slice(0, isURL.length - 1);
-        if (url) {
-          getDataTs(`${url}${pageNum}`).then(res => {
-            if (url === 'main?page=') dispatch(addCampingList(res.content));
-            else dispatch(addCampingList(res));
-          });
-        }
-      }
+      console.log(url);
+      getDataTs(`${url}${pageNum}`).then(res => {
+        if (url === 'main?page=') dispatch(addCampingList(res.content));
+        else dispatch(addCampingList(res));
+      });
+
       setIsLoaded(false);
     }
     setpageNum(pageNum + 1);
   };
-  console.log(pageNum);
+
+  // console.log(data);
   const onIntersect: IntersectionObserverCallback = async (
     [entry],
     observer
