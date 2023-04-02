@@ -121,7 +121,6 @@ function Content() {
   // ];
   useEffect(() => {
     getDataTs(`main/${contentId}`).then(res => {
-      console.log(res);
       setIsContent(res);
     });
     return () => {

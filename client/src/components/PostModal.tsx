@@ -8,15 +8,19 @@ import useUploadImage from '../hooks/useUploadImage';
 import { sendFormDataTs } from '../api/tsapi';
 
 type PostType = {
-  setIsSubmit: (foo: any) => void
-  maxWidth?:string
+  setIsSubmit: (foo: any) => void;
+  maxWidth?: string;
 };
-function PostModal({ setIsSubmit, maxWidth='600px' }: PostType) {
+function PostModal({ setIsSubmit, maxWidth = '600px' }: PostType) {
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [errorMessage,setErrorMessage]=useState({title:'',content:'',submit:''});
+  const [errorMessage, setErrorMessage] = useState({
+    title: '',
+    content: '',
+    submit: '',
+  });
 
   const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -26,33 +30,58 @@ function PostModal({ setIsSubmit, maxWidth='600px' }: PostType) {
   };
 
   const articleSubmitHandler = () => {
-    if(isInputEmpty()) return;
+    if (isInputEmpty()) return;
     else {
-      console.log('start submit');
-    const data = { title, content };
-    sendFormDataTs('articles', 'post', data, image, 'articleCreate','articleImg').then((data) =>
-      navigate(`/community/${data.id}`)
-    ).catch((err)=>setErrorMessage(prevState=>{return {...prevState,submit:`글 작성이 실패했습니다. (${err.response.status})`}}))
-  }};
+      // console.log('start submit');
+      const data = { title, content };
+      sendFormDataTs(
+        'articles',
+        'post',
+        data,
+        image,
+        'articleCreate',
+        'articleImg'
+      )
+        .then(data => navigate(`/community/${data.id}`))
+        .catch(err =>
+          setErrorMessage(prevState => {
+            return {
+              ...prevState,
+              submit: `글 작성이 실패했습니다. (${err.response.status})`,
+            };
+          })
+        );
+    }
+  };
 
-  const isInputEmpty=()=>{
-    let pass=true
-    if(!title) {
-      console.log('닉네임 없음')
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,title:'제목을 입력해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,title:''}});
-    if(!content) {
-      pass=false;
-      setErrorMessage(prevState=>{return {...prevState,content:'내용을 입력해주세요.'}});
-    } else setErrorMessage(prevState=>{return {...prevState,content:''}});
+  const isInputEmpty = () => {
+    let pass = true;
+    if (!title) {
+      // console.log('닉네임 없음')
+      pass = false;
+      setErrorMessage(prevState => {
+        return { ...prevState, title: '제목을 입력해주세요.' };
+      });
+    } else
+      setErrorMessage(prevState => {
+        return { ...prevState, title: '' };
+      });
+    if (!content) {
+      pass = false;
+      setErrorMessage(prevState => {
+        return { ...prevState, content: '내용을 입력해주세요.' };
+      });
+    } else
+      setErrorMessage(prevState => {
+        return { ...prevState, content: '' };
+      });
     return !pass;
-  }
+  };
 
   return (
     <Modal maxWidth={maxWidth}>
-      <div className='wrapper'>
-        <div className='header'>
+      <div className="wrapper">
+        <div className="header">
           <h2>글 작성하기</h2>
           <button>
             <HiOutlineX onClick={() => setIsSubmit(false)} />
@@ -64,42 +93,50 @@ function PostModal({ setIsSubmit, maxWidth='600px' }: PostType) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding='8px 14px'
-          radius='12px'>
+          padding="8px 14px"
+          radius="12px"
+        >
           {imageSrc.length >= 1 ? (
-            <div className='preview'>
-              <img alt='preview' src={imageSrc}></img>
+            <div className="preview">
+              <img alt="preview" src={imageSrc}></img>
               <button onClick={imageDelete}>
                 <HiOutlineX />
               </button>
             </div>
           ) : (
-            <label htmlFor='file'>이미지 첨부</label>
+            <label htmlFor="file">이미지 첨부</label>
           )}
-          <input type='file' id='file' onChange={imageChange}></input>
+          <input type="file" id="file" onChange={imageChange}></input>
         </ImageInput>
-        <Input placeholder='제목' onChange={titleHandler} />
-        {errorMessage.title&&<span className='error-message'>{errorMessage.title}</span>}
+        <Input placeholder="제목" onChange={titleHandler} />
+        {errorMessage.title && (
+          <span className="error-message">{errorMessage.title}</span>
+        )}
         <TextArea
           height={'200px'}
-          placeholder='내용'
+          placeholder="내용"
           onChange={contentHandler}
         />
-        {errorMessage.content&&<span className='error-message'>{errorMessage.content}</span>}
+        {errorMessage.content && (
+          <span className="error-message">{errorMessage.content}</span>
+        )}
         <Button
-        onClick={articleSubmitHandler}
+          onClick={articleSubmitHandler}
           border={'var(--chamong__color)'}
           color={'white'}
           bg={'var(--chamong__color)'}
           hcolor={'var(--chamong__color)'}
           hover={'white'}
           hborder={'var(--chamong__color)'}
-          padding='13px 15px'
-          radius='12px'
-          width='100%'>
+          padding="13px 15px"
+          radius="12px"
+          width="100%"
+        >
           작성 완료
         </Button>
-        {errorMessage.submit&&<span className='error-message'>{errorMessage.submit}</span>}
+        {errorMessage.submit && (
+          <span className="error-message">{errorMessage.submit}</span>
+        )}
       </div>
     </Modal>
   );

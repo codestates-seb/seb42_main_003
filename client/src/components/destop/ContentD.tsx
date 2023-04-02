@@ -241,14 +241,10 @@ export function ContentD({ isContent }: ContentInfo) {
   const addWishlist = (event: CustomMouseEvent) => {
     if (login) {
       if (isLike) {
-        sendDataTs(`bookmark/${contentId}`, 'delete', {}).then(res =>
-          console.log('delete')
-        );
+        sendDataTs(`bookmark/${contentId}`, 'delete', {}).then(res => {});
         setIsLike(false);
       } else {
-        sendDataTs(`bookmark/${contentId}`, 'post', {}).then(res => {
-          console.log('add');
-        });
+        sendDataTs(`bookmark/${contentId}`, 'post', {}).then(res => {});
         setIsLike(true);
       }
     } else alert('로그인을 해주세요');

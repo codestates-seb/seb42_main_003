@@ -67,7 +67,7 @@ export const Container = styled.div`
     }
   }
 `;
-export const MenuLink = styled(Link)``;
+export const MenuLink = styled.div``;
 type Title = {
   id: number;
   text: string;
@@ -106,7 +106,7 @@ function Nav() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isNav, setIsNav] = useState<Number>(1);
-  const [isLoginModal, setIsLoginModal] = useState<Boolean>(false);
+  // const [isLoginModal, setIsLoginModal] = useState<Boolean>(false);
   const loginState = useAppSelector(state => state.isLogin);
   const { pathname } = useLocation();
 
@@ -125,40 +125,22 @@ function Nav() {
   }, [pathname]);
 
   const clickHandler = (event: CustomMouseEvent) => {
-    // setIsNav(Number((event.target as HTMLLIElement).id));
     const menu = event.target as HTMLLIElement;
 
-    if (menu.id === '5')
-      loginState ? navigate('/mypage') : dispatch(loginModal(true));
-    if (menu.id === '4')
+    if (menu.id === '5') {
+      if (loginState) navigate('/mypage');
+      else {
+        dispatch(loginModal(true));
+      }
+    } else if (menu.id === '4') {
       loginState ? navigate('/wishlist') : dispatch(loginModal(true));
-    else {
+    } else {
       dispatch(loginModal(false));
       if (menu.id === '1') navigate('/');
       if (menu.id === '2') navigate('/userpick');
       if (menu.id === '3') navigate('/community');
     }
-
-    // if (menu.id === '4' || '5') {
-    //   if (loginState) navigate(navMenu[+menu.id - 1].link);
-    //   else {
-    //     if (menu.id === '4') {
-    //       dispatch(loginModal(true));
-    //       navigate('/');
-    //     } else if (menu.id === '5') {
-    //       if (loginState) navigate('/mypage');
-    //       else {
-    //         dispatch(loginModal(true));
-    //         navigate('/');
-    //       }
-    //     }
-    //   }
-    // } else {
-    //   navigate(navMenu[+menu.id - 1].link);
-    //   dispatch(loginModal(false));
-    // }
   };
-
   return (
     <Container>
       {/* {isLoginModal ? <Login setIsLoginModal={setIsLoginModal}></Login> : null} */}
@@ -168,7 +150,7 @@ function Nav() {
             <MenuLink
               id={String(ele.id)}
               key={ele.id}
-              to={ele.id === 5 ? (isLoginModal ? ele.link : '#') : ele.link}
+              // to={ele.id === 5 ? (isLoginModal ? ele.link : '#') : ele.link}
               // onClick={() => (ele.id === 5 ? setIsLoginModal(true) : null)}
               className={isNav !== ele.id ? 'nav_box' : 'nav_box_active'}
             >

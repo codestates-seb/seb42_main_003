@@ -209,7 +209,6 @@ function Login({ setIsLoginModal }: LoginInfo) {
   //로그인 함수입니다.
   const loginRequestHandler = () => {
     if (requestFieldCheck() && !emailErrorMessage && !passwordErrorMessage) {
-      console.log('login error 없음');
       const data = { email, password };
       loginTs(data, 'members/login')
         .then(data => {
@@ -249,7 +248,6 @@ function Login({ setIsLoginModal }: LoginInfo) {
       !emailErrorMessage &&
       !passwordErrorMessage
     ) {
-      console.log('signup error 없음');
       const data = { nickname, email, password };
       sendDataTs('members', 'post', data)
         .then(() => {
@@ -322,17 +320,15 @@ function Login({ setIsLoginModal }: LoginInfo) {
       'https://accounts.google.com/o/oauth2/auth?' +
       `client_id=${clientId}&` +
       `redirect_uri=${url}&` +
-      'response_type=token&' +
+      'response_type=code&' +
       'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
 
-    if (accessToken) {
-      sessionStorage.setItem('authorization', accessToken);
-      getDataTs('oauth2/authorization/google', { accessToken }).then(res =>
-        console.log(res)
-      );
-    }
+    // if (accessToken) {
+    //   sessionStorage.setItem('authorization', accessToken);
+    //   getDataTs('oauth2/authorization/google', { accessToken }).then(res => {});
+    // }
 
-    // getDataTs('oauth2/authorization/google').then(res => console.log(res));
+    getDataTs('oauth2/authorization/google').then(res => console.log(res));
   };
 
   return (
@@ -475,17 +471,6 @@ function Login({ setIsLoginModal }: LoginInfo) {
                 <button className="goggle" onClick={socialRequestHandler}>
                   구글로 로그인
                 </button>
-                {/* <GoogleOAuthProvider clientId="800254385039-hahopjm6c43bquetv71t8mi4albrsb70.apps.googleusercontent.com">
-                  <GoogleLogin
-                    // buttonText="google login"
-                    onSuccess={credenttialResponse => {
-                      console.log(credenttialResponse);
-                    }}
-                    onError={() => {
-                      console.log('login Failed');
-                    }}
-                  ></GoogleLogin>
-                </GoogleOAuthProvider> */}
               </div>
             ) : null}
           </div>

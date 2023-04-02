@@ -244,7 +244,7 @@ export function Post({ data }: Community) {
 
   const addLikeHandler = (event: CustomMouseEvent) => {
     const post = (event.currentTarget as HTMLLIElement).id;
-    console.log(post);
+
     if (!isLogin) {
       dispatch(loginModal(true));
       return;

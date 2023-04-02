@@ -36,7 +36,7 @@ const Container = styled.div<MapHeightProps>`
     width: 100%;
     max-width: 100vw;
     height: 760px;
-    overflow: hidden;
+    /* overflow: hidden; */
   }
   .card_wrap {
     width: 100%;
@@ -62,7 +62,8 @@ const Container = styled.div<MapHeightProps>`
       display: none;
     }
     width: 100%;
-    /* height: ${props => props.map_height}; */
+    min-height: 765px;
+    height: ${props => props.map_height};
   }
 
   .map_field_mobile {
@@ -141,7 +142,7 @@ function UserPick({ map_height }: MapHeightProps) {
       }
     }
   }, [isTab]);
-  // console.log(data);
+
   return (
     <Container
       onClick={() => dispatch(click(false))}
@@ -177,14 +178,14 @@ function UserPick({ map_height }: MapHeightProps) {
             </div>
           </div>
           <div className="map_field">
-            {Object.keys(data).length >= 1 && (
+            <div style={{ height: '100vh' }}>
               <MapContainer
-                level={12}
-                padding={'100px'}
+                level={13}
+                padding={'270px'}
                 campList={data}
                 border_rd={'0'}
               ></MapContainer>
-            )}
+            </div>
           </div>
           <div
             className={isMap ? 'map_field_mobile active' : 'map_field_mobile'}
@@ -195,13 +196,15 @@ function UserPick({ map_height }: MapHeightProps) {
                 &times;
               </p>
             </div>
-            {Object.keys(data).length >= 1 && (
-              <MapContainer
-                level={12}
-                padding={'270px'}
-                campList={data}
-                border_rd={'0'}
-              ></MapContainer>
+            {data && Array.isArray(data) && (
+              <div style={{ height: '100vh' }}>
+                <MapContainer
+                  level={13}
+                  padding={'270px'}
+                  campList={data}
+                  border_rd={'0'}
+                ></MapContainer>
+              </div>
             )}
           </div>
         </div>

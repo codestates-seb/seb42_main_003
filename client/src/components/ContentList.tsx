@@ -147,7 +147,6 @@ function ContentList({ isURL }: CardList) {
   useEffect(() => {
     setpageNum(1);
     if (isURL) setUrl(isURL.slice(0, isURL.length - 1));
-    console.log('a');
   }, [isURL]);
 
   const testFetch = (delay = 800) => new Promise(res => setTimeout(res, delay));
@@ -155,7 +154,7 @@ function ContentList({ isURL }: CardList) {
     if (data && pageNum > 1) {
       setIsLoaded(true);
       await testFetch();
-      console.log(url);
+
       getDataTs(`${url}${pageNum}`).then(res => {
         if (url === 'main?page=') dispatch(addCampingList(res.content));
         else dispatch(addCampingList(res));
@@ -166,7 +165,6 @@ function ContentList({ isURL }: CardList) {
     setpageNum(pageNum + 1);
   };
 
-  // console.log(data);
   const onIntersect: IntersectionObserverCallback = async (
     [entry],
     observer

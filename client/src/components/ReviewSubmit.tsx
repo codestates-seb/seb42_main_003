@@ -154,12 +154,8 @@ export function ReviewSubmit() {
       if (!data.content) alert('내용을 작성해주세요');
       else if (!data.rating) alert('별점을 달아주세요');
       else {
-        sendDataTs(`review/${contentId}`, 'post', data).then(res =>
-          console.log(res)
-        );
-        sendDataTs(`visited-places/${contentId}`, 'post', {}).then(res => {
-          console.log(res);
-        });
+        sendDataTs(`review/${contentId}`, 'post', data).then(res => {});
+        sendDataTs(`visited-places/${contentId}`, 'post', {}).then(res => {});
         window.location.replace(`/content/${contentId}`);
       }
     } else {
