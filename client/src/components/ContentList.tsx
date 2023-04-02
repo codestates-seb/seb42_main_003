@@ -189,7 +189,8 @@ function ContentList({ isURL }: CardList) {
   const scrollUpHandler = () => {
     window.scrollTo(0, 0);
     getDataTs(`${url}1`).then(res => {
-      dispatch(setCampingList(res.content));
+      if (url === 'main?page=') dispatch(setCampingList(res.content));
+      else dispatch(setCampingList(res));
     });
     setpageNum(1);
   };
