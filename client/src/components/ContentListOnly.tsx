@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { ContentCard, ContentCardRow } from './ContentCard';
 import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 interface CardList {
   flex_dir?: string;
   bottom_justify?: string;
@@ -13,6 +14,7 @@ interface CardList {
   line?: string;
   data?: any;
   setIsMap?: (foo: any) => void;
+  setData?: (foo: any) => void;
 }
 
 const ContainerRow = styled('div')<CardList>`
@@ -42,16 +44,22 @@ const ContainerRow = styled('div')<CardList>`
   }
 `;
 
-export function ContentListOnlyColumn({ data, setIsMap }: CardList) {
+export function ContentListOnlyColumn({ data, setIsMap, setData }: CardList) {
   let { pathname } = useLocation();
-
   return (
     <ContainerRow>
       <div className="wrapper">
         <div className={pathname === '/wishlist' ? 'row' : 'column'}>
           {data &&
             data.map((e: any, idx: number) => {
-              return <ContentCard setIsMap={setIsMap} key={idx} data={e} />;
+              return (
+                <ContentCard
+                  setData={setData}
+                  setIsMap={setIsMap}
+                  key={idx}
+                  data={e}
+                />
+              );
             })}
         </div>
       </div>
@@ -86,9 +94,11 @@ const ContainerColumn = styled('div')<CardList>`
   }
 `;
 
-export function ContentListOnlyRow({ data, setIsMap }: CardList) {
+export function ContentListOnlyRow({ data, setIsMap, setData }: CardList) {
   let { pathname } = useLocation();
-
+  useEffect(() => {
+    console.log('a');
+  }, [data]);
   return (
     <ContainerColumn>
       <div className="wrapper">
@@ -97,6 +107,7 @@ export function ContentListOnlyRow({ data, setIsMap }: CardList) {
             return (
               <div key={idx} className="row">
                 <ContentCardRow
+                  setData={setData}
                   setIsMap={setIsMap}
                   data={e}
                   like={'none'}

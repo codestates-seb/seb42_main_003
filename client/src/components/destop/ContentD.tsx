@@ -247,15 +247,13 @@ export function ContentD({ isContent }: ContentInfo) {
         setIsLike(false);
       } else {
         sendDataTs(`bookmark/${contentId}`, 'post', {}).then(res => {
-          // alert('위시리스트에 추가되었습니다!');
-          // window.location.replace('/');
           console.log('add');
         });
         setIsLike(true);
       }
     } else alert('로그인을 해주세요');
   };
-  console.log(isLike);
+
   return (
     <Container isContent={isContent} bg={isContent.firstImageUrl}>
       <main>
@@ -275,10 +273,7 @@ export function ContentD({ isContent }: ContentInfo) {
               <p className="average">{isContent.totalRating}</p>
             </div>
             <div>
-              <div
-                className="review_grade pointer"
-                onClick={() => setIsLike(!isLike)}
-              >
+              <div className="review_grade pointer" onClick={addWishlist}>
                 <svg
                   viewBox="0 0 24 24"
                   className={!isLike ? 'heart' : 'active'}
@@ -286,9 +281,7 @@ export function ContentD({ isContent }: ContentInfo) {
                 >
                   <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z" />
                 </svg>
-                <p onClick={addWishlist} className="average">
-                  저장
-                </p>
+                <p className="average">저장</p>
               </div>
             </div>
           </div>
