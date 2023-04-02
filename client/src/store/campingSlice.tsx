@@ -10,7 +10,9 @@ const campingSlice = createSlice({
       return action.payload;
     },
     addCampingList: (state, action) => {
-      return state.concat(action.payload);
+      if (state.length < 151) {
+        return state.concat(action.payload);
+      }
     },
   },
 });
