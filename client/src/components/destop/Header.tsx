@@ -118,12 +118,17 @@ function Header({ width_M, setIsURL }: SearchState) {
       link: '/community',
     },
   ];
-  const navChangeHandler = (id: number) => {
-    dispatch(navNumber(id));
-  };
+  // const navChangeHandler = (id: number) => {
+  //   dispatch(navNumber(id));
+  // };
   useEffect(() => {
-    // console.log('change');
+    if (pathname === '/') dispatch(navNumber(0));
+    else if (pathname === '/userpick') dispatch(navNumber(1));
+    else if (pathname === '/wishlist')
+      loginState ? dispatch(navNumber(2)) : dispatch(loginModal(true));
+    else if (pathname === '/community') dispatch(navNumber(3));
   }, [pathname]);
+
   const loginHandler = () => {
     if (loginState) navigate('/mypage');
     else dispatch(loginModal(true));
@@ -136,11 +141,11 @@ function Header({ width_M, setIsURL }: SearchState) {
       if (loginState) navigate(navMenu[+menu.id - 1].link);
       else dispatch(loginModal(true));
     } else navigate(navMenu[+menu.id - 1].link);
-    navChangeHandler(+menu.id);
+    // navChangeHandler(+menu.id);
   };
+
   return (
     <Container width_M={width_M}>
-      {/* {isLoginModal ? <Login setIsLoginModal={setIsLoginModal}></Login> : null} */}
       <div className="header">
         <div
           className="logo"
