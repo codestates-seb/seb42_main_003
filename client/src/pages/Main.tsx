@@ -19,6 +19,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  /* height: 100%; */
   .map_header {
     /* height: 50px; */
     @media (min-width: 768px) {
@@ -38,10 +39,9 @@ const Container = styled.div`
   }
   .map {
     @media (min-width: 768px) {
-      /* overflow-y: hidden */
       top: 76px;
     }
-    overflow-y: hidden
+    /* overflow-y: hidden */
     z-index: 900;
     position: absolute;
     top: 80px;
@@ -74,13 +74,6 @@ function Main() {
   const dispatch = useAppDispatch();
   const data = useAppSelector(state => state.campingList);
   useEffect(() => {
-    // getDataTs(isURL).then(res => {
-    //   if (res) {
-    //     if (isURL === 'main?page=1') {
-    //       setData(res.content);
-    //     } else setData(res);
-    //   }
-    // });
     getDataTs(isURL).then(res => {
       if (res) {
         if (isURL === 'main?page=1') {
@@ -89,7 +82,19 @@ function Main() {
       }
     });
   }, [isURL]);
-  // console.log(data);
+
+  useEffect(() => {
+    console.log('a');
+    window.scrollTo(0, 0);
+  }, []);
+
+  // useEffect(() => {
+  //   getDataTs('page1').then(res => {
+  //     dispatch(setCampingList(res));
+  //   });
+  // }, [isURL]);
+  // console.log(isURL);
+  console.log(data);
   return (
     <Container onClick={() => dispatch(click(false))}>
       {clicked ? null : (
@@ -122,7 +127,7 @@ function Main() {
           <div className={isMap ? 'community' : ''}>
             <CommunityBestM></CommunityBestM>
           </div>
-          <ContentList data={data}></ContentList>
+          <ContentList isURL={isURL} data={data}></ContentList>
         </>
       ) : clicked || isMap ? null : (
         <>

@@ -122,17 +122,11 @@ function Wishlist(map_height: MapHeightProps) {
   const [isMap, setIsMap] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    // if (!isLogin) dispatch(loginModal(true));
     getDataTs('bookmark?page=1').then(res => {
       console.log(res);
       if (res) setData(res.content);
     });
   }, []);
-
-  // useEffect(()=>{
-  //   if(!isLogin) navigate('/error')
-  //   console.log(data);
-  // },[data])
 
   return (
     <Container
@@ -158,6 +152,7 @@ function Wishlist(map_height: MapHeightProps) {
               <ContentListOnlyRow
                 setIsMap={setIsMap}
                 data={data}
+                setData={setData}
               ></ContentListOnlyRow>
             </div>
           </div>
