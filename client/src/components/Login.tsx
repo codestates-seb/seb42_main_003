@@ -279,7 +279,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
       )
     ) {
       emailCheck = false;
-      setEmailErrorMessage(`${email} 이메일 형식에 맞게 입력해주세요`);
+      setEmailErrorMessage(`이메일 형식에 맞게 입력해주세요`);
     }
 
     //* Email: a@a 형태 맞다면 or 로그인 창이라면 에러메시지 초기화
