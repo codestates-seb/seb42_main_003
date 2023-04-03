@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { getDataTs } from '../../api/tsapi';
+import { useNavigate } from 'react-router-dom';
 
 interface CardList {
   data?: string[];
@@ -64,6 +65,7 @@ const Container = styled.div`
 `;
 
 function CommunityBestD({}: CardList) {
+  const navigate=useNavigate();
   const [isCommunity, setIsCommunity] = useState<ArticleType[]>([]);
   useEffect(() => {
     getDataTs('articles/popular-web').then(res => {
@@ -81,7 +83,7 @@ function CommunityBestD({}: CardList) {
                 <img src={data.profileImg} alt="cat" className="avatar"></img>
                 <p>{data.nickname}</p>
               </div> */}
-              <li className="title">{data.title}</li>
+              <li onClick={()=>navigate(`community/${data.id}`)} className="title">{data.title}</li>
             </ul>
           );
         })}
