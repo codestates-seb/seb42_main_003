@@ -514,7 +514,7 @@ function AddCampModal({
           ) : (
             <label htmlFor="file">이미지 첨부</label>
           )}
-          <input type="file" id="file" onChange={imageChange}></input>
+          <input type="file" id="file" accept='.png, .jpeg, .jpg' onChange={imageChange}></input>
         </ImageInput>
         <Input
           value={memo}
@@ -710,7 +710,7 @@ function EditProfileModal({
           ) : (
             <label htmlFor="file">프로필 이미지 등록</label>
           )}
-          <input type="file" id="file" onChange={imageChange}></input>
+          <input type="file" id="file" accept='.png, .jpeg, .jpg' onChange={imageChange}></input>
         </ImageInput>
 
         <Input

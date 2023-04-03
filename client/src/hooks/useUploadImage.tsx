@@ -16,12 +16,22 @@ function useUploadImage() {
   const imageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files;
     if (selectedFile === null) return;
+    let pass=true;
+    var fileSize = selectedFile[0].size;
+    const maxSize = 3 * 1024 * 1024;
+    if(fileSize>maxSize){
+      alert("파일 크기는 3MB 이하여야 합니다.");
+      pass=false;
+    }
     if (selectedFile[0] && selectedFile[0].type.match(/(png|jpg|jpeg)$/)) {
       // console.log(selectedFile);
+    } else if(selectedFile[0]) {
+      alert('jpg, png 확장자만 가능합니다!');
+      pass=false;
+    }
+    if(pass){
       encodeFileToBase64(selectedFile[0]);
       setImage(selectedFile);
-    } else {
-      alert('jpg, png 확장자만 가능합니다!');
     }
   };
 
