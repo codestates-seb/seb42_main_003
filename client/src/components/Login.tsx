@@ -209,7 +209,6 @@ function Login({ setIsLoginModal }: LoginInfo) {
   //로그인 함수입니다.
   const loginRequestHandler = () => {
     if (requestFieldCheck() && !emailErrorMessage && !passwordErrorMessage) {
-      console.log('login error 없음');
       const data = { email, password };
       loginTs(data, 'members/login')
         .then(data => {
@@ -249,7 +248,6 @@ function Login({ setIsLoginModal }: LoginInfo) {
       !emailErrorMessage &&
       !passwordErrorMessage
     ) {
-      console.log('signup error 없음');
       const data = { nickname, email, password };
       sendDataTs('members', 'post', data)
         .then(() => {
@@ -279,7 +277,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
       )
     ) {
       emailCheck = false;
-      setEmailErrorMessage(`${email} 이메일 형식에 맞게 입력해주세요`);
+      setEmailErrorMessage(`이메일 형식에 맞게 입력해주세요`);
     }
 
     //* Email: a@a 형태 맞다면 or 로그인 창이라면 에러메시지 초기화
@@ -313,24 +311,27 @@ function Login({ setIsLoginModal }: LoginInfo) {
     if (!email) setEmailErrorMessage('');
     if (!password) setPasswordErrorMessage('');
   };
-
+  const clientId = process.env.REACT_APP_CLIENTID;
+  const url = process.env.REACT_APP_GOOGLE_URL;
   const socialRequestHandler = () => {
     const parsedHash = new URLSearchParams(window.location.hash.substring(1));
     const accessToken = parsedHash.get('access_token');
     window.location.href =
-      'https://accounts.google.com/o/oauth2/auth?' +
-      'client_id=800254385039-hahopjm6c43bquetv71t8mi4albrsb70.apps.googleusercontent.com&' +
-      'redirect_uri=http://chamongbucket.s3-website.ap-northeast-2.amazonaws.com&' +
-      'response_type=token&' +
+      'https://accounts.google.com/o/oauth2/v2/auth?' +
+      `client_id=${clientId}&` +
+      `redirect_uri=${url}&` +
+      'response_type=code&' +
       'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
 
-    if (accessToken) {
-      sessionStorage.setItem('authorization', accessToken);
-      getDataTs('oauth2/authorization/google', { accessToken }).then(res =>
-        console.log(res)
-      );
-    }
-    // getDataTs('oauth2/authorization/google').then(res => console.log(res));
+    // if (accessToken) {
+    //   sessionStorage.setItem('authorization', accessToken);
+    //   getDataTs('oauth2/authorization/google', { accessToken }).then(res => {});
+    // }
+    //*
+    getDataTs('oauth2/authorization/google').then(res => {
+      sessionStorage.setItem('authorization', res.headers.authorization);
+      localStorage.setItem('refresh', res.headers.refresh);
+    });
   };
 
   return (
@@ -473,17 +474,6 @@ function Login({ setIsLoginModal }: LoginInfo) {
                 <button className="goggle" onClick={socialRequestHandler}>
                   구글로 로그인
                 </button>
-                {/* <GoogleOAuthProvider clientId="800254385039-hahopjm6c43bquetv71t8mi4albrsb70.apps.googleusercontent.com">
-                  <GoogleLogin
-                    // buttonText="google login"
-                    onSuccess={credenttialResponse => {
-                      console.log(credenttialResponse);
-                    }}
-                    onError={() => {
-                      console.log('login Failed');
-                    }}
-                  ></GoogleLogin>
-                </GoogleOAuthProvider> */}
               </div>
             ) : null}
           </div>

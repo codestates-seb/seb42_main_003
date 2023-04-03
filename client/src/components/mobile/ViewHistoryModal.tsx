@@ -19,10 +19,10 @@ const ViewHistoryModalContainer = styled.section`
 `;
 
 interface ViewHistoryModalProps {
-  viewHistoryHandler:()=>void;
-  writtenArticleInfos:ArticleType[]|null;
-  commentedArticleInfos:ArticleType[]|null;
-  likedArticleInfos:ArticleType[]|null;
+  viewHistoryHandler: () => void;
+  writtenArticleInfos: ArticleType[] | null;
+  commentedArticleInfos: ArticleType[] | null;
+  likedArticleInfos: ArticleType[] | null;
 }
 
 function ViewHistoryModal({
@@ -34,7 +34,7 @@ function ViewHistoryModal({
   const [tabState, setTabState] = useState<number>(1);
 
   const tabHandler = (e: any) => {
-    console.log('tab state change!')
+    // console.log('tab state change!')
     setTabState(Number(e.target.value));
   };
 
@@ -58,7 +58,17 @@ function ViewHistoryModal({
             내가 좋아요 누른 글
           </button>
         </Tab>
-        <HistoryContainer history={tabState===1?writtenArticleInfos:tabState===2?commentedArticleInfos:tabState===3?likedArticleInfos:writtenArticleInfos}/>
+        <HistoryContainer
+          history={
+            tabState === 1
+              ? writtenArticleInfos
+              : tabState === 2
+              ? commentedArticleInfos
+              : tabState === 3
+              ? likedArticleInfos
+              : writtenArticleInfos
+          }
+        />
       </div>
     </ViewHistoryModalContainer>
   );

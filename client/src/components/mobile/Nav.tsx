@@ -9,6 +9,8 @@ import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxTK';
 import { useNavigate } from 'react-router-dom';
 import { loginModal } from '../../store/loginModal';
+import { useLocation } from 'react-router-dom';
+import { navNumber } from '../../store/navSlice';
 
 export const Container = styled.div`
   display: flex;
@@ -65,75 +67,80 @@ export const Container = styled.div`
     }
   }
 `;
-export const MenuLink = styled(Link)``;
+export const MenuLink = styled.div``;
 type Title = {
   id: number;
   text: string;
   link: string | any;
 }[];
 
-const navMenu: Title = [
-  {
-    id: 1,
-    text: '메인',
-    link: '/',
-  },
-  {
-    id: 2,
-    text: '유저픽',
-    link: '/userpick',
-  },
-  {
-    id: 3,
-    text: '커뮤니티',
-    link: '/community',
-  },
-  {
-    id: 4,
-    text: '위시리스트',
-    link: '/wishlist',
-  },
-  {
-    id: 5,
-    text: '마이페이지',
-    link: '/mypage',
-  },
-];
-
 function Nav() {
+  const navMenu: Title = [
+    {
+      id: 1,
+      text: '메인',
+      link: '/',
+    },
+    {
+      id: 2,
+      text: '유저픽',
+      link: '/userpick',
+    },
+    {
+      id: 3,
+      text: '커뮤니티',
+      link: '/community',
+    },
+    {
+      id: 4,
+      text: '위시리스트',
+      link: '/wishlist',
+    },
+    {
+      id: 5,
+      text: '마이페이지',
+      link: '/mypage',
+    },
+  ];
+  type CustomMouseEvent = MouseEvent<HTMLElement>;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isNav, setIsNav] = useState<Number>(1);
-  const [isLoginModal, setIsLoginModal] = useState<Boolean>(false);
-  type CustomMouseEvent = MouseEvent<HTMLElement>;
+  // const [isLoginModal, setIsLoginModal] = useState<Boolean>(false);
   const loginState = useAppSelector(state => state.isLogin);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (pathname === '/') setIsNav(1);
+    else if (pathname === '/userpick') setIsNav(2);
+    else if (pathname === '/community') setIsNav(3);
+    else if (pathname === '/wishlist')
+      sessionStorage.getItem('authorization')
+        ? setIsNav(4)
+        : dispatch(loginModal(true));
+    else if (pathname === '/mypage')
+      sessionStorage.getItem('authorization')
+        ? setIsNav(5)
+        : dispatch(loginModal(true));
+  }, [pathname]);
 
   const clickHandler = (event: CustomMouseEvent) => {
-    setIsNav(Number((event.target as HTMLLIElement).id));
     const menu = event.target as HTMLLIElement;
 
-    if (menu.id === '4' || '5') {
-      if (loginState) navigate(navMenu[+menu.id - 1].link);
+    if (menu.id === '5') {
+      if (loginState) navigate('/mypage');
       else {
-        if (menu.id === '4') {
-          dispatch(loginModal(true));
-          navigate('/');
-          setIsNav(1);
-        } else if (menu.id === '5') {
-          if (loginState) navigate('/mypage');
-          else {
-            dispatch(loginModal(true));
-            navigate('/');
-            setIsNav(1);
-          }
-        }
+        dispatch(loginModal(true));
       }
+    } else if (menu.id === '4') {
+      loginState ? navigate('/wishlist') : dispatch(loginModal(true));
     } else {
-      navigate(navMenu[+menu.id - 1].link);
       dispatch(loginModal(false));
+      if (menu.id === '1') navigate('/');
+      if (menu.id === '2') navigate('/userpick');
+      if (menu.id === '3') navigate('/community');
     }
   };
-
   return (
     <Container>
       {/* {isLoginModal ? <Login setIsLoginModal={setIsLoginModal}></Login> : null} */}
@@ -143,7 +150,7 @@ function Nav() {
             <MenuLink
               id={String(ele.id)}
               key={ele.id}
-              to={ele.id === 5 ? (isLoginModal ? ele.link : '#') : ele.link}
+              // to={ele.id === 5 ? (isLoginModal ? ele.link : '#') : ele.link}
               // onClick={() => (ele.id === 5 ? setIsLoginModal(true) : null)}
               className={isNav !== ele.id ? 'nav_box' : 'nav_box_active'}
             >

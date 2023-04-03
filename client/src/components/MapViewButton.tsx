@@ -8,11 +8,14 @@ export const Container = styled.div`
   top: 85%;
   left: 45%;
   transform: transition(-50%);
-
   .button_box {
     z-index: 901;
     position: fixed;
-    top: 87%;
+    @media (min-width: 768px) {
+      top: 85%;
+      left: 38%;
+    }
+    top: 85%;
     left: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;

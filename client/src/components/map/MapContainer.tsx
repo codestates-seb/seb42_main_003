@@ -32,6 +32,7 @@ export function MapContainer({
   const [map, setMap] = useState<any>(null);
   const [currentCamp, setCurrentCamp] = useState<any>(null);
   const [markerList, setMarkerList] = useState<any>([]);
+
   useEffect(() => {
     // container.current=null;
     // console.log(container)
@@ -69,22 +70,16 @@ export function MapContainer({
       );
 
       if (Object.keys(campList).length >= 1)
-        map.panTo(
-          new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX)
-        );
+        map.panTo(new kakao.maps.LatLng(campList[0].mapY, campList[0].mapX));
       setCurrentCamp(null);
       mapReload();
       map.relayout();
       map.setMaxLevel(13);
       //마커가 아닌 지도 클릭시 currentCamp=null, 마커사이즈 초기화
-      kakao.maps.event.addListener(
-        map,
-        'click',
-        function (mouseEvent: any) {
-          setCurrentCamp(null);
-          if (lastestMarker) lastestMarker.setImage(markerImageNormal);
-        }
-      );
+      kakao.maps.event.addListener(map, 'click', function (mouseEvent: any) {
+        setCurrentCamp(null);
+        if (lastestMarker) lastestMarker.setImage(markerImageNormal);
+      });
 
       for (let camp of campList) {
         const markerPosition = new kakao.maps.LatLng(camp.mapY, camp.mapX);
@@ -133,10 +128,7 @@ export function MapContainer({
       mapMarker,
       imageSizeNormal
     );
-    const markerImageBig = new kakao.maps.MarkerImage(
-      mapMarker,
-      imageSizeBig
-    );
+    const markerImageBig = new kakao.maps.MarkerImage(mapMarker, imageSizeBig);
 
     if (lastestMarker) {
       lastestMarker.setImage(markerImageNormal);
@@ -162,17 +154,16 @@ export function MapContainer({
   return (
     <MapWrapper>
       <div
-        id='map'
+        id="map"
         ref={container}
         style={{
           width: '100%',
           height: '100%',
           // borderRadius: '12px',
           borderRadius: `${border_rd || '12px'}`,
-        }}></div>
-      {currentCamp && (
-        <MapInfoContainer camp={currentCamp} padding={padding} />
-      )}
+        }}
+      ></div>
+      {currentCamp && <MapInfoContainer camp={currentCamp} padding={padding} />}
     </MapWrapper>
   );
 }
@@ -181,7 +172,7 @@ function MapInfoContainer({ camp, padding = '16px' }: any) {
   return (
     <MapInfoWrapper padding={padding}>
       <div>
-        <ContentCardRow like={'none'} data={camp} remove='inline' />
+        <ContentCardRow like={'none'} data={camp} remove="inline" />
       </div>
     </MapInfoWrapper>
   );

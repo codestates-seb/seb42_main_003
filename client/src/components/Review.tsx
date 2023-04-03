@@ -6,7 +6,7 @@ import { FcLikePlaceholder } from 'react-icons/fc';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { AiFillDelete } from 'react-icons/ai';
 import { FcLike } from 'react-icons/fc';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxTK';
 import { edit } from '../store/reviewSlice';
 import { Button } from '../styles/Button';
@@ -15,6 +15,8 @@ import { ReviewSubmit } from './ReviewSubmit';
 import { useState, useEffect } from 'react';
 import { timeParser } from '../utils/timeParser';
 import { getDataTs, sendDataTs } from '../api/tsapi';
+import { loginModal } from '../store/loginModal';
+import { MouseEvent } from 'react';
 
 const Container = styled.div`
   .post {
@@ -180,13 +182,16 @@ type ReviewType =
 export function Review({ isReview, setIsModal }: ReviewType) {
   // const [isModal, setIsModal] = useState(false);
   const dispatch = useAppDispatch();
+  const { contentId } = useParams();
   const [memberId, setMemberId] = useState();
   const login = useAppSelector(state => state.isLogin);
   const reviewDeleteHandler = () => {
-    sendDataTs(`review/${isReview.id}`, 'delete', {}).then(res =>
-      console.log(res)
+    sendDataTs(`review/${isReview.reviewId}`, 'delete', {}).then(res =>
+      alert('리뷰가 삭제되었습니다')
     );
+    window.location.replace(`/content/${contentId}`);
   };
+
   useEffect(() => {
     if (login)
       getDataTs(`members/token`).then(res => {
@@ -229,9 +234,37 @@ type Community = {
   data: ArticleType;
 };
 export function Post({ data }: Community) {
+  type CustomMouseEvent = MouseEvent<HTMLElement>;
+  const [isLiked, setIsLiked] = useState(data.isLiked);
+  const isLogin = useAppSelector(state => state.isLogin);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    setIsLiked(data.isLiked);
+  }, [data]);
+
+  const addLikeHandler = (event: CustomMouseEvent) => {
+    const post = (event.currentTarget as HTMLLIElement).id;
+
+    if (!isLogin) {
+      dispatch(loginModal(true));
+      return;
+    }
+    if (isLiked) {
+      sendDataTs(`articles/${post}/like`, 'delete', {}).then(() => {
+        setIsLiked(false);
+      });
+    } else {
+      sendDataTs(`articles/${post}/like`, 'post', {})
+        .then(() => {
+          setIsLiked(true);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  };
   return (
     <Container className="post">
-      {/* {isCommunity.map((ele: any) => { */}
       <div key={data.id} className="wrap">
         <div className="header">
           <div className="post_left">
@@ -255,17 +288,23 @@ export function Post({ data }: Community) {
               <BsTextCenter className="post_icon" />
               <span>{data.commentCnt}</span>
             </div>
-            <div className="field heart">
-              {!data.isLiked ? (
-                <FcLikePlaceholder className="post_icon" />
+            <div
+              id={String(data.id)}
+              className="field heart"
+              onClick={addLikeHandler}
+            >
+              {!isLiked ? (
+                <FcLikePlaceholder id={String(data.id)} className="post_icon" />
               ) : (
-                <FcLike className="post_icon" />
+                <FcLike id={String(data.id)} className="post_icon" />
               )}
-              <span>{data.likeCnt}</span>
+              <span id={String(data.id)} onClick={addLikeHandler}>
+                {data.likeCnt}
+              </span>
             </div>
           </div>
         </div>
-        <p className="post_bottom">
+        <p id={String(data.id)} className="post_bottom">
           <Link to={`/community/${data.id}`}>{data.title}</Link>
         </p>
       </div>

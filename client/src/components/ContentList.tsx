@@ -6,7 +6,9 @@ import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import MyPick from './destop/MyPick';
 import { getDataTs } from '../api/tsapi';
 import useIntersectionObserver from '../hooks/useIO';
-import { setCampingList } from '../store/campingSlice';
+import { setCampingList, addCampingList } from '../store/campingSlice';
+import { FloatButton } from '../styles/mapStyle';
+import { HiPlus } from 'react-icons/hi';
 
 interface CardList {
   content?: any;
@@ -14,6 +16,7 @@ interface CardList {
   setData?: any;
   set?: any;
   setContent?: any;
+  isURL?: string;
 }
 
 const Container = styled('div')<CardList>`
@@ -96,36 +99,82 @@ const Spinner = styled.div`
     flex-direction: column;
   }
 `;
-function ContentList({ setData }: CardList) {
+const StyleScrollUp = styled.div`
+  /* @media (min-width: 768px) {
+    display: none;
+  } */
+  display: flex;
+  justify-content: center;
+  .wrapper_button {
+    max-width: 866.67px;
+    min-width: 480px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 15px;
+    font-weight: 500;
+    align-items: center;
+    /* padding-left: 50px; */
+    /* background-color: var(--searchbar__color); */
+    height: 60px;
+  }
+  .div_box {
+    @media (max-width: 768px) {
+      display: none;
+    }
+    max-width: 303.33px;
+    /* min-width: 260.32px; */
+    width: 100%;
+  }
+  .upButton {
+    padding: 10px;
+    cursor: pointer;
+    background-color: var(--searchbar__color);
+    margin-left: 5px;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  /* margin-left: 50px; */
+`;
+function ContentList({ isURL }: CardList) {
   const data = useAppSelector(state => state.campingList);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [pageNum, setpageNum] = useState(2);
+  const [pageNum, setpageNum] = useState(0);
+  const [url, setUrl] = useState(isURL?.slice(0, isURL.length - 1));
+
   const dispatch = useAppDispatch();
 
-  const testFetch = (delay = 500) => new Promise(res => setTimeout(res, delay));
-  // console.log(data);
+  useEffect(() => {
+    setpageNum(1);
+    if (isURL) setUrl(isURL.slice(0, isURL.length - 1));
+  }, [isURL]);
+
+  const testFetch = (delay = 800) => new Promise(res => setTimeout(res, delay));
   const getMoreItem = async () => {
-    if (data) {
+    if (data && pageNum > 1) {
       setIsLoaded(true);
       await testFetch();
-      getDataTs(`main?page=${pageNum}`).then(res => {
-        // setData(data.concat(res.content));
-        dispatch(setCampingList(res.content));
+
+      getDataTs(`${url}${pageNum}`).then(res => {
+        if (url === 'main?page=') dispatch(addCampingList(res.content));
+        else dispatch(addCampingList(res));
       });
+
       setIsLoaded(false);
-      setpageNum(pageNum + 1);
     }
+    setpageNum(pageNum + 1);
   };
 
   const onIntersect: IntersectionObserverCallback = async (
     [entry],
     observer
   ) => {
-    if (entry.isIntersecting && !isLoaded) {
+    if (entry.isIntersecting && !isLoaded && pageNum < 5) {
       observer.unobserve(entry.target);
       await getMoreItem();
       observer.observe(entry.target);
     }
+    //* 옵저버 관찰시작, entry false, isLoaded false.
   };
 
   const { setTarget } = useIntersectionObserver({
@@ -135,15 +184,24 @@ function ContentList({ setData }: CardList) {
     onIntersect,
   });
 
+  const scrollUpHandler = () => {
+    window.scrollTo(0, 0);
+    getDataTs(`${url}1`).then(res => {
+      if (url === 'main?page=') dispatch(setCampingList(res.content));
+      else dispatch(setCampingList(res));
+    });
+    setpageNum(1);
+  };
   return (
     <div className="background">
       <Container>
         <div className="wrapper">
           <div className="main">
-            {data &&
-              data.map((e: any, idx: number) => {
-                return <ContentCard key={idx} data={e} />;
-              })}
+            {data
+              ? data.map((e: any, idx: number) => {
+                  return <ContentCard key={idx} data={e} />;
+                })
+              : null}
           </div>
           <div className="item">
             <div className="item_wrapper">
@@ -153,28 +211,40 @@ function ContentList({ setData }: CardList) {
           </div>
         </div>
       </Container>
-      {data ? (
-        <Spinner>
-          <div className="layerPopup">
-            {data && data.length < 60 ? (
-              <div className="spinner" ref={setTarget}></div>
-            ) : (
-              <div
-                style={{
-                  fontSize: '18px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  maxWidth: '600px',
-                  zIndex: '100',
-                }}
-              >
-                {/* 마지막 데이터입니다 */}
+      {pageNum < 4 ? (
+        <div className="spinner" ref={setTarget}>
+          {isLoaded && (
+            <Spinner>
+              <div className="layerPopup">
+                <div className="spinner"></div>
+
+                <div
+                  style={{
+                    fontSize: '18px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    maxWidth: '600px',
+                    zIndex: '100',
+                  }}
+                ></div>
               </div>
-            )}
+            </Spinner>
+          )}
+        </div>
+      ) : (
+        <StyleScrollUp className="float">
+          <div className="wrapper_button">
+            마지막 목록입니다{' '}
+            <button className="upButton" onClick={scrollUpHandler}>
+              ⬆️
+            </button>
           </div>
-        </Spinner>
-      ) : null}
-      <div style={{ height: '60px' }}></div>
+          <div className="div_box"></div>
+        </StyleScrollUp>
+      )}
+
+      <div className="end" style={{ height: '60px' }}></div>
+      {/* <Floating >위로</Floating> */}
     </div>
   );
 }
