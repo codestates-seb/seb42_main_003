@@ -19,6 +19,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  /* height: 100%; */
   .map_header {
     /* height: 50px; */
     @media (min-width: 768px) {
@@ -38,10 +39,9 @@ const Container = styled.div`
   }
   .map {
     @media (min-width: 768px) {
-      /* overflow-y: hidden */
       top: 76px;
     }
-    overflow-y: hidden
+    /* overflow-y: hidden */
     z-index: 900;
     position: absolute;
     top: 80px;
@@ -67,21 +67,25 @@ function Main() {
   // const [isClicked, setIsClicked] = useState<boolean>(false);
   const size = useWindowSize();
   const clicked = useAppSelector(state => state.clicked);
-  const [content, setContent] = useState<Info>();
-  const [data, setData] = useState<Info>();
+  // const [content, setContent] = useState<Info>();
+  // const [data, setData] = useState<Info>();
   const [isMap, setIsMap] = useState<boolean>(false);
   const [isURL, setIsURL] = useState<string>('main?page=1');
   const dispatch = useAppDispatch();
+  const data = useAppSelector(state => state.campingList);
   useEffect(() => {
     getDataTs(isURL).then(res => {
       if (res) {
         if (isURL === 'main?page=1') {
           dispatch(setCampingList(res.content));
-          setData(res.content);
-        } else setData(res);
+        } else dispatch(setCampingList(res));
       }
     });
   }, [isURL]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Container onClick={() => dispatch(click(false))}>
@@ -113,9 +117,9 @@ function Main() {
         <>
           <Category setIsURL={setIsURL}></Category>
           <div className={isMap ? 'community' : ''}>
-            {/* <CommunityBestM></CommunityBestM> */}
+            <CommunityBestM></CommunityBestM>
           </div>
-          <ContentList data={data} setData={setData}></ContentList>
+          {isURL ? <ContentList isURL={isURL} data={data}></ContentList> : null}
         </>
       ) : clicked || isMap ? null : (
         <>
@@ -123,7 +127,7 @@ function Main() {
           <div className={isMap ? 'community' : ''}>
             <CommunityBestM></CommunityBestM>
           </div>
-          <ContentList data={data} setData={setData}></ContentList>
+          <ContentList data={data}></ContentList>
         </>
       )}
       {/* <Footer></Footer> */}

@@ -140,8 +140,6 @@ export function ReviewSubmit() {
     };
   };
 
-  console.log(isEdit);
-
   const handleStarClick = (index: number) => {
     let clickStates = [...clicked];
     for (let i = 0; i < 5; i++) {
@@ -152,17 +150,20 @@ export function ReviewSubmit() {
 
   const submitHandler = () => {
     const data = { content: isEdit.content, rating: score };
-    if (!data.content) alert('내용을 작성해주세요');
-    else if (!data.rating) alert('별점을 달아주세요');
-    else {
-      sendDataTs(`review/${contentId}`, 'post', data).then(res =>
-        console.log(res)
+    if (!isEdit.reviewId) {
+      if (!data.content) alert('내용을 작성해주세요');
+      else if (!data.rating) alert('별점을 달아주세요');
+      else {
+        sendDataTs(`review/${contentId}`, 'post', data).then(res => {});
+        sendDataTs(`visited-places/${contentId}`, 'post', {}).then(res => {});
+        window.location.replace(`/content/${contentId}`);
+      }
+    } else {
+      sendDataTs(`review/${isEdit.reviewId}`, 'patch', data).then(res =>
+        alert('리뷰가 수정되었습니다!')
       );
-      sendDataTs(`visited-places/${contentId}`, 'post', {}).then(res => {
-        console.log(res);
-      });
+      window.location.replace(`/content/${contentId}`);
     }
-    window.location.replace(`/content/${contentId}`);
   };
   return (
     <Container>

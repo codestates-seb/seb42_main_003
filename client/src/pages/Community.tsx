@@ -84,9 +84,9 @@ export const Container = styled.div`
     @media (min-width: 768px) {
       display: none;
     }
-    position: absolute;
-    bottom: 10%;
-    right: 10%;
+    position: sticky;
+    bottom: 17%;
+    left: 85%;
   }
   .modal_submit {
     .wrapper {
@@ -160,7 +160,6 @@ export function Community() {
 
   const keywordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
-    console.log(e.target.value);
   };
   return (
     <Container onClick={() => dispatch(click(false))}>
@@ -205,11 +204,6 @@ export function Community() {
               <PostModal setIsSubmit={setIsSubmit}></PostModal>
             </div>
           ) : null}
-          <div className="float_Button">
-            <FloatButton onClick={submitHandler}>
-              <HiPlus />
-            </FloatButton>
-          </div>
           <MobileHeader className="mobile">
             <h1>커뮤니티</h1>
           </MobileHeader>
@@ -228,6 +222,11 @@ export function Community() {
             ))}
           </div>
         </div>
+        <span className="float_Button">
+          <FloatButton onClick={submitHandler}>
+            <HiPlus />
+          </FloatButton>
+        </span>
       </div>
       <Pagination
         currentPage={currentPage}

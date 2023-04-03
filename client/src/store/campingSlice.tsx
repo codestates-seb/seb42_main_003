@@ -3,17 +3,19 @@ import { createSlice } from '@reduxjs/toolkit';
 let initialState: any = [];
 
 const campingSlice = createSlice({
-  name: 'memberInfo',
+  name: 'camping',
   initialState,
   reducers: {
     setCampingList: (state, action) => {
-      return state.concat(action.payload);
+      return action.payload;
     },
-    removeMemberInfo: state => {
-      return (state = initialState);
+    addCampingList: (state, action) => {
+      if (state.length < 151) {
+        return state.concat(action.payload);
+      }
     },
   },
 });
 
-export const { setCampingList } = campingSlice.actions;
+export const { setCampingList, addCampingList } = campingSlice.actions;
 export default campingSlice;

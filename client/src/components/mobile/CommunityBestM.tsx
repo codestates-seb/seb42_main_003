@@ -16,7 +16,6 @@ const Container = styled('div')<CardList>`
   border-bottom: 0.5px solid var(--chamong__color);
   margin-bottom: 15px;
   overflow: hidden;
-
   @media (min-width: 768px) {
     display: none;
   }
@@ -28,6 +27,8 @@ const Container = styled('div')<CardList>`
     text-align: center;
   }
   .carousel {
+    margin-top: 3px;
+    margin-left: -10px;
     width: 300vw;
     height: 100%;
     display: flex;
@@ -37,6 +38,7 @@ const Container = styled('div')<CardList>`
   .title {
     width: 100vw;
     text-align: center;
+    /* align-self: center; */
     color: var(--fontBlack__700);
     font-weight: 400;
     font-size: var(--fs__big);

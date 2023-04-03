@@ -21,13 +21,13 @@ import { useAppDispatch, useAppSelector } from '../hooks/reduxTK';
 import { Modal } from '../styles/Modal';
 import { HiOutlineX } from 'react-icons/hi';
 import { FcLike } from 'react-icons/fc';
-import { AiOutlineEye,AiOutlineHeart } from 'react-icons/ai';
+import { AiOutlineEye, AiOutlineHeart } from 'react-icons/ai';
 import useUploadImage from '../hooks/useUploadImage';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { loginModal } from '../store/loginModal';
 
 function PostDetail() {
-  const isLogin = useAppSelector((state) => state.isLogin);
+  const isLogin = useAppSelector(state => state.isLogin);
   const { postId } = useParams();
   const [postData, setPostData] = useState<ArticleType | null>(null);
   const [commentData, setCommentData] = useState<any>(null);
@@ -37,7 +37,7 @@ function PostDetail() {
 
   useEffect(() => {
     getDataTs(`articles/${postId}`)
-      .then((data) => {
+      .then(data => {
         setPostData(data);
         setCommentData(data.comments);
       })
@@ -50,7 +50,7 @@ function PostDetail() {
         alert('삭제되었습니다.');
         navigate('/community');
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   };
 
   useEffect(() => {
@@ -110,60 +110,58 @@ interface PostProps {
 function ViewContent({ post, setIsSubmit, setIsDelete }: PostProps) {
   const dispatch = useAppDispatch();
   const windowSize = useWindowSize();
-  const isLogin = useAppSelector((state) => state.isLogin);
-  const memberInfo = useAppSelector((state) => state.memberInfo);
+  const isLogin = useAppSelector(state => state.isLogin);
+  const memberInfo = useAppSelector(state => state.memberInfo);
   const [nowLike, setNowLike] = useState(post.likeCnt);
   const [isAlreadyLike, setIsAlreadyLike] = useState(post.isLiked);
-  console.log(post);
   const likeHandler = () => {
     if (!isLogin) {
       dispatch(loginModal(true));
       return;
     }
 
-if(isAlreadyLike) {
-  sendDataTs(`articles/${post.id}/like`,'delete',{})
-  .then(()=>{
-    setNowLike((prevState) => (prevState -= 1));
-    setIsAlreadyLike(false);
-  })
-} 
-else {
-    sendDataTs(`articles/${post.id}/like`, 'post', {})
-      .then(() => {
-        setNowLike((prevState) => (prevState += 1));
-        setIsAlreadyLike(true);
-      })
-      .catch((err) => {
-        console.log(err);
+    if (isAlreadyLike) {
+      sendDataTs(`articles/${post.id}/like`, 'delete', {}).then(() => {
+        setNowLike(prevState => (prevState -= 1));
+        setIsAlreadyLike(false);
       });
+    } else {
+      sendDataTs(`articles/${post.id}/like`, 'post', {})
+        .then(() => {
+          setNowLike(prevState => (prevState += 1));
+          setIsAlreadyLike(true);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   };
-};
   return (
     <PostArticle>
       <h2>{post.title}</h2>
       <div>
         <div>
           <img
-              src={post.profileImg}
-              alt='profile-img'
-              className='profile-img'></img>
-          <div className='member-info-upper'>
-            <span className='member-info-nickname'>{post.nickname}</span>
-            <span className='member-created-at'>
+            src={post.profileImg}
+            alt="profile-img"
+            className="profile-img"
+          ></img>
+          <div className="member-info-upper">
+            <span className="member-info-nickname">{post.nickname}</span>
+            <span className="member-created-at">
               {timeParser(post.createdAt)}
             </span>
           </div>
         </div>
-        <div className='post-info'>
+        <div className="post-info">
           <div>
-            <span className='post-info-span'>
+            <span className="post-info-span">
               <AiOutlineEye />
               <span>{post.viewCnt}</span>
             </span>
-            <span className='post-info-span'>
-              <button onClick={likeHandler} className='post-info-like-button'>
-                {isAlreadyLike?<FcLike/>:<AiOutlineHeart/>}
+            <span className="post-info-span">
+              <button onClick={likeHandler} className="post-info-like-button">
+                {isAlreadyLike ? <FcLike /> : <AiOutlineHeart />}
               </button>
               <span>{nowLike}</span>
             </span>
@@ -178,15 +176,17 @@ else {
       </div>
 
       <p>
-      {post.articleImg &&
-            <img
-          src={post.articleImg}
-          alt='article'
-          className='article-image'
-          style={{ maxWidth: windowSize.width }}></img>}
+        {post.articleImg && (
+          <img
+            src={post.articleImg}
+            alt="article"
+            className="article-image"
+            style={{ maxWidth: windowSize.width }}
+          ></img>
+        )}
         <div>{post.content}</div>
       </p>
-      <div className='post-buttonbox'>
+      <div className="post-buttonbox">
         {isLogin && memberInfo.id === post.memberId && (
           <ButtonBox setIsSubmit={setIsSubmit} setIsDelete={setIsDelete} />
         )}
@@ -203,34 +203,36 @@ interface ButtonBoxProps {
 function ButtonBox({ setIsSubmit, setIsDelete }: ButtonBoxProps) {
   return (
     <ButtonBoxStyle>
-      <span className='button-wrapper'>
+      <span className="button-wrapper">
         <Button
-          padding='8px'
+          padding="8px"
           border={'var(--chamong__color)'}
           color={'var(--chamong__color)'}
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          radius='12px'
-          width='100%'
-          onClick={() => setIsSubmit(true)}>
+          radius="12px"
+          width="100%"
+          onClick={() => setIsSubmit(true)}
+        >
           <BsPencilSquare />
-          <span className='button-desktop'> 수정하기</span>
+          <span className="button-desktop"> 수정하기</span>
         </Button>
       </span>
-      <span className='button-wrapper'>
+      <span className="button-wrapper">
         <Button
-          padding='8px'
+          padding="8px"
           border={'var(--chamong__color)'}
           color={'var(--chamong__color)'}
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          radius='12px'
-          width='100%'
-          onClick={() => setIsDelete(true)}>
+          radius="12px"
+          width="100%"
+          onClick={() => setIsDelete(true)}
+        >
           <HiOutlineX />
-          <span className='button-desktop'> 삭제하기</span>
+          <span className="button-desktop"> 삭제하기</span>
         </Button>
       </span>
     </ButtonBoxStyle>
@@ -247,10 +249,10 @@ function DeleteConfirmModal({
   setIsDelete,
 }: DeleteConfirmModalProps) {
   return (
-    <Modal maxWidth='200px'>
-      <div className='wrapper'>
-        <div className='modal-text'>정말로 삭제할까요?</div>
-        <div className='modal-text'>
+    <Modal maxWidth="200px">
+      <div className="wrapper">
+        <div className="modal-text">정말로 삭제할까요?</div>
+        <div className="modal-text">
           <Button
             onClick={removeArticleHandler}
             border={'var(--chamong__color)'}
@@ -259,19 +261,21 @@ function DeleteConfirmModal({
             hcolor={'var(--chamong__color)'}
             hover={'white'}
             hborder={'var(--chamong__color)'}
-            padding='14px 15px'
-            radius='12px'>
+            padding="14px 15px"
+            radius="12px"
+          >
             삭제
           </Button>
           <Button
             onClick={() => setIsDelete(false)}
-            radius='12px'
-            padding='14px 15px'
+            radius="12px"
+            padding="14px 15px"
             border={'var(--chamong__color)'}
             color={'var(--chamong__color)'}
             hcolor={'white'}
             hover={'var(--chamong__color)'}
-            hborder={'var(--chamong__color)'}>
+            hborder={'var(--chamong__color)'}
+          >
             취소
           </Button>
         </div>
@@ -296,7 +300,7 @@ interface CommentProps {
 }
 
 function ViewComment({ comment }: CommentProps) {
-  const memberInfo = useAppSelector((state) => state.memberInfo);
+  const memberInfo = useAppSelector(state => state.memberInfo);
 
   const commentDeleteHandler = () => {
     if (memberInfo.id === comment.memberId) {
@@ -308,7 +312,7 @@ function ViewComment({ comment }: CommentProps) {
         .then(() => {
           window.location.reload();
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     }
   };
 
@@ -318,18 +322,18 @@ function ViewComment({ comment }: CommentProps) {
         <div>
           <img
             src={comment.profileImg}
-            alt='profile-img'
-            className='profile-img'></img>
-          <div className='member-info-upper'>
-            <span className='member-info-nickname'>
-              {comment.nickname}
-            </span>
-            <span className='member-created-at'>
+            alt="profile-img"
+            className="profile-img"
+          ></img>
+          <div className="member-info-upper">
+            <span className="member-info-nickname">{comment.nickname}</span>
+            <span className="member-created-at">
               {timeParser(comment.createdAt)}
               {memberInfo.id == comment.memberId && (
                 <button
                   onClick={commentDeleteHandler}
-                  className='comment-delete-button'>
+                  className="comment-delete-button"
+                >
                   <HiOutlineX />
                 </button>
               )}
@@ -359,16 +363,18 @@ function PostCommentMobile({ articleId }: PostCommentProps) {
 
   return (
     <PostCommentStyle>
-      <div className='post-comment-input'>
+      <div className="post-comment-input">
         <Input
-          placeholder='댓글을 남겨주세요!'
+          placeholder="댓글을 남겨주세요!"
           value={content}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setContent(e.target.value)
-          }></Input>
+          }
+        ></Input>
         <button
-          className='post-comment-mobile-button'
-          onClick={postCommentHandler}>
+          className="post-comment-mobile-button"
+          onClick={postCommentHandler}
+        >
           <BsPencilSquare />
         </button>
         <Button
@@ -378,9 +384,10 @@ function PostCommentMobile({ articleId }: PostCommentProps) {
           hcolor={'var(--chamong__color)'}
           hover={'white'}
           hborder={'var(--chamong__color)'}
-          padding='14px 15px'
-          radius='12px'
-          onClick={postCommentHandler}>
+          padding="14px 15px"
+          radius="12px"
+          onClick={postCommentHandler}
+        >
           작성
         </Button>
       </div>
@@ -395,7 +402,7 @@ type PostType = {
 function PostEditModal({ postData, setIsSubmit }: PostType) {
   const navigate = useNavigate();
   const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
-  const [isPhotoEdit,setIsPhotoEdit]=useState(false);
+  const [isPhotoEdit, setIsPhotoEdit] = useState(false);
   const [title, setTitle] = useState(postData.title);
   const [content, setContent] = useState(postData.content);
   const [errorMessage, setErrorMessage] = useState({
@@ -423,8 +430,8 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
       'articleImg'
     )
       .then(() => window.location.reload())
-      .catch((err) =>
-        setErrorMessage((prevState) => {
+      .catch(err =>
+        setErrorMessage(prevState => {
           return {
             ...prevState,
             submit: `글 수정이 실패했습니다. (${err.response.status})`,
@@ -437,29 +444,29 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
     let pass = true;
     if (!title) {
       pass = false;
-      setErrorMessage((prevState) => {
+      setErrorMessage(prevState => {
         return { ...prevState, title: '제목을 입력해주세요.' };
       });
     } else
-      setErrorMessage((prevState) => {
+      setErrorMessage(prevState => {
         return { ...prevState, title: '' };
       });
     if (!content) {
       pass = false;
-      setErrorMessage((prevState) => {
+      setErrorMessage(prevState => {
         return { ...prevState, content: '내용을 입력해주세요.' };
       });
     } else
-      setErrorMessage((prevState) => {
+      setErrorMessage(prevState => {
         return { ...prevState, content: '' };
       });
     return !pass;
   };
 
   return (
-    <Modal maxWidth='600px'>
-      <div className='wrapper'>
-        <div className='header'>
+    <Modal maxWidth="600px">
+      <div className="wrapper">
+        <div className="header">
           <h2>글 수정하기</h2>
           <button>
             <HiOutlineX onClick={() => setIsSubmit(false)} />
@@ -471,37 +478,43 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
           hcolor={'white'}
           hover={'var(--chamong__color)'}
           hborder={'var(--chamong__color)'}
-          padding='8px 14px'
-          radius='12px'>
-          {imageSrc.length >= 1||!isPhotoEdit ? (
-            <div className='preview'>
-              <img alt='preview' src={isPhotoEdit?imageSrc:postData.articleImg}></img>
-              <button onClick={()=>{
-                if(isPhotoEdit) imageDelete();
-                else {
-                  setIsPhotoEdit(true);
-                }
-                }}>       
+          padding="8px 14px"
+          radius="12px"
+        >
+          {imageSrc.length >= 1 || !isPhotoEdit ? (
+            <div className="preview">
+              <img
+                alt="preview"
+                src={isPhotoEdit ? imageSrc : postData.articleImg}
+              ></img>
+              <button
+                onClick={() => {
+                  if (isPhotoEdit) imageDelete();
+                  else {
+                    setIsPhotoEdit(true);
+                  }
+                }}
+              >
                 <HiOutlineX />
               </button>
             </div>
           ) : (
-            <label htmlFor='file'>이미지 첨부</label>
+            <label htmlFor="file">이미지 첨부</label>
           )}
-          <input type='file' id='file' onChange={imageChange}></input>
+          <input type="file" id="file" onChange={imageChange}></input>
         </ImageInput>
-        <Input placeholder='제목' onChange={titleHandler} value={title} />
+        <Input placeholder="제목" onChange={titleHandler} value={title} />
         {errorMessage.title && (
-          <span className='error-message'>{errorMessage.title}</span>
+          <span className="error-message">{errorMessage.title}</span>
         )}
         <TextArea
           value={content}
           height={'200px'}
-          placeholder='내용'
+          placeholder="내용"
           onChange={contentHandler}
         />
         {errorMessage.content && (
-          <span className='error-message'>{errorMessage.content}</span>
+          <span className="error-message">{errorMessage.content}</span>
         )}
         <Button
           onClick={articleSubmitHandler}
@@ -511,13 +524,14 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
           hcolor={'var(--chamong__color)'}
           hover={'white'}
           hborder={'var(--chamong__color)'}
-          padding='13px 15px'
-          radius='12px'
-          width='100%'>
+          padding="13px 15px"
+          radius="12px"
+          width="100%"
+        >
           수정 완료
         </Button>
         {errorMessage.submit && (
-          <span className='error-message'>{errorMessage.submit}</span>
+          <span className="error-message">{errorMessage.submit}</span>
         )}
       </div>
     </Modal>
