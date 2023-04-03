@@ -445,7 +445,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
             </div>
             {isUserState ? (
               <div className="social">
-                <svg
+                {/* <svg
                   viewBox="0 0 32 32"
                   xmlns="http://www.w3.org/2000/svg"
                   aria-hidden="true"
@@ -473,7 +473,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
                 </svg>
                 <button className="goggle" onClick={socialRequestHandler}>
                   구글로 로그인
-                </button>
+                </button> */}
               </div>
             ) : null}
           </div>

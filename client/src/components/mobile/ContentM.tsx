@@ -176,7 +176,13 @@ export function ContentM({
   return (
     <Container
       isContent={isContent}
-      bg={isContent.firstImageUrl}
+      bg={
+        isContent.placeImg
+          ? isContent.placeImg
+          : isContent.firstImageUrl
+          ? isContent.firstImageUrl
+          : 'https://user-images.githubusercontent.com/116159684/229258665-6f5e3195-5073-4fc0-b290-833ef0c00754.jpeg'
+      }
       setIsModal={setIsModal}
     >
       <MobileHeader>

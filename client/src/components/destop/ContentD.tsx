@@ -48,7 +48,7 @@ const Container = styled('div')<ContentInfo>`
   }
   .background {
     flex: 0.5;
-    background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg');
+    /* background-image: url('https://gocamping.or.kr/upload/camp/100358/thumb/thumb_720_3006GPoZLjm1dpqwhevGKAPR.jpg'); */
     background-repeat: no-repeat;
     border-radius: 16px;
   }
@@ -251,7 +251,16 @@ export function ContentD({ isContent }: ContentInfo) {
   };
 
   return (
-    <Container isContent={isContent} bg={isContent.firstImageUrl}>
+    <Container
+      isContent={isContent}
+      bg={
+        isContent.placeImg
+          ? isContent.placeImg
+          : isContent.firstImageUrl
+          ? isContent.firstImageUrl
+          : 'https://user-images.githubusercontent.com/116159684/229258665-6f5e3195-5073-4fc0-b290-833ef0c00754.jpeg'
+      }
+    >
       <main>
         {/* 데스크탑 컨텐츠 위~에 헤더 */}
         <div className="header">
