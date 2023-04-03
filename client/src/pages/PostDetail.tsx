@@ -501,7 +501,7 @@ function PostEditModal({ postData, setIsSubmit }: PostType) {
           ) : (
             <label htmlFor="file">이미지 첨부</label>
           )}
-          <input type="file" id="file" onChange={imageChange}></input>
+          <input type='file' id='file' accept='.png, .jpeg, .jpg' onChange={imageChange}></input>
         </ImageInput>
         <Input placeholder="제목" onChange={titleHandler} value={title} />
         {errorMessage.title && (

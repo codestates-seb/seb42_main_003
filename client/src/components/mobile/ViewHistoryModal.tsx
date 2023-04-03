@@ -7,7 +7,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { HistoryContainer } from '../HistoryContainer';
 
 const ViewHistoryModalContainer = styled.section`
-  position: absolute;
+  position: fixed;
   top: 0px;
   background-color: white;
   width: 100%;

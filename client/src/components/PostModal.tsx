@@ -106,7 +106,7 @@ function PostModal({ setIsSubmit, maxWidth = '600px' }: PostType) {
           ) : (
             <label htmlFor="file">이미지 첨부</label>
           )}
-          <input type="file" id="file" onChange={imageChange}></input>
+          <input type='file' id='file' accept='.png, .jpeg, .jpg' onChange={imageChange}></input>
         </ImageInput>
         <Input placeholder="제목" onChange={titleHandler} />
         {errorMessage.title && (
