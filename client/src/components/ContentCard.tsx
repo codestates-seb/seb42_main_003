@@ -241,7 +241,7 @@ export function ContentCard({ data, remove, setIsMap }: CardView) {
               ? data.themaEnvrnCl
               : data?.featureNm
               ? data.featureNm
-              : `${data.facltNm}입니다.`}
+              : data.memo}
           </div>
           {data.facltNm ? (
             <div className="card_bottom">
@@ -468,7 +468,6 @@ export function ContentCardRow({
     // getDataTs('bookmark?page=1').then(res => setIsLike(res.content.bookmarked));
     setIsLike(data.bookmarked);
   }, [data]);
-  console.log(data);
 
   const deleteHandler = (event: CustomMouseEvent) => {
     //* 위시리스트 삭제 API
@@ -491,8 +490,8 @@ export function ContentCardRow({
       });
     }
   };
-  console.log(data);
-  // const { image, imageSrc, imageChange, imageDelete } = useUploadImage()
+
+  const { image, imageSrc, imageChange, imageDelete } = useUploadImage();
   const sharedAddHandler = (event: CustomMouseEvent) => {
     //*유저픽_유저의 차박지에 등록하는 API 호출
 
@@ -508,17 +507,19 @@ export function ContentCardRow({
     //   reader.readAsDataURL(fileBlob);
     //   image = reader.result as string;
     // };
-
     sendFormDataTs(
       `pick-places/${event}`,
       'patch',
       patchData,
-      image,
+      undefined,
       'patchMyPlace',
       'placeImg'
-    ).then(res => {});
+    ).then(res => {
+      window.location.replace('/userpick');
+    });
     // console.log('유저픽_유저의 차박지에 등록');
-    navigate('/userpick');
+
+    // navigate('/userpick');
   };
 
   const login = useAppSelector(state => state.isLogin);
@@ -587,7 +588,9 @@ export function ContentCardRow({
           <h1>
             {data.address
               ? data.address.split(' ').slice(0, 2).join(' ')
-              : data.facltNm}
+              : data.facltNm
+              ? data.facltNm
+              : null}
           </h1>
           {data.doNm ? (
             <div className="address">

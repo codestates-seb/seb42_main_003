@@ -160,7 +160,6 @@ export function Community() {
 
   const keywordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
-    console.log(e.target.value);
   };
   return (
     <Container onClick={() => dispatch(click(false))}>

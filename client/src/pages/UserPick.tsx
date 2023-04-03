@@ -36,12 +36,12 @@ const Container = styled.div<MapHeightProps>`
     width: 100%;
     max-width: 100vw;
     height: 760px;
-    /* overflow: hidden; */
+    overflow: hidden;
   }
   .card_wrap {
     width: 100%;
     max-width: 650px;
-    height: 100vh;
+    height: 760px;
     overflow: scroll;
   }
   .card_field {

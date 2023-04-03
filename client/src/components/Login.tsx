@@ -317,7 +317,7 @@ function Login({ setIsLoginModal }: LoginInfo) {
     const parsedHash = new URLSearchParams(window.location.hash.substring(1));
     const accessToken = parsedHash.get('access_token');
     window.location.href =
-      'https://accounts.google.com/o/oauth2/auth?' +
+      'https://accounts.google.com/o/oauth2/v2/auth?' +
       `client_id=${clientId}&` +
       `redirect_uri=${url}&` +
       'response_type=code&' +
@@ -327,8 +327,11 @@ function Login({ setIsLoginModal }: LoginInfo) {
     //   sessionStorage.setItem('authorization', accessToken);
     //   getDataTs('oauth2/authorization/google', { accessToken }).then(res => {});
     // }
-
-    getDataTs('oauth2/authorization/google').then(res => console.log(res));
+    //*
+    getDataTs('oauth2/authorization/google').then(res => {
+      sessionStorage.setItem('authorization', res.headers.authorization);
+      localStorage.setItem('refresh', res.headers.refresh);
+    });
   };
 
   return (
