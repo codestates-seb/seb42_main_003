@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useEffect, useState, useRef } from 'react';
 import { getDataTs } from '../../api/tsapi';
+import { useNavigate } from 'react-router-dom';
 
 interface CardList {
   data?: string[];
@@ -61,6 +62,7 @@ const Container = styled('div')<CardList>`
 `;
 
 function CommunityBestM({}: CardList) {
+  const navigate=useNavigate();
   const [isCommunity, setIsCommunity] = useState<ArticleType[]>([]);
   const [isDot, setIsDot] = useState<number>(1);
   useEffect(() => {
@@ -82,7 +84,7 @@ function CommunityBestM({}: CardList) {
       <h1>커뮤니티 인기글</h1>
       <div className="carousel">
         {isCommunity.map((ele: any) => (
-          <div key={ele.id} className="title">
+          <div  onClick={()=>navigate(`community/${ele.id}`)} key={ele.id} className="title">
             {ele.title}
           </div>
         ))}
